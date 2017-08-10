@@ -1,0 +1,183 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="SDK">
+      <UniqueIdentifier>{20ac4ddc-67da-483f-8839-06fbde999256}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib">
+      <UniqueIdentifier>{e95b7352-40ba-4c43-b216-f950698b252b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib\cvvimage">
+      <UniqueIdentifier>{21fe5c79-ec53-4bb9-a360-62fd1e0dc4c5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="EyedeaExample.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EyedeaExampleDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\EyedeaSDK\CXX\EyedeaAPI.h">
+      <Filter>SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\EyedeaSDK\CXX\EyedeaCheckData.h">
+      <Filter>SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\EyedeaSDK\CXX\EyedeaDef.h">
+      <Filter>SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\EyedeaSDK\CXX\EyedeaErrorType.h">
+      <Filter>SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\EyedeaSDK\CXX\EyedeaEthernetClient.h">
+      <Filter>SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\EyedeaSDK\CXX\EyedeaInterface.h">
+      <Filter>SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib\cvvimage\CvvImage.h">
+      <Filter>lib\cvvimage</Filter>
+    </ClInclude>
+    <ClInclude Include="EyedeaVisionConfigTabDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EyedeaCheckDefectTabDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EyedeaPickAndPlaceTabDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EyedeaCalibrationTabDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="use_opencv_static.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EyedeaCameraConfigTabDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EyedeaSearchAreaDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="EyedeaExample.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EyedeaExampleDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\EyedeaSDK\CXX\EyedeaAPI.cpp">
+      <Filter>SDK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\EyedeaSDK\CXX\EyedeaCheckData.cpp">
+      <Filter>SDK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\EyedeaSDK\CXX\EyedeaEthernetClient.cpp">
+      <Filter>SDK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\EyedeaSDK\CXX\EyedeaInterface.cpp">
+      <Filter>SDK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib\cvvimage\CvvImage.cpp">
+      <Filter>lib\cvvimage</Filter>
+    </ClCompile>
+    <ClCompile Include="EyedeaVisionConfigTabDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EyedeaCheckDefectTabDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EyedeaPickAndPlaceTabDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EyedeaCalibrationTabDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EyedeaCameraConfigTabDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EyedeaSearchAreaDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="EyedeaExample.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\EyedeaExample.rc2">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\EyedeaExample.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\..\..\..\..\Downloads\if_Full_Screen_2_779449.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\..\..\..\..\Downloads\if_Full_Screen_778085.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\..\..\..\..\Downloads\if_icon-ios7-circle-outline_211717 (1).png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\..\..\..\..\Downloads\if_Social_Delicious_778080.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="icons\if_Full_Screen_2_779449.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="icons\if_Full_Screen_778085.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="icons\if_icon-ios7-circle-outline_211717 (1).png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="icons\if_Social_Delicious_778080.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="icons\icon_0000.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="icons\icon_0001.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="icons\icon_0002.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="icons\icon_0003.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+</Project>

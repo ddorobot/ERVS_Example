@@ -829,6 +829,8 @@ void CEyedeaVisionConfigTabDlg::OnBnClickedButtonEnvOptionObjectAngleSet()
 void CEyedeaVisionConfigTabDlg::OnBnClickedButtonVisionConfigGet2()
 {
 	// TODO: Add your control notification handler code here
+	float image_morph_size = ERVS_GetVisionConfigOption(VISION_CONFIG_IMAGE_MORPH_SIZE);
+
 	float blur = ERVS_GetVisionConfigOption(VISION_CONFIG_BLUR2);
 	float denoising = ERVS_GetVisionConfigOption(VISION_CONFIG_DENOISING2);
 	float edge_low_thre = ERVS_GetVisionConfigOption(VISION_CONFIG_EDGE_LOW_THRESHOLD2);
@@ -860,6 +862,9 @@ void CEyedeaVisionConfigTabDlg::OnBnClickedButtonVisionConfigGet2()
 	float masking_option_find_object_threshold = ERVS_GetVisionConfigOption(VISION_CONFIG_FIND_OBJECT_MASKING_OPTION_THRESHOLD);
 
 	CString str;
+	str.Format(_T("%.2f"), image_morph_size);
+	GetDlgItem(IDC_EDIT_VISION_CONFIG_IMAGE_MORPH)->SetWindowText(str);
+
 	str.Format(_T("%.2f"), blur);
 	GetDlgItem(IDC_EDIT_VISION_CONFIG_27)->SetWindowText(str);
 	str.Format(_T("%.2f"), denoising);
@@ -900,6 +905,7 @@ void CEyedeaVisionConfigTabDlg::OnBnClickedButtonVisionConfigGet2()
 void CEyedeaVisionConfigTabDlg::OnBnClickedButtonVisionConfigSet2()
 {
 	// TODO: Add your control notification handler code here
+	float image_morph_size = 0.0; // ERVS_GetVisionConfigOption(VISION_CONFIG_BLUR);
 	float blur = 0.0; // ERVS_GetVisionConfigOption(VISION_CONFIG_BLUR);
 	float denoising = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_DENOISING);
 	float edge_low_thre = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_EDGE_LOW_THRESHOLD);
@@ -931,6 +937,8 @@ void CEyedeaVisionConfigTabDlg::OnBnClickedButtonVisionConfigSet2()
 	float masking_option_find_threshold = 0.0;
 
 	CString str;
+	GetDlgItem(IDC_EDIT_VISION_CONFIG_IMAGE_MORPH)->GetWindowText(str);
+	image_morph_size = _ttof(str);
 	GetDlgItem(IDC_EDIT_VISION_CONFIG_27)->GetWindowText(str);
 	blur = _ttof(str);
 	GetDlgItem(IDC_EDIT_VISION_CONFIG_28)->GetWindowText(str);
@@ -967,6 +975,7 @@ void CEyedeaVisionConfigTabDlg::OnBnClickedButtonVisionConfigSet2()
 	}
 
 	//set
+	ERVS_SetVisionConfigOption(VISION_CONFIG_IMAGE_MORPH_SIZE, image_morph_size);
 	ERVS_SetVisionConfigOption(VISION_CONFIG_BLUR2, blur);
 	ERVS_SetVisionConfigOption(VISION_CONFIG_DENOISING2, denoising);
 	ERVS_SetVisionConfigOption(VISION_CONFIG_EDGE_LOW_THRESHOLD2, edge_low_thre);

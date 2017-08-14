@@ -1266,72 +1266,92 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindGetInfo2()
 		}
 	}
 
-	float *p_id = NULL;
-	float *p_camera_center_x = NULL;
-	float *p_camera_center_y = NULL;
-	float *p_robot_center_x = NULL;
-	float *p_robot_center_y = NULL;
-	float *p_angle = NULL;
-	float *p_type = NULL;
-	float *p_score = NULL;
-
-	int nObject = ERVS_GetFindObjectInfo(user_index, p_id_range, id_index, &p_id, &p_camera_center_x, &p_camera_center_y, &p_robot_center_x, &p_robot_center_y, &p_angle, &p_type, &p_score);
-
-	time_t curr_time;
-	struct tm *curr_tm;
-	curr_time = time(NULL);
-	curr_tm = localtime(&curr_time);
-
-	CString str;
-	str.Format(_T("%d-%d-%d-%d-%d-%d : find object count = %d\r\n"), curr_tm->tm_year + 1900, curr_tm->tm_mon + 1, curr_tm->tm_mday, curr_tm->tm_hour, curr_tm->tm_min, curr_tm->tm_sec, nObject);
-	printf("%s", str);
-	MyTextOut(str, RGB(0, 0, 255));
-
-	int index = 0;
-	int sub_index = 0;
-
-	HTREEITEM  hRoot = NULL;
-	
-	for (int i = 0; i < nObject; i++)
+	//for (int i = 0; i < 10000; i++)
 	{
-		printf("%s", str);
-		if ((int)p_id[i] % 1000 == 0)
+		float *p_id = NULL;
+		float *p_camera_center_x = NULL;
+		float *p_camera_center_y = NULL;
+		float *p_robot_center_x = NULL;
+		float *p_robot_center_y = NULL;
+		float *p_angle = NULL;
+		float *p_type = NULL;
+		float *p_score = NULL;
+
+		//printf("test = %d\n", i);
+
+		int nObject = ERVS_GetFindObjectInfo(user_index, p_id_range, id_index, &p_id, &p_camera_center_x, &p_camera_center_y, &p_robot_center_x, &p_robot_center_y, &p_angle, &p_type, &p_score);
+
+		time_t curr_time;
+		struct tm *curr_tm;
+		curr_time = time(NULL);
+		curr_tm = localtime(&curr_time);
+
+		CString str;
+		str.Format(_T("%d-%d-%d-%d-%d-%d : find object count = %d\r\n"), curr_tm->tm_year + 1900, curr_tm->tm_mon + 1, curr_tm->tm_mday, curr_tm->tm_hour, curr_tm->tm_min, curr_tm->tm_sec, nObject);
+		//printf("%s", str);
+		MyTextOut(str, RGB(0, 0, 255));
+
+		int index = 0;
+		int sub_index = 0;
+
+		HTREEITEM  hRoot = NULL;
+
+		for (int i = 0; i < nObject; i++)
 		{
-			str.Format(_T(" - [%d] : id=%04d / type=%d / cpos=(%.2f, %.2f) / rpos=(%.2f, %.2f) / angle=%d / score=%.2f\n"), index, (int)p_id[i], (int)p_type[i], p_camera_center_x[i], p_camera_center_y[i], p_robot_center_x[i], p_robot_center_y[i], (int)p_angle[i], p_score[i]);
-
-			MyTextOut(str, RGB(255, 100, 0));
-
-			CString str_tree;
-			str_tree.Format(_T("ID(%04d)-%d"), (int)p_id[i], index);
-
-			hRoot = m_tree_result.InsertItem(str_tree, 0/* nImage */, 1/* nSelectedImage */, TVI_ROOT, TVI_LAST);
-			m_tree_result.Expand(hRoot, TVE_EXPAND);
-
-			//HTREEITEM  hChild;
-			//hChild = m_tree_result.InsertItem(L"image", 1/* nImage */, 1/* nSelectedImage */, hRoot, TVI_LAST);
-			index++;
-			sub_index = 0;
-		}
-		else
-		{
-			str.Format(_T("       : id=%04d / type=%d / cpos=(%.2f, %.2f) / rpos=(%.2f, %.2f) / angle=%d / score=%.2f\n"), (int)p_id[i], (int)p_type[i], p_camera_center_x[i], p_camera_center_y[i], p_robot_center_x[i], p_robot_center_y[i], (int)p_angle[i], p_score[i]);
-			MyTextOut(str, RGB(0, 100, 255));
-
-			if (hRoot != NULL)
+			//printf("%s", str);
+			if ((int)p_id[i] % 1000 == 0)
 			{
+				str.Format(_T(" - [%d] : id=%04d / type=%d / cpos=(%.2f, %.2f) / rpos=(%.2f, %.2f) / angle=%d / score=%.2f\n"), index, (int)p_id[i], (int)p_type[i], p_camera_center_x[i], p_camera_center_y[i], p_robot_center_x[i], p_robot_center_y[i], (int)p_angle[i], p_score[i]);
+
+				MyTextOut(str, RGB(255, 100, 0));
+
 				CString str_tree;
-				str_tree.Format(_T("ID(%04d)-%d"), (int)p_id[i], sub_index);
+				str_tree.Format(_T("ID(%04d)-%d"), (int)p_id[i], index);
 
-				HTREEITEM  hChild;
-				hChild = m_tree_result.InsertItem(str_tree, 1/* nImage */, 1/* nSelectedImage */, hRoot, TVI_LAST);
-
+				hRoot = m_tree_result.InsertItem(str_tree, 0/* nImage */, 1/* nSelectedImage */, TVI_ROOT, TVI_LAST);
 				m_tree_result.Expand(hRoot, TVE_EXPAND);
-				m_tree_result.Expand(hChild, TVE_EXPAND);
-			}
 
-			sub_index++;
+				//HTREEITEM  hChild;
+				//hChild = m_tree_result.InsertItem(L"image", 1/* nImage */, 1/* nSelectedImage */, hRoot, TVI_LAST);
+				index++;
+				sub_index = 0;
+			}
+			else
+			{
+				str.Format(_T("       : id=%04d / type=%d / cpos=(%.2f, %.2f) / rpos=(%.2f, %.2f) / angle=%d / score=%.2f\n"), (int)p_id[i], (int)p_type[i], p_camera_center_x[i], p_camera_center_y[i], p_robot_center_x[i], p_robot_center_y[i], (int)p_angle[i], p_score[i]);
+				MyTextOut(str, RGB(0, 100, 255));
+
+				if (hRoot != NULL)
+				{
+					CString str_tree;
+					str_tree.Format(_T("ID(%04d)-%d"), (int)p_id[i], sub_index);
+
+					HTREEITEM  hChild;
+					hChild = m_tree_result.InsertItem(str_tree, 1/* nImage */, 1/* nSelectedImage */, hRoot, TVI_LAST);
+
+					m_tree_result.Expand(hRoot, TVE_EXPAND);
+					m_tree_result.Expand(hChild, TVE_EXPAND);
+				}
+
+				sub_index++;
+			}
+			//MyTextOut(" - [%d] : id=%04d / type=%d / cpos=(%.4f, %.4f) / rpos=(%.4f, %.4f) / angle=%d / score=%.4f\n", i, (int)p_id[i], (int)p_type[i], p_camera_center_x[i], p_camera_center_y[i], p_robot_center_x[i], p_robot_center_y[i], p_angle[i], p_score[i]);
 		}
-		//MyTextOut(" - [%d] : id=%04d / type=%d / cpos=(%.4f, %.4f) / rpos=(%.4f, %.4f) / angle=%d / score=%.4f\n", i, (int)p_id[i], (int)p_type[i], p_camera_center_x[i], p_camera_center_y[i], p_robot_center_x[i], p_robot_center_y[i], p_angle[i], p_score[i]);
+
+		if (p_camera_center_x != NULL) free(p_camera_center_x);
+		if (p_camera_center_y != NULL) free(p_camera_center_y);
+		if (p_robot_center_x != NULL) free(p_robot_center_x);
+		if (p_robot_center_y != NULL) free(p_robot_center_y);
+		if (p_angle != NULL) free(p_angle);
+		if (p_type != NULL) free(p_type);
+		if (p_score != NULL) free(p_score);
+
+		//Result image
+		int len = 921600;
+		//ERVS_GetImage(GET_IMAGE_RESULT, -1, (char**)&m_result_image.data, &len);
+		ERVS_GetFindObjectResultImage(-1, -1, (char**)&m_result_image.data, &len);
+
+		Sleep(1);
 	}
 
 #if 0
@@ -1384,24 +1404,11 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindGetInfo2()
 	}
 #endif
 
-	if (p_camera_center_x != NULL) free(p_camera_center_x);
-	if (p_camera_center_y != NULL) free(p_camera_center_y);
-	if (p_robot_center_x != NULL) free(p_robot_center_x);
-	if (p_robot_center_y != NULL) free(p_robot_center_y);
-	if (p_angle != NULL) free(p_angle);
-	if (p_type != NULL) free(p_type);
-	if (p_score != NULL) free(p_score);
-	
 	if (p_id_range != NULL)
 	{
 		delete[] p_id_range;
 		p_id_range = NULL;
 	}
-
-	//Result image
-	int len = 921600;
-	//ERVS_GetImage(GET_IMAGE_RESULT, -1, (char**)&m_result_image.data, &len);
-	ERVS_GetFindObjectResultImage(-1, -1, (char**)&m_result_image.data, &len);
 }
 
 void CEyedeaCheckDefectTabDlg::OnBnClickedButtonCheckCameraCalibok()
@@ -1824,10 +1831,17 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindObjectDetectionLevelGet()
 {
 	// TODO: Add your control notification handler code here
 	int level = ERVS_GetVisionConfigOption(VISION_CONFIG_FIND_OBJECT_LEVEL);
+	float min_angle = ERVS_GetVisionConfigOption(VISION_CONFIG_L_MIN_ANGLE2);
+	float max_angle = ERVS_GetVisionConfigOption(VISION_CONFIG_L_MAX_ANGLE2);
 
 	CString str;
 	str.Format(_T("%d"), level);
 	GetDlgItem(IDC_EDIT_FIND_OBJECT_DETECTION_LEVEL)->SetWindowText(str);
+
+	str.Format(_T("%d"), (int)min_angle);
+	GetDlgItem(IDC_EDIT_ANGLE_MIN)->SetWindowText(str);
+	str.Format(_T("%d"), (int)max_angle);
+	GetDlgItem(IDC_EDIT_ANGLE_MAX)->SetWindowText(str);
 }
 
 
@@ -1839,6 +1853,16 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindObjectDetectionLevelSet()
 	int level = _ttoi(str);
 
 	ERVS_SetVisionConfigOption(VISION_CONFIG_FIND_OBJECT_LEVEL, level);
+
+	int min_angle = 0; //ERVS_GetVisionConfigOption(VISION_CONFIG_L_MIN_ANGLE);
+	int max_angle = 0; //ERVS_GetVisionConfigOption(VISION_CONFIG_L_MAX_ANGLE);
+	GetDlgItem(IDC_EDIT_ANGLE_MIN)->GetWindowText(str);
+	min_angle = _ttoi(str);
+	GetDlgItem(IDC_EDIT_ANGLE_MAX)->GetWindowText(str);
+	max_angle = _ttoi(str);
+
+	ERVS_SetVisionConfigOption(VISION_CONFIG_L_MIN_ANGLE2, min_angle);
+	ERVS_SetVisionConfigOption(VISION_CONFIG_L_MAX_ANGLE2, max_angle);
 
 	//cross check
 	OnBnClickedButtonFindObjectDetectionLevelGet();

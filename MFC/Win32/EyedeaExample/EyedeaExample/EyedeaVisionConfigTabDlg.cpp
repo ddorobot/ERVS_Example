@@ -848,8 +848,8 @@ void CEyedeaVisionConfigTabDlg::OnBnClickedButtonVisionConfigGet2()
 	float search_value_master = ERVS_GetVisionConfigOption(VISION_CONFIG_SEARCH_VALUE_OBJECT2);
 	float circle_detect_inlier_rate = ERVS_GetVisionConfigOption(VISION_CONFIG_CIRCLE_DETECTION_INLIER_RATE2);
 	float circle_detect_max_iteration = ERVS_GetVisionConfigOption(VISION_CONFIG_CIRCLE_DETECTION_MAX_ITERATION2);
-	float min_angle = ERVS_GetVisionConfigOption(VISION_CONFIG_L_MIN_ANGLE2);
-	float max_angle = ERVS_GetVisionConfigOption(VISION_CONFIG_L_MAX_ANGLE2);
+	//float min_angle = ERVS_GetVisionConfigOption(VISION_CONFIG_L_MIN_ANGLE2);
+	//float max_angle = ERVS_GetVisionConfigOption(VISION_CONFIG_L_MAX_ANGLE2);
 	float scene_thre = ERVS_GetVisionConfigOption(VISION_CONFIG_SCENE_THRESHOLD2);
 	float use_candidate_roi = ERVS_GetVisionConfigOption(VISION_CONFIG_USE_CANDIDATE_TM_UROI2);
 	float candidate_roi_thre = ERVS_GetVisionConfigOption(VISION_CONFIG_USE_CANDIDATE_TM_UROI_THRESHOLD2);
@@ -923,8 +923,8 @@ void CEyedeaVisionConfigTabDlg::OnBnClickedButtonVisionConfigSet2()
 	float search_value_master = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_SEARCH_VALUE_OBJECT);
 	float circle_detect_inlier_rate = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_CIRCLE_DETECTION_INLIER_RATE);
 	float circle_detect_max_iteration = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_CIRCLE_DETECTION_MAX_ITERATION);
-	float min_angle = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_L_MIN_ANGLE);
-	float max_angle = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_L_MAX_ANGLE);
+	//float min_angle = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_L_MIN_ANGLE);
+	//float max_angle = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_L_MAX_ANGLE);
 	float scene_thre = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_SCENE_THRESHOLD);
 	float use_candidate_roi = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_USE_CANDIDATE_TM_UROI);
 	float candidate_roi_thre = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_USE_CANDIDATE_TM_UROI_THRESHOLD);
@@ -993,8 +993,8 @@ void CEyedeaVisionConfigTabDlg::OnBnClickedButtonVisionConfigSet2()
 	ERVS_SetVisionConfigOption(VISION_CONFIG_SEARCH_VALUE_OBJECT2, search_value_master);
 	ERVS_SetVisionConfigOption(VISION_CONFIG_CIRCLE_DETECTION_INLIER_RATE2, circle_detect_inlier_rate);
 	ERVS_SetVisionConfigOption(VISION_CONFIG_CIRCLE_DETECTION_MAX_ITERATION2, circle_detect_max_iteration);
-	ERVS_SetVisionConfigOption(VISION_CONFIG_L_MIN_ANGLE2, min_angle);
-	ERVS_SetVisionConfigOption(VISION_CONFIG_L_MAX_ANGLE2, max_angle);
+	//ERVS_SetVisionConfigOption(VISION_CONFIG_L_MIN_ANGLE2, min_angle);
+	//ERVS_SetVisionConfigOption(VISION_CONFIG_L_MAX_ANGLE2, max_angle);
 	ERVS_SetVisionConfigOption(VISION_CONFIG_SCENE_THRESHOLD2, scene_thre);
 	ERVS_SetVisionConfigOption(VISION_CONFIG_USE_CANDIDATE_TM_UROI2, use_candidate_roi);
 	ERVS_SetVisionConfigOption(VISION_CONFIG_USE_CANDIDATE_TM_UROI_THRESHOLD2, candidate_roi_thre);

@@ -26,6 +26,9 @@ CEyedeaCheckDefectTabDlg::CEyedeaCheckDefectTabDlg(CWnd* pParent /*=NULL*/)
 {
 	m_result_image = cv::Mat::zeros(cv::Size(640, 480), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
 	m_result_histogram_image = cv::Mat::zeros(cv::Size(256, 400), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
+	m_result_histogram_r_image = cv::Mat::zeros(cv::Size(256, 400), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
+	m_result_histogram_g_image = cv::Mat::zeros(cv::Size(256, 400), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
+	m_result_histogram_b_image = cv::Mat::zeros(cv::Size(256, 400), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
 }
 
 CEyedeaCheckDefectTabDlg::~CEyedeaCheckDefectTabDlg()
@@ -627,6 +630,19 @@ void CEyedeaCheckDefectTabDlg::ThreadFunctionDraw()
 	CRect rect_histogram_display;													//display rect
 	GetDlgItem(IDC_STATIC_HISTOGRAM)->GetClientRect(&rect_histogram_display);			//get rect information on window
 	CClientDC dc_histogram_display(GetDlgItem(IDC_STATIC_HISTOGRAM));					//device context for display mfc control
+
+	CRect rect_histogram_r_display;													//display rect
+	GetDlgItem(IDC_STATIC_HISTOGRAM_R)->GetClientRect(&rect_histogram_r_display);			//get rect information on window
+	CClientDC dc_histogram_r_display(GetDlgItem(IDC_STATIC_HISTOGRAM_R));					//device context for display mfc control
+
+	CRect rect_histogram_g_display;													//display rect
+	GetDlgItem(IDC_STATIC_HISTOGRAM_G)->GetClientRect(&rect_histogram_g_display);			//get rect information on window
+	CClientDC dc_histogram_g_display(GetDlgItem(IDC_STATIC_HISTOGRAM_G));					//device context for display mfc control
+
+	CRect rect_histogram_b_display;													//display rect
+	GetDlgItem(IDC_STATIC_HISTOGRAM_B)->GetClientRect(&rect_histogram_b_display);			//get rect information on window
+	CClientDC dc_histogram_b_display(GetDlgItem(IDC_STATIC_HISTOGRAM_B));					//device context for display mfc control
+
 #if 0
 	//cv::Mat found_image_object = cv::Mat::zeros(cv::Size(640, 480), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
 	m_found_image_object = cv::Mat::zeros(cv::Size(640, 480), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
@@ -702,6 +718,15 @@ void CEyedeaCheckDefectTabDlg::ThreadFunctionDraw()
 
 		vImage.CopyOf(&IplImage(m_result_histogram_image), 1);							//mat to vimage
 		vImage.DrawToHDC(dc_histogram_display.m_hDC, &rect_histogram_display);				//draw on display_rect
+
+		vImage.CopyOf(&IplImage(m_result_histogram_r_image), 1);							//mat to vimage
+		vImage.DrawToHDC(dc_histogram_r_display.m_hDC, &rect_histogram_r_display);				//draw on display_rect
+
+		vImage.CopyOf(&IplImage(m_result_histogram_g_image), 1);							//mat to vimage
+		vImage.DrawToHDC(dc_histogram_g_display.m_hDC, &rect_histogram_g_display);				//draw on display_rect
+
+		vImage.CopyOf(&IplImage(m_result_histogram_b_image), 1);							//mat to vimage
+		vImage.DrawToHDC(dc_histogram_b_display.m_hDC, &rect_histogram_b_display);				//draw on display_rect
 
 		//vImage.CopyOf(&IplImage(m_found_image_object), 1);							//mat to vimage
 		//vImage.DrawToHDC(dc_display_found_object.m_hDC, &rect_display_found_object);				//draw on display_rect
@@ -1279,7 +1304,7 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindGetInfo2()
 
 		//printf("test = %d\n", i);
 
-		int nObject = ERVS_GetFindObjectInfo(user_index, p_id_range, id_index, &p_id, &p_camera_center_x, &p_camera_center_y, &p_robot_center_x, &p_robot_center_y, &p_angle, &p_type, &p_score);
+		int nObject = ERVS_GetFindObjectInfo(user_index, 10, &p_id, &p_camera_center_x, &p_camera_center_y, &p_robot_center_x, &p_robot_center_y, &p_angle, &p_type, &p_score);
 
 		time_t curr_time;
 		struct tm *curr_tm;
@@ -2007,8 +2032,11 @@ void CEyedeaCheckDefectTabDlg::OnNMDblclkTreeResult(NMHDR *pNMHDR, LRESULT *pRes
 		float score = 0.0;
 		float histogram_size = 0.0;
 		float *p_histogram = NULL;
+		float *p_histogram_r = NULL;
+		float *p_histogram_g = NULL;
+		float *p_histogram_b = NULL;
 
-		ERVS_GetFindObjectResultInfo(mom_index, me_index, &id, &camera_center_x, &camera_center_y, &robot_center_x, &robot_center_y, &angle, &type, &score, &p_histogram, &histogram_size);
+		ERVS_GetFindObjectResultInfo(mom_index, me_index, &id, &camera_center_x, &camera_center_y, &robot_center_x, &robot_center_y, &angle, &type, &score, &p_histogram, &p_histogram_r, &p_histogram_g, &p_histogram_b, &histogram_size);
 		
 		CString str;
 		str.Format(_T("camera(%.2f, %.2f), robot(%.2f, %.2f), angle(%.2f)"), camera_center_x, camera_center_y, robot_center_x, robot_center_y, angle);
@@ -2022,16 +2050,44 @@ void CEyedeaCheckDefectTabDlg::OnNMDblclkTreeResult(NMHDR *pNMHDR, LRESULT *pRes
 		if (histogram_size > 0)
 		{
 			m_result_histogram_image = 0;
+			m_result_histogram_r_image = 0;
+			m_result_histogram_g_image = 0;
+			m_result_histogram_b_image = 0;
 
 			if (m_result_histogram_image.cols < histogram_size)
 			{
 				m_result_histogram_image = cv::Mat::zeros(cv::Size(histogram_size, 255), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
 			}
 
+			if (m_result_histogram_r_image.cols < histogram_size)
+			{
+				m_result_histogram_r_image = cv::Mat::zeros(cv::Size(histogram_size, 255), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
+			}
+
+			if (m_result_histogram_g_image.cols < histogram_size)
+			{
+				m_result_histogram_g_image = cv::Mat::zeros(cv::Size(histogram_size, 255), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
+			}
+
+			if (m_result_histogram_b_image.cols < histogram_size)
+			{
+				m_result_histogram_b_image = cv::Mat::zeros(cv::Size(histogram_size, 255), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
+			}
+
 			for (int i = 0; i < histogram_size; i++)
 			{
 				int value = p_histogram[i];
-				cv::line(m_result_histogram_image, cv::Point(i, m_result_histogram_image.rows), cv::Point(i, m_result_histogram_image.rows - value), cv::Scalar(255, 255, 255), 1);
+				cv::line(m_result_histogram_image, cv::Point(i, m_result_histogram_image.rows), cv::Point(i, m_result_histogram_image.rows - value), cv::Scalar(128, 128, 128), 1);
+
+				//r
+				value = p_histogram_r[i];
+				cv::line(m_result_histogram_r_image, cv::Point(i, m_result_histogram_r_image.rows), cv::Point(i, m_result_histogram_r_image.rows - value), cv::Scalar(128, 128, 255), 1);
+
+				value = p_histogram_g[i];
+				cv::line(m_result_histogram_g_image, cv::Point(i, m_result_histogram_g_image.rows), cv::Point(i, m_result_histogram_g_image.rows - value), cv::Scalar(128, 255, 128), 1);
+
+				value = p_histogram_b[i];
+				cv::line(m_result_histogram_b_image, cv::Point(i, m_result_histogram_b_image.rows), cv::Point(i, m_result_histogram_b_image.rows - value), cv::Scalar(255, 128, 128), 1);
 			}
 		}
 
@@ -2039,6 +2095,24 @@ void CEyedeaCheckDefectTabDlg::OnNMDblclkTreeResult(NMHDR *pNMHDR, LRESULT *pRes
 		{
 			free(p_histogram);
 			p_histogram = NULL;
+		}
+
+		if (p_histogram_r != NULL)
+		{
+			free(p_histogram_r);
+			p_histogram_r = NULL;
+		}
+
+		if (p_histogram_g != NULL)
+		{
+			free(p_histogram_g);
+			p_histogram_g = NULL;
+		}
+
+		if (p_histogram_b != NULL)
+		{
+			free(p_histogram_b);
+			p_histogram_b = NULL;
 		}
 
 		//Get Result Information from ERVS

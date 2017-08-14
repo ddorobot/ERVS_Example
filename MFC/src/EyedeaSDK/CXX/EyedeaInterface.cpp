@@ -10257,7 +10257,7 @@ int CEyedeaInterface::GetFindObjectCount(void)
 	return count;
 }
 
-int CEyedeaInterface::GetFindObjectResultInfo(int base_index, int sub_index, float* out_id, float* out_cx, float* out_cy, float* out_rx, float* out_ry, float* out_angle, float* out_type, float* out_score, float** out_histogram, float* out_histogram_size)
+int CEyedeaInterface::GetFindObjectResultInfo(int base_index, int sub_index, float* out_id, float* out_cx, float* out_cy, float* out_rx, float* out_ry, float* out_angle, float* out_type, float* out_score, float** out_histogram, float** out_histogram_b, float** out_histogram_g, float** out_histogram_r, float* out_histogram_size)
 {
 	boost::unique_lock<boost::mutex> scoped_lock(mutex);
 
@@ -10393,6 +10393,7 @@ int CEyedeaInterface::GetFindObjectResultInfo(int base_index, int sub_index, flo
 		int histogram_size = (int)(*out_histogram_size);
 		if (histogram_size > 0)
 		{
+			//gray
 			if ((*out_histogram) != NULL)	free((*out_histogram));
 			(*out_histogram) = (float *)malloc(sizeof(float)*histogram_size);
 
@@ -10405,6 +10406,51 @@ int CEyedeaInterface::GetFindObjectResultInfo(int base_index, int sub_index, flo
 				i_histogram_data |= ((int)data[index++]) & 0x000000FF;
 
 				(*out_histogram)[i] = (float)i_histogram_data / (float)scale_factor;
+			}
+
+			//b
+			if ((*out_histogram_b) != NULL)	free((*out_histogram_b));
+			(*out_histogram_b) = (float *)malloc(sizeof(float)*histogram_size);
+
+			for (int i = 0; i < histogram_size; i++)
+			{
+				//i_score
+				i_histogram_data = ((int)data[index++] << 24) & 0xFF000000;
+				i_histogram_data |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_histogram_data |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_histogram_data |= ((int)data[index++]) & 0x000000FF;
+
+				(*out_histogram_b)[i] = (float)i_histogram_data / (float)scale_factor;
+			}
+
+			//g
+			if ((*out_histogram_g) != NULL)	free((*out_histogram_g));
+			(*out_histogram_g) = (float *)malloc(sizeof(float)*histogram_size);
+
+			for (int i = 0; i < histogram_size; i++)
+			{
+				//i_score
+				i_histogram_data = ((int)data[index++] << 24) & 0xFF000000;
+				i_histogram_data |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_histogram_data |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_histogram_data |= ((int)data[index++]) & 0x000000FF;
+
+				(*out_histogram_g)[i] = (float)i_histogram_data / (float)scale_factor;
+			}
+
+			//r
+			if ((*out_histogram_r) != NULL)	free((*out_histogram_r));
+			(*out_histogram_r) = (float *)malloc(sizeof(float)*histogram_size);
+
+			for (int i = 0; i < histogram_size; i++)
+			{
+				//i_score
+				i_histogram_data = ((int)data[index++] << 24) & 0xFF000000;
+				i_histogram_data |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_histogram_data |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_histogram_data |= ((int)data[index++]) & 0x000000FF;
+
+				(*out_histogram_r)[i] = (float)i_histogram_data / (float)scale_factor;
 			}
 		}
 	}
@@ -10419,7 +10465,7 @@ int CEyedeaInterface::GetFindObjectResultInfo(int base_index, int sub_index, flo
 	return i_histogram_size;
 }
 
-int CEyedeaInterface::GetFindObjectInfo(int index, int* id_range, unsigned int id_range_size, float** out_id, float** out_cx, float** out_cy, float** out_rx, float** out_ry, float** out_angle, float** out_type, float** out_score)
+int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, float** out_id, float** out_cx, float** out_cy, float** out_rx, float** out_ry, float** out_angle, float** out_type, float** out_score)
 {
 	boost::unique_lock<boost::mutex> scoped_lock(mutex);
 
@@ -10431,7 +10477,7 @@ int CEyedeaInterface::GetFindObjectInfo(int index, int* id_range, unsigned int i
 
 	char command = COMMAND_GET_FIND_OBJECT_INFO;
 
-	int len = 4 + 4 + 4* id_range_size;
+	int len = 4 + 4 ;
 	unsigned char* data = new unsigned char[len];
 
 	//index
@@ -10441,20 +10487,11 @@ int CEyedeaInterface::GetFindObjectInfo(int index, int* id_range, unsigned int i
 	data[data_index++] = (index & 0x0000FF00) >> 8;
 	data[data_index++] = (index & 0x000000FF);
 
-	//size
-	data[data_index++] = (id_range_size & 0xFF000000) >> 24;
-	data[data_index++] = (id_range_size & 0x00FF0000) >> 16;
-	data[data_index++] = (id_range_size & 0x0000FF00) >> 8;
-	data[data_index++] = (id_range_size & 0x000000FF);
-
-	for (int i = 0; i < id_range_size; i++)
-	{
-		//id_range
-		data[data_index++] = (id_range[i] & 0xFF000000) >> 24;
-		data[data_index++] = (id_range[i] & 0x00FF0000) >> 16;
-		data[data_index++] = (id_range[i] & 0x0000FF00) >> 8;
-		data[data_index++] = (id_range[i] & 0x000000FF);
-	}
+	//max_objects_count
+	data[data_index++] = (max_objects_count & 0xFF000000) >> 24;
+	data[data_index++] = (max_objects_count & 0x00FF0000) >> 16;
+	data[data_index++] = (max_objects_count & 0x0000FF00) >> 8;
+	data[data_index++] = (max_objects_count & 0x000000FF);
 
 	unsigned int scale_factor = 1;
 	int ret = 0;

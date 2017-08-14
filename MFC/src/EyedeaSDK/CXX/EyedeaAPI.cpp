@@ -748,14 +748,14 @@ int ERVS_GetFindObjectCount(void)
 	return g_cls_interface.GetFindObjectCount();
 }
 
-int ERVS_GetFindObjectResultInfo(int base_index, int sub_index, float* out_id, float* out_cx, float* out_cy, float* out_rx, float* out_ry, float* out_angle, float* out_type, float* out_score, float** out_histogram, float* out_histogram_size)
+int ERVS_GetFindObjectResultInfo(int base_index, int sub_index, float* out_id, float* out_cx, float* out_cy, float* out_rx, float* out_ry, float* out_angle, float* out_type, float* out_score, float** out_histogram, float** out_histogram_b, float** out_histogram_g, float** out_histogram_r, float* out_histogram_size)
 {
-	return g_cls_interface.GetFindObjectResultInfo(base_index, sub_index, out_id, out_cx, out_cy, out_rx, out_ry, out_angle, out_type, out_score, out_histogram, out_histogram_size);
+	return g_cls_interface.GetFindObjectResultInfo(base_index, sub_index, out_id, out_cx, out_cy, out_rx, out_ry, out_angle, out_type, out_score, out_histogram, out_histogram_b, out_histogram_g, out_histogram_r, out_histogram_size);
 }
 
-int ERVS_GetFindObjectInfo(int index, int* id_range, unsigned int id_range_size, float** out_id, float** out_cx, float** out_cy, float** out_rx, float** out_ry, float** out_angle, float** out_type, float** out_score)
+int ERVS_GetFindObjectInfo(int index, int max_objects_count, float** out_id, float** out_cx, float** out_cy, float** out_rx, float** out_ry, float** out_angle, float** out_type, float** out_score)
 {
-	return g_cls_interface.GetFindObjectInfo(index, id_range, id_range_size, out_id, out_cx, out_cy, out_rx, out_ry, out_angle, out_type, out_score) ;
+	return g_cls_interface.GetFindObjectInfo(index, max_objects_count, out_id, out_cx, out_cy, out_rx, out_ry, out_angle, out_type, out_score) ;
 }
 
 int ERVS_GetFindObjectInfo2(int index, float* out_cx, float* out_cy, float* out_rx, float* out_ry, float* out_angle, float* out_type, float* out_score)

@@ -113,6 +113,9 @@ public:
 
 	cv::Mat m_result_image;
 	cv::Mat m_result_histogram_image;
+	cv::Mat m_result_histogram_r_image;
+	cv::Mat m_result_histogram_g_image;
+	cv::Mat m_result_histogram_b_image;
 
 	//CListBox m_list_result_index;
 	//afx_msg void OnLbnDblclkListResult();

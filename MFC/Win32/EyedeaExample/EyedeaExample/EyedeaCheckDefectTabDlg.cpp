@@ -229,6 +229,9 @@ BOOL CEyedeaCheckDefectTabDlg::OnInitDialog()
 	str.Format(_T("0"));
 	GetDlgItem(IDC_EDIT_DEP_ID)->SetWindowText(str);
 
+	str.Format(_T("10"));
+	GetDlgItem(IDC_EDIT_FIND_MAX_COUNT)->SetWindowText(str);
+
 	//start Thread
 	//eyedea - start of thread
 	m_run_thread = true;
@@ -1303,15 +1306,18 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindGetInfo2()
 		float *p_score = NULL;
 
 		//printf("test = %d\n", i);
+		CString str;
+		GetDlgItem(IDC_EDIT_FIND_MAX_COUNT)->GetWindowText(str);
+		int nMaxObjects = _ttoi(str);
 
-		int nObject = ERVS_GetFindObjectInfo(user_index, 10, &p_id, &p_camera_center_x, &p_camera_center_y, &p_robot_center_x, &p_robot_center_y, &p_angle, &p_type, &p_score);
+		int nObject = ERVS_GetFindObjectInfo(user_index, nMaxObjects, &p_id, &p_camera_center_x, &p_camera_center_y, &p_robot_center_x, &p_robot_center_y, &p_angle, &p_type, &p_score);
 
 		time_t curr_time;
 		struct tm *curr_tm;
 		curr_time = time(NULL);
 		curr_tm = localtime(&curr_time);
 
-		CString str;
+		//CString str;
 		str.Format(_T("%d-%d-%d-%d-%d-%d : find object count = %d\r\n"), curr_tm->tm_year + 1900, curr_tm->tm_mon + 1, curr_tm->tm_mday, curr_tm->tm_hour, curr_tm->tm_min, curr_tm->tm_sec, nObject);
 		//printf("%s", str);
 		MyTextOut(str, RGB(0, 0, 255));

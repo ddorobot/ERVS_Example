@@ -16,7 +16,7 @@ CEyedeaCalibrationTabDlg::CEyedeaCalibrationTabDlg(CWnd* pParent /*=NULL*/)
 	, m_run_thread(false)
 	, m_b_draw_pause(true)
 {
-	m_calib_image = cv::Mat::zeros(cv::Size(640, 480), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
+	//m_calib_image = cv::Mat::zeros(cv::Size(640, 480), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
 }
 
 CEyedeaCalibrationTabDlg::~CEyedeaCalibrationTabDlg()
@@ -84,7 +84,7 @@ BOOL CEyedeaCalibrationTabDlg::OnInitDialog()
 
 void CEyedeaCalibrationTabDlg::ThreadFunctionDraw()
 {
-	if(m_calib_image.empty()) 	m_calib_image = cv::Mat::zeros(cv::Size(640, 480), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
+	m_calib_image = cv::Mat::zeros(cv::Size(640, 480), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
 	cv::Mat image_result = cv::Mat::zeros(cv::Size(640, 480), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
 
 	CRect rect_display_ori;													//display rect
@@ -373,6 +373,9 @@ void CEyedeaCalibrationTabDlg::OnBnClickedButtonLoadCalibration()
 void CEyedeaCalibrationTabDlg::OnBnClickedButtonGetCalibrationImage()
 {
 	// TODO: Add your control notification handler code here
-	int len = 921600;
-	ERVS_GetImage(GET_IMAGE_CALIBRATION_FEATURE, 0, (char**)&m_calib_image.data, &len);
+	if (!m_calib_image.empty())
+	{
+		int len = 921600;
+		ERVS_GetImage(GET_IMAGE_CALIBRATION_FEATURE, 0, (char**)&m_calib_image.data, &len);
+	}
 }

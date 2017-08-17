@@ -48,4 +48,9 @@ public:
 
 protected:
 	CBitmap* IplImageToCBitmap(IplImage* img);
+public:
+	afx_msg void OnBnClickedButtonGetCalibrationImage();
+
+private:
+	cv::Mat m_calib_image;
 };

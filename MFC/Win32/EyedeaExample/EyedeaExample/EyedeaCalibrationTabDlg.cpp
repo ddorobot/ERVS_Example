@@ -16,7 +16,7 @@ CEyedeaCalibrationTabDlg::CEyedeaCalibrationTabDlg(CWnd* pParent /*=NULL*/)
 	, m_run_thread(false)
 	, m_b_draw_pause(true)
 {
-
+	m_calib_image = cv::Mat::zeros(cv::Size(640, 480), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
 }
 
 CEyedeaCalibrationTabDlg::~CEyedeaCalibrationTabDlg()
@@ -41,6 +41,7 @@ BEGIN_MESSAGE_MAP(CEyedeaCalibrationTabDlg, CDialogEx)
 	ON_WM_LBUTTONDOWN()
 	ON_BN_CLICKED(IDC_BUTTON_SAVE_CALIBRATION, &CEyedeaCalibrationTabDlg::OnBnClickedButtonSaveCalibration)
 	ON_BN_CLICKED(IDC_BUTTON_LOAD_CALIBRATION, &CEyedeaCalibrationTabDlg::OnBnClickedButtonLoadCalibration)
+	ON_BN_CLICKED(IDC_BUTTON_GET_CALIBRATION_IMAGE, &CEyedeaCalibrationTabDlg::OnBnClickedButtonGetCalibrationImage)
 END_MESSAGE_MAP()
 
 
@@ -83,7 +84,7 @@ BOOL CEyedeaCalibrationTabDlg::OnInitDialog()
 
 void CEyedeaCalibrationTabDlg::ThreadFunctionDraw()
 {
-	cv::Mat image_ori = cv::Mat::zeros(cv::Size(640, 480), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
+	if(m_calib_image.empty()) 	m_calib_image = cv::Mat::zeros(cv::Size(640, 480), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
 	cv::Mat image_result = cv::Mat::zeros(cv::Size(640, 480), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
 
 	CRect rect_display_ori;													//display rect
@@ -101,10 +102,7 @@ void CEyedeaCalibrationTabDlg::ThreadFunctionDraw()
 			continue;
 		}
 
-		int len = 921600;
-		ERVS_GetImage(GET_IMAGE_CALIBRATION_FEATURE, 0, (char**)&image_ori.data, &len);
-
-		vImage.CopyOf(&IplImage(image_ori), 1);							//mat to vimage
+		vImage.CopyOf(&IplImage(m_calib_image), 1);							//mat to vimage
 		vImage.DrawToHDC(dc_display_ori.m_hDC, &rect_display_ori);				//draw on display_rect
 	};
 }
@@ -369,4 +367,12 @@ void CEyedeaCalibrationTabDlg::OnBnClickedButtonLoadCalibration()
 	GetDlgItem(IDC_EDIT_CALIBRATION_ROBOT_X)->SetWindowText(str);
 	str.Format(_T("%.3f"), robot_y);
 	GetDlgItem(IDC_EDIT_CALIBRATION_ROBOT_Y)->SetWindowText(str);
+}
+
+
+void CEyedeaCalibrationTabDlg::OnBnClickedButtonGetCalibrationImage()
+{
+	// TODO: Add your control notification handler code here
+	int len = 921600;
+	ERVS_GetImage(GET_IMAGE_CALIBRATION_FEATURE, 0, (char**)&m_calib_image.data, &len);
 }

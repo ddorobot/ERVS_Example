@@ -1301,6 +1301,18 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindGetInfo2()
 		float *p_camera_center_y = NULL;
 		float *p_robot_center_x = NULL;
 		float *p_robot_center_y = NULL;
+
+		float *p_camera_bound_center_x = NULL;
+		float *p_camera_bound_center_y = NULL;
+		float *p_robot_bound_center_x = NULL;
+		float *p_robot_bound_center_y = NULL;
+
+		float *p_camera_mass_center_x = NULL;
+		float *p_camera_mass_center_y = NULL;
+		float *p_robot_mass_center_x = NULL;
+		float *p_robot_mass_center_y = NULL;
+
+
 		float *p_angle = NULL;
 		float *p_type = NULL;
 		float *p_score = NULL;
@@ -1310,7 +1322,14 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindGetInfo2()
 		GetDlgItem(IDC_EDIT_FIND_MAX_COUNT)->GetWindowText(str);
 		int nMaxObjects = _ttoi(str);
 
-		int nObject = ERVS_GetFindObjectInfo(user_index, nMaxObjects, &p_id, &p_camera_center_x, &p_camera_center_y, &p_robot_center_x, &p_robot_center_y, &p_angle, &p_type, &p_score);
+		int nObject = ERVS_GetFindObjectInfo(user_index, nMaxObjects, 
+												&p_id, 
+												&p_camera_center_x, &p_camera_center_y, &p_robot_center_x, &p_robot_center_y, 
+												&p_camera_bound_center_x, &p_camera_bound_center_y, &p_robot_bound_center_x, &p_robot_bound_center_y,
+												&p_camera_mass_center_x, &p_camera_mass_center_y, &p_robot_mass_center_x, &p_robot_mass_center_y,
+												&p_angle, 
+												&p_type, 
+												&p_score);
 
 		time_t curr_time;
 		struct tm *curr_tm;
@@ -1332,7 +1351,12 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindGetInfo2()
 			//printf("%s", str);
 			if ((int)p_id[i] % 1000 == 0)
 			{
-				str.Format(_T(" - [%d] : id=%04d / type=%d / cpos=(%.2f, %.2f) / rpos=(%.2f, %.2f) / angle=%d / score=%.2f\n"), index, (int)p_id[i], (int)p_type[i], p_camera_center_x[i], p_camera_center_y[i], p_robot_center_x[i], p_robot_center_y[i], (int)p_angle[i], p_score[i]);
+				str.Format(_T(" - [%d] : id=%04d/type=%d/cpos=(%.2f,%.2f)/rpos=(%.2f,%.2f)/cbpos=(%.2f,%.2f)/rbpos=(%.2f,%.2f)/cmpos=(%.2f,%.2f)/rmpos=(%.2f,%.2f)/angle=%d/score=%.2f\n"), 
+							index, (int)p_id[i], (int)p_type[i], 
+							p_camera_center_x[i], p_camera_center_y[i], p_robot_center_x[i], p_robot_center_y[i], 
+							p_camera_bound_center_x[i], p_camera_bound_center_y[i], p_robot_bound_center_x[i], p_robot_bound_center_y[i],
+							p_camera_mass_center_x[i], p_camera_mass_center_y[i], p_robot_mass_center_x[i], p_robot_mass_center_y[i],
+							(int)p_angle[i], p_score[i]);
 
 				MyTextOut(str, RGB(255, 100, 0));
 
@@ -1349,7 +1373,12 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindGetInfo2()
 			}
 			else
 			{
-				str.Format(_T("       : id=%04d / type=%d / cpos=(%.2f, %.2f) / rpos=(%.2f, %.2f) / angle=%d / score=%.2f\n"), (int)p_id[i], (int)p_type[i], p_camera_center_x[i], p_camera_center_y[i], p_robot_center_x[i], p_robot_center_y[i], (int)p_angle[i], p_score[i]);
+				str.Format(_T("       : id=%04d/type=%d/cpos=(%.2f,%.2f)/rpos=(%.2f,%.2f)/cbpos=(%.2f,%.2f)/rbpos=(%.2f,%.2f)/cmpos=(%.2f,%.2f)/rmpos=(%.2f,%.2f)/angle=%d/score=%.2f\n"),
+							(int)p_id[i], (int)p_type[i], 
+							p_camera_center_x[i], p_camera_center_y[i], p_robot_center_x[i], p_robot_center_y[i], 
+							p_camera_bound_center_x[i], p_camera_bound_center_y[i], p_robot_bound_center_x[i], p_robot_bound_center_y[i],
+							p_camera_mass_center_x[i], p_camera_mass_center_y[i], p_robot_mass_center_x[i], p_robot_mass_center_y[i],
+							(int)p_angle[i], p_score[i]);
 				MyTextOut(str, RGB(0, 100, 255));
 
 				if (hRoot != NULL)
@@ -1373,6 +1402,14 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindGetInfo2()
 		if (p_camera_center_y != NULL) free(p_camera_center_y);
 		if (p_robot_center_x != NULL) free(p_robot_center_x);
 		if (p_robot_center_y != NULL) free(p_robot_center_y);
+		if (p_camera_bound_center_x != NULL) free(p_camera_bound_center_x);
+		if (p_camera_bound_center_y != NULL) free(p_camera_bound_center_y);
+		if (p_robot_bound_center_x != NULL) free(p_robot_bound_center_x);
+		if (p_robot_bound_center_y != NULL) free(p_robot_bound_center_y);
+		if (p_camera_mass_center_x != NULL) free(p_camera_mass_center_x);
+		if (p_camera_mass_center_y != NULL) free(p_camera_mass_center_y);
+		if (p_robot_mass_center_x != NULL) free(p_robot_mass_center_x);
+		if (p_robot_mass_center_y != NULL) free(p_robot_mass_center_y);
 		if (p_angle != NULL) free(p_angle);
 		if (p_type != NULL) free(p_type);
 		if (p_score != NULL) free(p_score);

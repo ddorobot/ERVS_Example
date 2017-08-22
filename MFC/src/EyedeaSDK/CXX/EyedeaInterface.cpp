@@ -10465,7 +10465,7 @@ int CEyedeaInterface::GetFindObjectResultInfo(int base_index, int sub_index, flo
 	return i_histogram_size;
 }
 
-int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, float** out_id, float** out_cx, float** out_cy, float** out_rx, float** out_ry, float** out_angle, float** out_type, float** out_score)
+int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, float** out_id, float** out_cx, float** out_cy, float** out_rx, float** out_ry, float** out_bound_cx, float** out_bound_cy, float** out_bound_rx, float** out_bound_ry, float** out_mass_cx, float** out_mass_cy, float** out_mass_rx, float** out_mass_ry, float** out_angle, float** out_type, float** out_score)
 {
 	boost::unique_lock<boost::mutex> scoped_lock(mutex);
 
@@ -10524,6 +10524,14 @@ int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, float*
 	int i_camera_y = 0;
 	int i_robot_x = 0;
 	int i_robot_y = 0;
+	int i_camera_bound_x = 0;
+	int i_camera_bound_y = 0;
+	int i_robot_bound_x = 0;
+	int i_robot_bound_y = 0;
+	int i_camera_mass_x = 0;
+	int i_camera_mass_y = 0;
+	int i_robot_mass_x = 0;
+	int i_robot_mass_y = 0;
 	int i_angle = 0;
 	int i_type = 0;
 	int i_score = 0;
@@ -10540,13 +10548,21 @@ int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, float*
 		nObject |= ((int)data[index++] << 8) & 0x0000FF00;
 		nObject |= ((int)data[index++]) & 0x000000FF;
 
-		if (nObject > 0 && len >= 4 + (32* nObject))
+		if (nObject > 0 && len >= 4 + ((16*4)* nObject))
 		{
 			if ((*out_id) != NULL)	free((*out_id));
 			if ((*out_cx) != NULL)	free((*out_cx));
 			if ((*out_cy) != NULL)	free((*out_cy));
 			if ((*out_rx) != NULL)	free((*out_rx));
 			if ((*out_ry) != NULL)	free((*out_ry));
+			if ((*out_bound_cx) != NULL)	free((*out_bound_cx));
+			if ((*out_bound_cy) != NULL)	free((*out_bound_cy));
+			if ((*out_bound_rx) != NULL)	free((*out_bound_rx));
+			if ((*out_bound_ry) != NULL)	free((*out_bound_ry));
+			if ((*out_mass_cx) != NULL)	free((*out_mass_cx));
+			if ((*out_mass_cy) != NULL)	free((*out_mass_cy));
+			if ((*out_mass_rx) != NULL)	free((*out_mass_rx));
+			if ((*out_mass_ry) != NULL)	free((*out_mass_ry));
 			if ((*out_angle) != NULL)	free((*out_angle));
 			if ((*out_type) != NULL)	free((*out_type));
 			if ((*out_score) != NULL)	free((*out_score));
@@ -10557,6 +10573,14 @@ int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, float*
 			(*out_cy) = (float *)malloc(sizeof(float)*nObject);
 			(*out_rx) = (float *)malloc(sizeof(float)*nObject);
 			(*out_ry) = (float *)malloc(sizeof(float)*nObject);
+			(*out_bound_cx) = (float *)malloc(sizeof(float)*nObject);
+			(*out_bound_cy) = (float *)malloc(sizeof(float)*nObject);
+			(*out_bound_rx) = (float *)malloc(sizeof(float)*nObject);
+			(*out_bound_ry) = (float *)malloc(sizeof(float)*nObject);
+			(*out_mass_cx) = (float *)malloc(sizeof(float)*nObject);
+			(*out_mass_cy) = (float *)malloc(sizeof(float)*nObject);
+			(*out_mass_rx) = (float *)malloc(sizeof(float)*nObject);
+			(*out_mass_ry) = (float *)malloc(sizeof(float)*nObject);
 			(*out_angle) = (float *)malloc(sizeof(float)*nObject);
 			(*out_type) = (float *)malloc(sizeof(float)*nObject);
 			(*out_score) = (float *)malloc(sizeof(float)*nObject);
@@ -10594,6 +10618,56 @@ int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, float*
 				i_robot_y |= ((int)data[index++] << 8) & 0x0000FF00;
 				i_robot_y |= ((int)data[index++]) & 0x000000FF;
 
+				//bound center
+				//i_camera_x
+				i_camera_bound_x = ((int)data[index++] << 24) & 0xFF000000;
+				i_camera_bound_x |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_camera_bound_x |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_camera_bound_x |= ((int)data[index++]) & 0x000000FF;
+
+				//i_camera_y
+				i_camera_bound_y = ((int)data[index++] << 24) & 0xFF000000;
+				i_camera_bound_y |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_camera_bound_y |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_camera_bound_y |= ((int)data[index++]) & 0x000000FF;
+
+				//i_robot_x
+				i_robot_bound_x = ((int)data[index++] << 24) & 0xFF000000;
+				i_robot_bound_x |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_robot_bound_x |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_robot_bound_x |= ((int)data[index++]) & 0x000000FF;
+
+				//i_robot_y
+				i_robot_bound_y = ((int)data[index++] << 24) & 0xFF000000;
+				i_robot_bound_y |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_robot_bound_y |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_robot_bound_y |= ((int)data[index++]) & 0x000000FF;
+
+				//center of mass
+				//i_camera_x
+				i_camera_mass_x = ((int)data[index++] << 24) & 0xFF000000;
+				i_camera_mass_x |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_camera_mass_x |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_camera_mass_x |= ((int)data[index++]) & 0x000000FF;
+
+				//i_camera_y
+				i_camera_mass_y = ((int)data[index++] << 24) & 0xFF000000;
+				i_camera_mass_y |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_camera_mass_y |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_camera_mass_y |= ((int)data[index++]) & 0x000000FF;
+
+				//i_robot_x
+				i_robot_mass_x = ((int)data[index++] << 24) & 0xFF000000;
+				i_robot_mass_x |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_robot_mass_x |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_robot_mass_x |= ((int)data[index++]) & 0x000000FF;
+
+				//i_robot_y
+				i_robot_mass_y = ((int)data[index++] << 24) & 0xFF000000;
+				i_robot_mass_y |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_robot_mass_y |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_robot_mass_y |= ((int)data[index++]) & 0x000000FF;
+
 				//i_angle
 				i_angle = ((int)data[index++] << 24) & 0xFF000000;
 				i_angle |= ((int)data[index++] << 16) & 0x00FF0000;
@@ -10625,6 +10699,14 @@ int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, float*
 				(*out_cy)[i] = (float)i_camera_y / (float)scale_factor;
 				(*out_rx)[i] = (float)i_robot_x / (float)scale_factor;
 				(*out_ry)[i] = (float)i_robot_y / (float)scale_factor;
+				(*out_bound_cx)[i] = (float)i_camera_bound_x / (float)scale_factor;
+				(*out_bound_cy)[i] = (float)i_camera_bound_y / (float)scale_factor;
+				(*out_bound_rx)[i] = (float)i_robot_bound_x / (float)scale_factor;
+				(*out_bound_ry)[i] = (float)i_robot_bound_y / (float)scale_factor;
+				(*out_mass_cx)[i] = (float)i_camera_mass_x / (float)scale_factor;
+				(*out_mass_cy)[i] = (float)i_camera_mass_y / (float)scale_factor;
+				(*out_mass_rx)[i] = (float)i_robot_mass_x / (float)scale_factor;
+				(*out_mass_ry)[i] = (float)i_robot_mass_y / (float)scale_factor;
 				(*out_angle)[i] = (float)i_angle / (float)scale_factor;
 				(*out_type)[i] = (float)i_type / (float)scale_factor;
 				(*out_score)[i] = (float)i_score / (float)scale_factor;

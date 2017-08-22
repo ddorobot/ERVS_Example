@@ -1901,6 +1901,7 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindObjectDetectionLevelGet()
 	int level = ERVS_GetVisionConfigOption(VISION_CONFIG_FIND_OBJECT_LEVEL);
 	float min_angle = ERVS_GetVisionConfigOption(VISION_CONFIG_L_MIN_ANGLE2);
 	float max_angle = ERVS_GetVisionConfigOption(VISION_CONFIG_L_MAX_ANGLE2);
+	float positive_rate = ERVS_GetVisionConfigOption(VISION_CONFIG_POSITIVE_RATE);
 
 	CString str;
 	str.Format(_T("%d"), level);
@@ -1910,6 +1911,9 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindObjectDetectionLevelGet()
 	GetDlgItem(IDC_EDIT_ANGLE_MIN)->SetWindowText(str);
 	str.Format(_T("%d"), (int)max_angle);
 	GetDlgItem(IDC_EDIT_ANGLE_MAX)->SetWindowText(str);
+
+	str.Format(_T("%.2f"), positive_rate);
+	GetDlgItem(IDC_EDIT_POSITIVE_RATE)->SetWindowText(str);
 }
 
 
@@ -1924,13 +1928,18 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindObjectDetectionLevelSet()
 
 	int min_angle = 0; //ERVS_GetVisionConfigOption(VISION_CONFIG_L_MIN_ANGLE);
 	int max_angle = 0; //ERVS_GetVisionConfigOption(VISION_CONFIG_L_MAX_ANGLE);
+	float positive_rate = 0.0;
+
 	GetDlgItem(IDC_EDIT_ANGLE_MIN)->GetWindowText(str);
 	min_angle = _ttoi(str);
 	GetDlgItem(IDC_EDIT_ANGLE_MAX)->GetWindowText(str);
 	max_angle = _ttoi(str);
+	GetDlgItem(IDC_EDIT_POSITIVE_RATE)->GetWindowText(str);
+	positive_rate = _ttof(str);
 
 	ERVS_SetVisionConfigOption(VISION_CONFIG_L_MIN_ANGLE2, min_angle);
 	ERVS_SetVisionConfigOption(VISION_CONFIG_L_MAX_ANGLE2, max_angle);
+	ERVS_SetVisionConfigOption(VISION_CONFIG_POSITIVE_RATE, positive_rate);
 
 	//cross check
 	OnBnClickedButtonFindObjectDetectionLevelGet();

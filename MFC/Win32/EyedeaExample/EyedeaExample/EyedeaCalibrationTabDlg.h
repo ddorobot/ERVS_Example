@@ -51,4 +51,5 @@ protected:
 public:
 	afx_msg void OnBnClickedButtonGetCalibrationImage();
 	cv::Mat m_calib_image;
+	void Update();
 };

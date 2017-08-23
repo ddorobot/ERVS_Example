@@ -898,6 +898,9 @@ void CEyedeaExampleDlg::OnTcnSelchangeTabMy(int index)
 		m_tab_dlg_vision_config.m_b_draw_pause = true;
 		//m_tab_dlg_searcharea.m_b_draw_pause = true;
 
+		//m_tab_dlg_vision_config.OnBnClickedButtonCalibrationGetListInfo();
+
+		m_tab_dlg_calibration.Update();
 		m_tab_dlg_calibration.ShowWindow(SW_SHOW);
 		m_pwndShow = &m_tab_dlg_calibration;
 		break;

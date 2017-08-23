@@ -338,13 +338,11 @@ void CEyedeaCalibrationTabDlg::OnLButtonDown(UINT nFlags, CPoint point)
 	CDialogEx::OnLButtonDown(nFlags, point);
 }
 
-
 void CEyedeaCalibrationTabDlg::OnBnClickedButtonSaveCalibration()
 {
 	// TODO: Add your control notification handler code here
 	ERVS_Calibration_Save();
 }
-
 
 void CEyedeaCalibrationTabDlg::OnBnClickedButtonLoadCalibration()
 {
@@ -378,4 +376,21 @@ void CEyedeaCalibrationTabDlg::OnBnClickedButtonGetCalibrationImage()
 		int len = 921600;
 		ERVS_GetImage(GET_IMAGE_CALIBRATION_FEATURE, 0, (char**)&m_calib_image.data, &len);
 	}
+}
+
+void CEyedeaCalibrationTabDlg::Update()
+{
+	OnBnClickedButtonCalibrationChessInfoGet();
+	OnBnClickedButtonCalibrationGetListInfo();
+
+	CString str;
+	str.Format(_T("-"));
+
+	GetDlgItem(IDC_EDIT_CALIBRATION_MOVE_ROBOT_X)->SetWindowText(str);
+	GetDlgItem(IDC_EDIT_CALIBRATION_MOVE_ROBOT_Y)->SetWindowText(str);
+
+	GetDlgItem(IDC_EDIT_CALIBRATION_PIXEL_X)->SetWindowText(str);
+	GetDlgItem(IDC_EDIT_CALIBRATION_PIXEL_Y)->SetWindowText(str);
+	GetDlgItem(IDC_EDIT_CALIBRATION_ROBOT_X)->SetWindowText(str);
+	GetDlgItem(IDC_EDIT_CALIBRATION_ROBOT_Y)->SetWindowText(str);
 }

@@ -1236,12 +1236,58 @@ void CEyedeaCheckDefectTabDlg::RoadAllFromERVS()
 	//OnBnClickedCheckFindMultiObjects();
 	OnBnClickedButtonFindObjectFilterSizeGet();
 	OnBnClickedButtonFindObjectFilterPaddingGet();
-	OnBnClickedCheckDependencySearcharea();
-	OnBnClickedCheckUseCalibrationImage();
-	OnBnClickedCheckHistogram();
-	OnBnClickedCheckFixedArea();
 	OnBnClickedButtonFindObjectDetectionLevelGet();
 	OnBnClickedButtonCheckCameraCalibok();
+
+	//OnBnClickedCheckDependencySearcharea();
+	//check
+	float only_one_option = ERVS_GetVisionConfigOption(SEARCHAREA_VISION_CONFIG_ONLY_ONE_OBJECT);
+	if (only_one_option)
+	{
+		CheckDlgButton(IDC_CHECK_DEPENDENCY_SEARCHAREA, TRUE);
+	}
+	else
+	{
+		CheckDlgButton(IDC_CHECK_DEPENDENCY_SEARCHAREA, FALSE);
+	}
+
+	//OnBnClickedCheckUseCalibrationImage();
+	//check
+	float use_calibration_image = ERVS_GetVisionConfigOption(VISION_CONFIG_USE_CALIBRATION_IMAGE);
+
+	if (use_calibration_image)
+	{
+		CheckDlgButton(IDC_CHECK_USE_CALIBRATION_IMAGE, TRUE);
+	}
+	else
+	{
+		CheckDlgButton(IDC_CHECK_USE_CALIBRATION_IMAGE, FALSE);
+	}
+
+	//OnBnClickedCheckHistogram();
+	//check
+	float use_histogram = ERVS_GetVisionConfigOption(VISION_CONFIG_USE_HISTOGRAM);
+
+	if (use_histogram)
+	{
+		CheckDlgButton(IDC_CHECK_HISTOGRAM, TRUE);
+	}
+	else
+	{
+		CheckDlgButton(IDC_CHECK_HISTOGRAM, FALSE);
+	}
+
+	//OnBnClickedCheckFixedArea();
+	int ret = ERVS_GetOptionFixArea();
+
+	if (ret > 0)
+	{
+		CheckDlgButton(IDC_CHECK_FIXED_AREA, TRUE);
+	}
+	else
+	{
+		CheckDlgButton(IDC_CHECK_FIXED_AREA, FALSE);
+	}
 }
 
 #if 0

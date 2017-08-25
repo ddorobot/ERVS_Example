@@ -1312,7 +1312,7 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindGetInfo2()
 	//Get Select DB Info from Parent List Control
 	int list_num_ui = ((CEyedeaExampleDlg *)GetParent())->m_list_information.GetItemCount();
 	POSITION pos = ((CEyedeaExampleDlg *)GetParent())->m_list_information.GetFirstSelectedItemPosition();
-
+	
 	//Get DB Count
 	int nDB = ERVS_DB_Get_Count();
 	int select_id = ERVS_DB_Get_Select_ID();
@@ -1368,14 +1368,31 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindGetInfo2()
 		GetDlgItem(IDC_EDIT_FIND_MAX_COUNT)->GetWindowText(str);
 		int nMaxObjects = _ttoi(str);
 
-		int nObject = ERVS_GetFindObjectInfo(user_index, nMaxObjects, 
-												&p_id, 
-												&p_camera_center_x, &p_camera_center_y, &p_robot_center_x, &p_robot_center_y, 
-												&p_camera_bound_center_x, &p_camera_bound_center_y, &p_robot_bound_center_x, &p_robot_bound_center_y,
-												&p_camera_mass_center_x, &p_camera_mass_center_y, &p_robot_mass_center_x, &p_robot_mass_center_y,
-												&p_angle, 
-												&p_type, 
-												&p_score);
+		int nObject = 0;
+		BOOL bCheckOptionUsePrevImage = IsDlgButtonChecked(IDC_CHECK_GETINFO_USE_PREV_IMAGE);
+
+		if(bCheckOptionUsePrevImage)
+		{
+			nObject = ERVS_DetectWithPrevImage(user_index, nMaxObjects,
+				&p_id,
+				&p_camera_center_x, &p_camera_center_y, &p_robot_center_x, &p_robot_center_y,
+				&p_camera_bound_center_x, &p_camera_bound_center_y, &p_robot_bound_center_x, &p_robot_bound_center_y,
+				&p_camera_mass_center_x, &p_camera_mass_center_y, &p_robot_mass_center_x, &p_robot_mass_center_y,
+				&p_angle,
+				&p_type,
+				&p_score);
+		}
+		else
+		{
+			nObject = ERVS_DetectWithGrab(user_index, nMaxObjects,
+				&p_id,
+				&p_camera_center_x, &p_camera_center_y, &p_robot_center_x, &p_robot_center_y,
+				&p_camera_bound_center_x, &p_camera_bound_center_y, &p_robot_bound_center_x, &p_robot_bound_center_y,
+				&p_camera_mass_center_x, &p_camera_mass_center_y, &p_robot_mass_center_x, &p_robot_mass_center_y,
+				&p_angle,
+				&p_type,
+				&p_score);
+		}
 
 		time_t curr_time;
 		struct tm *curr_tm;

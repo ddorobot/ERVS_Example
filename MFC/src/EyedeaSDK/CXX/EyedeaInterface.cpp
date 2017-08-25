@@ -10465,7 +10465,7 @@ int CEyedeaInterface::GetFindObjectResultInfo(int base_index, int sub_index, flo
 	return i_histogram_size;
 }
 
-int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, float** out_id, float** out_cx, float** out_cy, float** out_rx, float** out_ry, float** out_bound_cx, float** out_bound_cy, float** out_bound_rx, float** out_bound_ry, float** out_mass_cx, float** out_mass_cy, float** out_mass_rx, float** out_mass_ry, float** out_angle, float** out_type, float** out_score)
+int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, int option, float** out_id, float** out_cx, float** out_cy, float** out_rx, float** out_ry, float** out_bound_cx, float** out_bound_cy, float** out_bound_rx, float** out_bound_ry, float** out_mass_cx, float** out_mass_cy, float** out_mass_rx, float** out_mass_ry, float** out_angle, float** out_type, float** out_score)
 {
 	boost::unique_lock<boost::mutex> scoped_lock(mutex);
 
@@ -10477,7 +10477,7 @@ int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, float*
 
 	char command = COMMAND_GET_FIND_OBJECT_INFO;
 
-	int len = 4 + 4 ;
+	int len = 4 + 4 + 4;
 	unsigned char* data = new unsigned char[len];
 
 	//index
@@ -10492,6 +10492,12 @@ int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, float*
 	data[data_index++] = (max_objects_count & 0x00FF0000) >> 16;
 	data[data_index++] = (max_objects_count & 0x0000FF00) >> 8;
 	data[data_index++] = (max_objects_count & 0x000000FF);
+
+	//option
+	data[data_index++] = (option & 0xFF000000) >> 24;
+	data[data_index++] = (option & 0x00FF0000) >> 16;
+	data[data_index++] = (option & 0x0000FF00) >> 8;
+	data[data_index++] = (option & 0x000000FF);
 
 	unsigned int scale_factor = 1;
 	int ret = 0;

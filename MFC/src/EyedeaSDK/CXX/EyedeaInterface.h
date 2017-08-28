@@ -195,6 +195,7 @@ public:
 	int Calibration_Clear(void);
 	int Calibration_Run(void);
 	int Calibration_GetPoint(const float in_px, const float in_py, float* out_rx, float* out_ry);
+	int Calibration_GetChessPoint(const int index, float* out_rx, float* out_ry);
 	int Calibration_isOK(void);
 	int Calibration_Save(void);
 	int Calibration_Load(void);

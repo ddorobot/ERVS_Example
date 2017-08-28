@@ -10196,6 +10196,85 @@ int CEyedeaInterface::Calibration_GetPoint(const float in_px, const float in_py,
     return ret;
 }
 
+int CEyedeaInterface::Calibration_GetChessPoint(const int index, float* out_rx, float* out_ry)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	//printf("SetSearchArea - %d %d %d %d\n", x, y, w, h);
+
+	char command = COMMAND_CALIBRATION_GETCHESSPOINT;
+
+	int len = 4;
+	unsigned char* data = new unsigned char[len];
+
+	//index
+	data[0] = (index & 0xFF000000) >> 24;
+	data[1] = (index & 0x00FF0000) >> 16;
+	data[2] = (index & 0x0000FF00) >> 8;
+	data[3] = (index & 0x000000FF);
+
+	unsigned int scale_factor = 1000;
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+	if (ret == EYEDEA_ERROR_INVALID_MEMORY)
+	{
+		int sec = 0;
+		while (1)
+		{
+			ret = m_cls_eth_client->Open(m_ip, m_port);
+			if (ret == 0) {
+				ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+				break;
+			}
+			else
+			{
+				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
+				sec++;
+				if (sec >= 60)
+					return ret;
+				continue;
+			}
+		}
+	}
+	if (ret != 0)
+		return ret;
+
+	int i_robot_x = 0;
+	int i_robot_y = 0;
+
+	if (len >= 8)
+	{
+		//i_robot_x
+		i_robot_x = ((int)data[0] << 24) & 0xFF000000;
+		i_robot_x |= ((int)data[1] << 16) & 0x00FF0000;
+		i_robot_x |= ((int)data[2] << 8) & 0x0000FF00;
+		i_robot_x |= ((int)data[3]) & 0x000000FF;
+
+		//i_robot_y
+		i_robot_y = ((int)data[4] << 24) & 0xFF000000;
+		i_robot_y |= ((int)data[5] << 16) & 0x00FF0000;
+		i_robot_y |= ((int)data[6] << 8) & 0x0000FF00;
+		i_robot_y |= ((int)data[7]) & 0x000000FF;
+	}
+
+	(*out_rx) = (float)i_robot_x / (float)scale_factor;
+	(*out_ry) = (float)i_robot_y / (float)scale_factor;
+
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+
+	return ret;
+}
+
 int CEyedeaInterface::GetFindObjectCount(void)
 {
 	boost::unique_lock<boost::mutex> scoped_lock(mutex);

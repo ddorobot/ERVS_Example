@@ -193,6 +193,7 @@ int ERVS_Calibration_Del(int index);
 int ERVS_Calibration_Clear(void);
 int ERVS_Calibration_Run(void);
 int ERVS_Calibration_GetPoint(const float in_px, const float in_py, float* out_rx, float* out_ry);
+int ERVS_Calibration_GetChessPoint(const int index, float* out_rx, float* out_ry);
 int ERVS_Calibration_isOK(void);
 int ERVS_Calibration_Save(void);
 int ERVS_Calibration_Load(void);

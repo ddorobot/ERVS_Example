@@ -67,6 +67,11 @@ BOOL CEyedeaCalibrationTabDlg::OnInitDialog()
 	GetDlgItem(IDC_EDIT_CALIBRATION_PIXEL_Y)->SetWindowText(str);
 	GetDlgItem(IDC_EDIT_CALIBRATION_ROBOT_X)->SetWindowText(str);
 	GetDlgItem(IDC_EDIT_CALIBRATION_ROBOT_Y)->SetWindowText(str);
+
+	GetDlgItem(IDC_EDIT_CALIBRATION_TL_X)->SetWindowText(str);
+	GetDlgItem(IDC_EDIT_CALIBRATION_TL_Y)->SetWindowText(str);
+	GetDlgItem(IDC_EDIT_CALIBRATION_BR_X)->SetWindowText(str);
+	GetDlgItem(IDC_EDIT_CALIBRATION_BR_Y)->SetWindowText(str);
 	
 	m_ImgList.Create(160, 120, ILC_COLOR24, 0, 0); //이미지 아이콘의 크기를 결정하는듯			
 	m_List_calibration.SetImageList(&m_ImgList, LVSIL_NORMAL);
@@ -304,6 +309,31 @@ void CEyedeaCalibrationTabDlg::OnBnClickedButtonCalibrationRun()
 	GetDlgItem(IDC_EDIT_CALIBRATION_ROBOT_X)->SetWindowText(str);
 	str.Format(_T("%.3f"), robot_y);
 	GetDlgItem(IDC_EDIT_CALIBRATION_ROBOT_Y)->SetWindowText(str);
+
+	int number_cols = ERVS_GetVisionConfigOption(VISION_CONFIG_CALIBRATION_CHESS_NUM_COLS);
+	int number_rows = ERVS_GetVisionConfigOption(VISION_CONFIG_CALIBRATION_CHESS_NUM_ROWS);
+
+	//Get Chess Top-Left
+	int top_left_index = (number_rows - 2);
+	float robot_x_on_chess_top_left = 0;
+	float robot_y_on_chess_top_left = 0;
+	ERVS_Calibration_GetChessPoint(top_left_index, &robot_x_on_chess_top_left, &robot_y_on_chess_top_left);
+
+	str.Format(_T("%.3f"), robot_x_on_chess_top_left);
+	GetDlgItem(IDC_EDIT_CALIBRATION_TL_X)->SetWindowText(str);
+	str.Format(_T("%.3f"), robot_y_on_chess_top_left);
+	GetDlgItem(IDC_EDIT_CALIBRATION_TL_Y)->SetWindowText(str);
+
+	//Get Chess Bottom-Right
+	int bottom_right_index = (number_rows - 1) * (number_cols - 2) ;
+	float robot_x_on_chess_bottom_right = 0;
+	float robot_y_on_chess_bottom_right = 0;
+	ERVS_Calibration_GetChessPoint(bottom_right_index, &robot_x_on_chess_bottom_right, &robot_y_on_chess_bottom_right);
+
+	str.Format(_T("%.3f"), robot_x_on_chess_bottom_right);
+	GetDlgItem(IDC_EDIT_CALIBRATION_BR_X)->SetWindowText(str);
+	str.Format(_T("%.3f"), robot_y_on_chess_bottom_right);
+	GetDlgItem(IDC_EDIT_CALIBRATION_BR_Y)->SetWindowText(str);
 }
 
 void CEyedeaCalibrationTabDlg::OnLButtonDown(UINT nFlags, CPoint point)

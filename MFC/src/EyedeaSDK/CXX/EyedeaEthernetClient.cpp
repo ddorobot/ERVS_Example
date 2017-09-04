@@ -90,12 +90,21 @@ int CEyedeaEthernetClient::Open(char* ip, int port)
 		do {
 			m_io_service->run_one();
 		} while (ec == boost::asio::error::would_block);
-		if (ec || !m_s->is_open())
+		if (ec || !m_s->is_open() || TimeOut == 1)
 		{
 			//cout << "error happend in socket connect" << endl;
-
+			m_s->close();
 			delete m_s;
 			m_s = NULL;
+			delete m_timer;
+			delete m_resolver;
+			delete m_io_service;
+			m_timer = NULL;
+			m_resolver = NULL;
+			m_io_service = NULL;
+
+			TimeOut = 0;
+
 			return EYEDEA_ERROR_SOCKET_CONNECT;
 		}
 		m_timer->cancel();
@@ -140,6 +149,8 @@ void CEyedeaEthernetClient::Close()
 
 	//cout << "close call" << endl;
 	//m_s->cancel();
+	TimeOut = 1;
+	/*
 	m_s->close();
 	delete m_timer;
 	//delete m_s;
@@ -149,9 +160,10 @@ void CEyedeaEthernetClient::Close()
 	//m_s = NULL;
 	m_resolver = NULL;
 	m_io_service = NULL;
+	*/
 }
 
-int CEyedeaEthernetClient::Send(char command, unsigned int* scalefactor, unsigned char** out_data, int* len) 
+int CEyedeaEthernetClient::Send(char command, unsigned int* scalefactor, unsigned char** out_data, int* len)
 {
 #if 0
 	if (client_socket < 0)
@@ -320,18 +332,24 @@ int CEyedeaEthernetClient::Send(char command, unsigned int* scalefactor, unsigne
 		//head data
 		//-------------------------------------------------------------
 
-		if (data_length > (*len))
-		{
-			if ((*out_data) != NULL)
+		if (get_command != COMMAND_GET_ZOOM_IMAGE && get_command != COMMAND_GET_IMAGE && get_command != COMMAND_GET_BASE_IMAGE &&
+			get_command != COMMAND_GET_RESULT_IMAGE && get_command != COMMAND_GET_RESULT_IMAGE_LOCAL && get_command != COMMAND_GET_RESULT_IMAGE_GLOBAL &&
+			get_command != COMMAND_GET_OBJECT_IMAGE && get_command != COMMAND_GET_IMAGE_W_OPTION && get_command != COMMAND_CALIBRATION_GET_IMAGE &&
+			get_command != COMMAND_GET_FIND_OBJECT_IMAGE) {
+			if (data_length > (*len))
 			{
-				delete (*out_data);
-				(*out_data) = NULL;
+				if ((*out_data) != NULL)
+				{
+					delete (*out_data);
+					(*out_data) = NULL;
+				}
+
+				//printf("new data\n");
+
+				(*out_data) = new unsigned char[data_length];
 			}
-
-			//printf("new data\n");
-
-			(*out_data) = new unsigned char[data_length];
 		}
+
 		//printf("get_command = %d\n", get_command);
 		//printf(" = data_length = %d\n", data_length);
 

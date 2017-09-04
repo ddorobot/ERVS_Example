@@ -6124,8 +6124,7 @@ int CEyedeaInterface::GetOptionFixSearchArea(void)
 		ret = (int)data[0];
 	}
 
-	//printf("int ret = 0; ret =%d\n", ret);
-	//printf("len = %d\n", len);
+	//printf("int ret = 0;	//printf("len = %d\n", len);
 
 	delete data;
 	data = NULL;
@@ -6184,8 +6183,7 @@ int CEyedeaInterface::GetOptionFixSearchUserRoi(void)
 		ret = (int)data[0];
 	}
 
-	//printf("int ret = 0; ret =%d\n", ret);
-	//printf("len = %d\n", len);
+	//printf("int ret = 0;	//printf("len = %d\n", len);
 
 	delete data;
 	data = NULL;
@@ -6244,8 +6242,7 @@ unsigned int CEyedeaInterface::GetNewID(void)
 		ret = (int)data[0];
 	}
 
-	//printf("int ret = 0; ret =%d\n", ret);
-	//printf("len = %d\n", len);
+	//printf("int ret = 0;	//printf("len = %d\n", len);
 
 	delete data;
 	data = NULL;
@@ -7082,8 +7079,7 @@ unsigned int CEyedeaInterface::GetCheckDefectLinstNum(void)
 		ret = (int)data[0];
 	}
 
-	//printf("int ret = 0; ret =%d\n", ret);
-	//printf("len = %d\n", len);
+	//printf("int ret = 0;	//printf("len = %d\n", len);
 
 	delete data;
 	data = NULL;
@@ -7141,8 +7137,7 @@ unsigned int CEyedeaInterface::GetObjectLinstNum(void)
 		ret = (int)data[0];
 	}
 
-	//printf("int ret = 0; ret =%d\n", ret);
-	//printf("len = %d\n", len);
+	//printf("int ret = 0;	//printf("len = %d\n", len);
 
 	delete data;
 	data = NULL;
@@ -7171,7 +7166,9 @@ int CEyedeaInterface::CreateSocket(char* ip, int port)
 
 	int ret;
 
-	int sec = 0;
+	//int sec = 0;
+
+	/*
 	while(1){
 		ret = m_cls_eth_client->Open(ip, port);
 		if(ret == 0)
@@ -7186,6 +7183,15 @@ int CEyedeaInterface::CreateSocket(char* ip, int port)
 		}
 	}
 	//return m_cls_eth_client->Open(ip, port);
+	*/
+	ret = m_cls_eth_client->Open(ip, port);
+
+	if (ret != 0)
+	{
+		delete m_cls_eth_client;
+		m_cls_eth_client = NULL;
+	}
+
 	return ret;
 }
 

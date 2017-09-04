@@ -98,6 +98,7 @@ BEGIN_MESSAGE_MAP(CEyedeaCheckDefectTabDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_CHECK_HISTOGRAM, &CEyedeaCheckDefectTabDlg::OnBnClickedCheckHistogram)
 	//ON_LBN_DBLCLK(IDC_LIST_RESULT, &CEyedeaCheckDefectTabDlg::OnLbnDblclkListResult)
 	ON_NOTIFY(NM_DBLCLK, IDC_TREE_RESULT, &CEyedeaCheckDefectTabDlg::OnNMDblclkTreeResult)
+	ON_BN_CLICKED(IDC_CHECK_ONE_OF_SUBS, &CEyedeaCheckDefectTabDlg::OnBnClickedCheckOneOfSubs)
 END_MESSAGE_MAP()
 
 
@@ -1288,6 +1289,18 @@ void CEyedeaCheckDefectTabDlg::RoadAllFromERVS()
 	{
 		CheckDlgButton(IDC_CHECK_FIXED_AREA, FALSE);
 	}
+
+	//check
+	float only_one_of_subs = ERVS_GetVisionConfigOption(VISION_CONFIG_FIND_ONE_OF_SUBS);
+
+	if (only_one_of_subs)
+	{
+		CheckDlgButton(IDC_CHECK_ONE_OF_SUBS, TRUE);
+}
+	else
+	{
+		CheckDlgButton(IDC_CHECK_ONE_OF_SUBS, FALSE);
+	}
 }
 
 #if 0
@@ -2237,4 +2250,31 @@ void CEyedeaCheckDefectTabDlg::OnNMDblclkTreeResult(NMHDR *pNMHDR, LRESULT *pRes
 	}
 	
 	*pResult = 1;
+}
+
+void CEyedeaCheckDefectTabDlg::OnBnClickedCheckOneOfSubs()
+{
+	// TODO: Add your control notification handler code here
+	BOOL bCheckOptionOneOfSubs = IsDlgButtonChecked(IDC_CHECK_ONE_OF_SUBS);
+
+	if (bCheckOptionOneOfSubs)
+	{
+		ERVS_SetVisionConfigOption(VISION_CONFIG_FIND_ONE_OF_SUBS, 1);
+	}
+	else
+	{
+		ERVS_SetVisionConfigOption(VISION_CONFIG_FIND_ONE_OF_SUBS, 0);
+	}
+
+	//check
+	float only_one_of_subs = ERVS_GetVisionConfigOption(VISION_CONFIG_FIND_ONE_OF_SUBS);
+
+	if (only_one_of_subs)
+	{
+		CheckDlgButton(IDC_CHECK_ONE_OF_SUBS, TRUE);
+	}
+	else
+	{
+		CheckDlgButton(IDC_CHECK_ONE_OF_SUBS, FALSE);
+	}
 }

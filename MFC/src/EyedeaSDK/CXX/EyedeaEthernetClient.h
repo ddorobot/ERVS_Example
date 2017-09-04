@@ -169,6 +169,8 @@ private:
 	char m_buf[DEFAULT_BUFLEN2];
 
 	CEyedeaCheckData m_cls_check_data;
+
+	int TimeOut = 0;
 };
 
 #endif

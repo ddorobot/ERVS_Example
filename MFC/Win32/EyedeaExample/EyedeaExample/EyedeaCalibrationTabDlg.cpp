@@ -42,6 +42,7 @@ BEGIN_MESSAGE_MAP(CEyedeaCalibrationTabDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_SAVE_CALIBRATION, &CEyedeaCalibrationTabDlg::OnBnClickedButtonSaveCalibration)
 	ON_BN_CLICKED(IDC_BUTTON_LOAD_CALIBRATION, &CEyedeaCalibrationTabDlg::OnBnClickedButtonLoadCalibration)
 	ON_BN_CLICKED(IDC_BUTTON_GET_CALIBRATION_IMAGE, &CEyedeaCalibrationTabDlg::OnBnClickedButtonGetCalibrationImage)
+	ON_BN_CLICKED(IDC_BUTTON_CALIBRATION_COPY, &CEyedeaCalibrationTabDlg::OnBnClickedButtonCalibrationCopy)
 END_MESSAGE_MAP()
 
 
@@ -288,13 +289,8 @@ void CEyedeaCalibrationTabDlg::OnBnClickedButtonCalibrationGetListInfo3()
 	OnBnClickedButtonCalibrationGetListInfo();
 }
 
-
-void CEyedeaCalibrationTabDlg::OnBnClickedButtonCalibrationRun()
+void CEyedeaCalibrationTabDlg::UpdateDataCalibrationRun(void)
 {
-	// TODO: Add your control notification handler code here
-	//pause 
-	ERVS_Calibration_Run();
-
 	//check calibration result
 	float robot_x = 0;
 	float robot_y = 0;
@@ -325,7 +321,7 @@ void CEyedeaCalibrationTabDlg::OnBnClickedButtonCalibrationRun()
 	GetDlgItem(IDC_EDIT_CALIBRATION_TL_Y)->SetWindowText(str);
 
 	//Get Chess Bottom-Right
-	int bottom_right_index = (number_rows - 1) * (number_cols - 2) ;
+	int bottom_right_index = (number_rows - 1) * (number_cols - 2);
 	float robot_x_on_chess_bottom_right = 0;
 	float robot_y_on_chess_bottom_right = 0;
 	ERVS_Calibration_GetChessPoint(bottom_right_index, &robot_x_on_chess_bottom_right, &robot_y_on_chess_bottom_right);
@@ -334,6 +330,17 @@ void CEyedeaCalibrationTabDlg::OnBnClickedButtonCalibrationRun()
 	GetDlgItem(IDC_EDIT_CALIBRATION_BR_X)->SetWindowText(str);
 	str.Format(_T("%.3f"), robot_y_on_chess_bottom_right);
 	GetDlgItem(IDC_EDIT_CALIBRATION_BR_Y)->SetWindowText(str);
+
+	UpdateDataCalibrationRun();
+}
+
+void CEyedeaCalibrationTabDlg::OnBnClickedButtonCalibrationRun()
+{
+	// TODO: Add your control notification handler code here
+	//pause 
+	ERVS_Calibration_Run();
+
+	
 }
 
 void CEyedeaCalibrationTabDlg::OnLButtonDown(UINT nFlags, CPoint point)
@@ -423,4 +430,19 @@ void CEyedeaCalibrationTabDlg::Update()
 	GetDlgItem(IDC_EDIT_CALIBRATION_PIXEL_Y)->SetWindowText(str);
 	GetDlgItem(IDC_EDIT_CALIBRATION_ROBOT_X)->SetWindowText(str);
 	GetDlgItem(IDC_EDIT_CALIBRATION_ROBOT_Y)->SetWindowText(str);
+}
+
+void CEyedeaCalibrationTabDlg::OnBnClickedButtonCalibrationCopy()
+{
+	// TODO: Add your control notification handler code here
+	CString str;
+	GetDlgItem(IDC_EDIT_CALIBRATION_COPY_ID)->GetWindowText(str);
+	int calibration_copy_id = _ttoi(str);
+
+	ERVS_Calibration_Copy(calibration_copy_id);
+
+	OnBnClickedButtonCalibrationGetListInfo();
+
+	UpdateDataCalibrationRun();
+
 }

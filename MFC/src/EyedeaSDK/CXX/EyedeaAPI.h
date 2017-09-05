@@ -197,6 +197,7 @@ int ERVS_Calibration_GetChessPoint(const int index, float* out_rx, float* out_ry
 int ERVS_Calibration_isOK(void);
 int ERVS_Calibration_Save(void);
 int ERVS_Calibration_Load(void);
+int ERVS_Calibration_Copy(const int id);
 
 int ERVS_SetLog(int logoption);
 

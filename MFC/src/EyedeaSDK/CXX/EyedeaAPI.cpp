@@ -748,6 +748,11 @@ int ERVS_Calibration_GetChessPoint(const int index, float* out_rx, float* out_ry
 	return g_cls_interface.Calibration_GetChessPoint(index, out_rx, out_ry);
 }
 
+int ERVS_Calibration_Copy(const int id)
+{
+	return g_cls_interface.Calibration_Copy(id);
+}
+
 int ERVS_GetFindObjectCount(void)
 {
 	return g_cls_interface.GetFindObjectCount();

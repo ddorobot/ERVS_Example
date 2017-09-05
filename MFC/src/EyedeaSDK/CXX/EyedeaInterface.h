@@ -199,6 +199,7 @@ public:
 	int Calibration_isOK(void);
 	int Calibration_Save(void);
 	int Calibration_Load(void);
+	int Calibration_Copy(const int id);
 
 	int SetLog(int logoption);
 

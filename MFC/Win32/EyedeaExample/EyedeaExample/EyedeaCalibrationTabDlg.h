@@ -45,6 +45,7 @@ public:
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnBnClickedButtonSaveCalibration();
 	afx_msg void OnBnClickedButtonLoadCalibration();
+	void UpdateDataCalibrationRun(void);
 
 protected:
 	CBitmap* IplImageToCBitmap(IplImage* img);
@@ -52,4 +53,5 @@ public:
 	afx_msg void OnBnClickedButtonGetCalibrationImage();
 	cv::Mat m_calib_image;
 	void Update();
+	afx_msg void OnBnClickedButtonCalibrationCopy();
 };

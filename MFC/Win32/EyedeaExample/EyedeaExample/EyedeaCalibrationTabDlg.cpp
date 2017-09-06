@@ -331,16 +331,15 @@ void CEyedeaCalibrationTabDlg::UpdateDataCalibrationRun(void)
 	str.Format(_T("%.3f"), robot_y_on_chess_bottom_right);
 	GetDlgItem(IDC_EDIT_CALIBRATION_BR_Y)->SetWindowText(str);
 
-	UpdateDataCalibrationRun();
+	//UpdateDataCalibrationRun();
 }
 
 void CEyedeaCalibrationTabDlg::OnBnClickedButtonCalibrationRun()
 {
 	// TODO: Add your control notification handler code here
-	//pause 
 	ERVS_Calibration_Run();
 
-	
+	UpdateDataCalibrationRun();
 }
 
 void CEyedeaCalibrationTabDlg::OnLButtonDown(UINT nFlags, CPoint point)

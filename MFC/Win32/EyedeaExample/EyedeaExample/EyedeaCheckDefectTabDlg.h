@@ -122,4 +122,5 @@ public:
 	CTreeCtrl m_tree_result;
 	afx_msg void OnNMDblclkTreeResult(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnBnClickedCheckOneOfSubs();
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };

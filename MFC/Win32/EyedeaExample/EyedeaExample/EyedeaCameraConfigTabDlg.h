@@ -34,4 +34,5 @@ public:
 	afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
 	afx_msg void OnBnClickedButtonCameraTakepic();
 	afx_msg void OnBnClickedButtonCameraTimerLed();
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };

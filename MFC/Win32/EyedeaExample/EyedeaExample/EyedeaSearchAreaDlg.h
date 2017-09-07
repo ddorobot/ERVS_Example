@@ -43,4 +43,5 @@ public:
 	afx_msg void OnBnClickedButtonSearchAreaConfigGet();
 	afx_msg void OnBnClickedButtonSearchAreaConfigSet();
 	afx_msg void OnBnClickedButtonSearchAreaConfigRemake();
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };

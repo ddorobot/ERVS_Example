@@ -54,4 +54,5 @@ public:
 	cv::Mat m_calib_image;
 	void Update();
 	afx_msg void OnBnClickedButtonCalibrationCopy();
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };

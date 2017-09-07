@@ -67,4 +67,5 @@ public:
 	afx_msg void OnBnClickedButtonApplyVisionConfigLocal();
 	void RoadAllFromERVS();
 	afx_msg void OnBnClickedButtonBgLearningStart();
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };

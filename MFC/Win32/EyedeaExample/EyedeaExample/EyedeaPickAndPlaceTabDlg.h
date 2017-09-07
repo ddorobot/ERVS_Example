@@ -31,4 +31,5 @@ public:
 	void ThreadFunctionDraw();
 	bool m_b_draw_pause;
 	virtual BOOL OnInitDialog();
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };

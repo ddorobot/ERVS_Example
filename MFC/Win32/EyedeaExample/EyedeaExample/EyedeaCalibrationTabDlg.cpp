@@ -445,3 +445,18 @@ void CEyedeaCalibrationTabDlg::OnBnClickedButtonCalibrationCopy()
 	UpdateDataCalibrationRun();
 
 }
+
+
+BOOL CEyedeaCalibrationTabDlg::PreTranslateMessage(MSG* pMsg)
+{
+	// TODO: Add your specialized code here and/or call the base class
+	if (pMsg->message == WM_KEYDOWN)
+	{
+		if (pMsg->wParam == VK_RETURN || pMsg->wParam == VK_ESCAPE)
+		{
+			return TRUE;                // Do not process further
+		}
+	}
+
+	return CDialogEx::PreTranslateMessage(pMsg);
+}

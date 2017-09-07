@@ -974,6 +974,28 @@ void CEyedeaExampleDlg::ManageDBListInfo(void)
 	int nDB = ERVS_DB_Get_Count();
 	int select_id = ERVS_DB_Get_Select_ID();
 
+#if 0
+	CString pszString;
+	if (select_id > 0)
+	{
+		pszString.Format(_T("[%d] Object Detection"), select_id);
+	}
+	else
+	{
+		pszString.Format(_T("[-] Object Detection"));
+	}
+
+	TCITEM tcItem;
+	//  Get the current tab item text.
+	TCHAR buffer[256] = { 0 };
+	tcItem.pszText = buffer;
+	tcItem.cchTextMax = 256;
+	tcItem.mask = TCIF_TEXT;
+	tcItem.pszText = pszString.LockBuffer();
+
+	m_tab_mode.SetItem(1, &tcItem);
+#endif
+
 	int nItem = 0;
 	for (nItem = 0; nItem < m_list_information.GetItemCount(); )
 	{
@@ -1312,4 +1334,19 @@ void CEyedeaExampleDlg::OnBnClickedButtonListLoad()
 	std::string str_path = std::string(CT2CA(strDBPath.operator LPCWSTR()));
 
 	ERVS_FileLoadObjectDBList(str_path);
+}
+
+
+BOOL CEyedeaExampleDlg::PreTranslateMessage(MSG* pMsg)
+{
+	// TODO: Add your specialized code here and/or call the base class
+	if (pMsg->message == WM_KEYDOWN)
+	{
+		if (pMsg->wParam == VK_RETURN || pMsg->wParam == VK_ESCAPE)
+		{
+			return TRUE;                // Do not process further
+		}
+	}
+
+	return CDialogEx::PreTranslateMessage(pMsg);
 }

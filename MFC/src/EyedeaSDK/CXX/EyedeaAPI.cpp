@@ -212,6 +212,11 @@ int ERVS_SetObjectCircle(float x, float y, float r1, float r2)
 	return g_cls_interface.SetObjectCircle(x, y, r1, r2);
 }
 
+int ERVS_SetObjectLine(float x, float y, float w, float h)
+{
+	return g_cls_interface.SetObjectLine(x, y, w, h);
+}
+
 int ERVS_SaveInformation(void)
 {
 	return g_cls_interface.SaveInformation();

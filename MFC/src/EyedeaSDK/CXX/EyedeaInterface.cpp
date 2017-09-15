@@ -4772,6 +4772,85 @@ int CEyedeaInterface::SetObjectCircle(float x, float y, float r1, float r2)
     return ret;
 }
 
+int CEyedeaInterface::SetObjectLine(float x, float y, float w, float h)
+{
+	//printf("test = %f, %f, %f, %f\n", x, y, r1, r2);
+
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_SET_OBJECT_LINE;
+	unsigned char* data = new unsigned char[16];
+	int len = 16;
+
+	int _x = x * 10000;
+	int _y = y * 10000;
+	int _w = w * 10000;
+	int _h = h * 10000;
+
+
+	//x
+	data[0] = (_x & 0xFF000000) >> 24;
+	data[1] = (_x & 0x00FF0000) >> 16;
+	data[2] = (_x & 0x0000FF00) >> 8;
+	data[3] = (_x & 0x000000FF);
+
+	//y
+	data[4] = (_y & 0xFF000000) >> 24;
+	data[5] = (_y & 0x00FF0000) >> 16;
+	data[6] = (_y & 0x0000FF00) >> 8;
+	data[7] = (_y & 0x000000FF);
+
+	//r1
+	data[8] = (_w & 0xFF000000) >> 24;
+	data[9] = (_w & 0x00FF0000) >> 16;
+	data[10] = (_w & 0x0000FF00) >> 8;
+	data[11] = (_w & 0x000000FF);
+
+	//r2
+	data[12] = (_h & 0xFF000000) >> 24;
+	data[13] = (_h & 0x00FF0000) >> 16;
+	data[14] = (_h & 0x0000FF00) >> 8;
+	data[15] = (_h & 0x000000FF);
+
+
+	unsigned int scale_factor = 10000;
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+	if (ret == EYEDEA_ERROR_INVALID_MEMORY)
+	{
+		int sec = 0;
+		while (1)
+		{
+			ret = m_cls_eth_client->Open(m_ip, m_port);
+			if (ret == 0) {
+				ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+				break;
+			}
+			else
+			{
+				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
+				sec++;
+				if (sec >= 60)
+					return ret;
+				continue;
+			}
+		}
+	}
+	if (ret != 0)
+		return ret;
+
+	delete (data);
+	data = NULL;
+
+	return ret;
+}
+
 int CEyedeaInterface::GetMainObjectInfo(float* out_x, float* out_y, float* out_a)
 {
 	boost::unique_lock<boost::mutex> scoped_lock(mutex);

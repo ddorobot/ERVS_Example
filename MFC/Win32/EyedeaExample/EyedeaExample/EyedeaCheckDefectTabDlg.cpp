@@ -16,13 +16,6 @@ CEyedeaCheckDefectTabDlg::CEyedeaCheckDefectTabDlg(CWnd* pParent /*=NULL*/)
 	, m_i_checkdefect_ret(0)
 	, m_run_thread(false)
 	, m_b_draw_pause(true)
-	, m_command(USER_COMMAND_NORMAL)
-	, m_b_mouse_ldown_on_drawwindow(false)
-	, m_b_mouse_move_pattern(false)
-	, m_select_rate_x(0.0)
-	, m_select_rate_y(0.0)
-	, m_select_rate_w(0.0)
-	, m_select_rate_h(0.0)
 {
 	m_result_image = cv::Mat::zeros(cv::Size(640, 480), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
 	m_result_histogram_image = cv::Mat::zeros(cv::Size(256, 400), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
@@ -42,11 +35,10 @@ CEyedeaCheckDefectTabDlg::~CEyedeaCheckDefectTabDlg()
 void CEyedeaCheckDefectTabDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_COMBO_GET_IMAGE_OPTION_BASE, m_combo_get_image_option_base);
 	//DDX_Control(pDX, IDC_COMBO_OBJECT_TYPE, m_combo_object_type);
 	//DDX_Control(pDX, IDC_LIST_FIND_OBJECTS, m_list_find_objects);
 	//DDX_Control(pDX, IDC_COMBO_DEPENDENCY_LIST, m_combo_dependency_list);
-	DDX_Control(pDX, IDC_BUTTON_SELECT_BASE, m_btn_select_base_object);
+	//DDX_Control(pDX, IDC_BUTTON_SELECT_BASE, m_btn_select_base_object);
 	DDX_Control(pDX, IDC_RICHEDIT2_PRINT, m_editMain);
 	//DDX_Control(pDX, IDC_LIST_RESULT, m_list_result_index);
 	DDX_Control(pDX, IDC_TREE_RESULT, m_tree_result);
@@ -54,7 +46,7 @@ void CEyedeaCheckDefectTabDlg::DoDataExchange(CDataExchange* pDX)
 
 
 BEGIN_MESSAGE_MAP(CEyedeaCheckDefectTabDlg, CDialogEx)
-	ON_BN_CLICKED(IDC_BUTTON_SET_BASE, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonSetBase)
+	//ON_BN_CLICKED(IDC_BUTTON_SET_BASE, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonSetBase)
 	//ON_BN_CLICKED(IDC_CHECK_USE_PCA, &CEyedeaCheckDefectTabDlg::OnBnClickedCheckUsePca)
 	//ON_BN_CLICKED(IDC_CHECK_OPTION_FIX_SEARCH_AREA, &CEyedeaCheckDefectTabDlg::OnBnClickedCheckOptionFixSearchArea)
 	//ON_BN_CLICKED(IDC_BUTTON_SELECT_SEARCH_AREA, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonSelectSearchArea)
@@ -70,41 +62,38 @@ BEGIN_MESSAGE_MAP(CEyedeaCheckDefectTabDlg, CDialogEx)
 	//ON_BN_CLICKED(IDC_CHECK_USE_FIND_WITH_CHECKDEFECT, &CEyedeaCheckDefectTabDlg::OnBnClickedCheckUseFindWithCheckdefect)
 	//ON_BN_CLICKED(IDC_BUTTON_VISION_CONFIG_FIND_OBJECT_GET, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonVisionConfigFindObjectGet)
 	//ON_BN_CLICKED(IDC_BUTTON_VISION_CONFIG_FIND_OBJECT_SET, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonVisionConfigFindObjectSet)
-	ON_BN_CLICKED(IDC_BUTTON_SELECT_BASE, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonSelectBase)
+	//ON_BN_CLICKED(IDC_BUTTON_SELECT_BASE, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonSelectBase)
 	//ON_BN_CLICKED(IDC_CHECK_FIND_MULTI_OBJECTS, &CEyedeaCheckDefectTabDlg::OnBnClickedCheckFindMultiObjects)
-	ON_BN_CLICKED(IDC_BUTTON_FIND_OBJECT_FILTER_SIZE_GET, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindObjectFilterSizeGet)
-	ON_BN_CLICKED(IDC_BUTTON_FIND_OBJECT_FILTER_PADDING_GET, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindObjectFilterPaddingGet)
-	ON_BN_CLICKED(IDC_BUTTON_FIND_OBJECT_FILTER_SIZE_SET, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindObjectFilterSizeSet)
-	ON_BN_CLICKED(IDC_BUTTON_FIND_OBJECT_FILTER_PADDING_SET, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindObjectFilterPaddingSet)
+	//ON_BN_CLICKED(IDC_BUTTON_FIND_OBJECT_FILTER_SIZE_GET, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindObjectFilterSizeGet)
+	//ON_BN_CLICKED(IDC_BUTTON_FIND_OBJECT_FILTER_PADDING_GET, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindObjectFilterPaddingGet)
+	//ON_BN_CLICKED(IDC_BUTTON_FIND_OBJECT_FILTER_SIZE_SET, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindObjectFilterSizeSet)
+	//ON_BN_CLICKED(IDC_BUTTON_FIND_OBJECT_FILTER_PADDING_SET, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindObjectFilterPaddingSet)
 	//ON_BN_CLICKED(IDC_BUTTON_FIND_GET_INFO, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindGetInfo)
-	ON_BN_CLICKED(IDC_BUTTON_FIND_OBJECT_LOCAL_PADDING_GET, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindObjectLocalPaddingGet)
-	ON_BN_CLICKED(IDC_BUTTON_FIND_OBJECT_LOCAL_PADDING_SET, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindObjectLocalPaddingSet)
+	//ON_BN_CLICKED(IDC_BUTTON_FIND_OBJECT_LOCAL_PADDING_GET, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindObjectLocalPaddingGet)
+	//ON_BN_CLICKED(IDC_BUTTON_FIND_OBJECT_LOCAL_PADDING_SET, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindObjectLocalPaddingSet)
 	//ON_BN_CLICKED(IDC_BUTTON_FIND_GET_POSE, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindGetPose)
 	//ON_BN_CLICKED(IDC_BUTTON_FIND_OBJECT_CLASSIFIER_THRE_GET, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindObjectClassifierThreGet)
 	ON_BN_CLICKED(IDC_BUTTON_FIND_GET_INFO2, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindGetInfo2)
-	ON_BN_CLICKED(IDC_BUTTON_CHECK_CAMERA_CALIBOK, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonCheckCameraCalibok)
-	ON_BN_CLICKED(IDC_CHECK_DEPENDENCY_SEARCHAREA, &CEyedeaCheckDefectTabDlg::OnBnClickedCheckDependencySearcharea)
-	ON_WM_LBUTTONDOWN()
-	ON_WM_MOUSEMOVE()
-	ON_WM_LBUTTONUP()
-	ON_BN_CLICKED(IDC_BUTTON_SET_ZOOM_IMAGE, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonSetZoomImage)
-	ON_BN_CLICKED(IDC_BUTTON_RESET_ZOOM_IMAGE, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonResetZoomImage)
-	ON_BN_CLICKED(IDC_BUTTON_DEP_ID_CHECK, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonDepIdCheck)
-	ON_BN_CLICKED(IDC_CHECK_FIXED_AREA, &CEyedeaCheckDefectTabDlg::OnBnClickedCheckFixedArea)
-	ON_BN_CLICKED(IDC_BUTTON_SELECT_CIRCLE, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonSelectCircle)
-	ON_BN_CLICKED(IDC_BUTTON_FIND_OBJECT_DETECTION_LEVEL_GET, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindObjectDetectionLevelGet)
-	ON_BN_CLICKED(IDC_BUTTON_FIND_OBJECT_DETECTION_LEVEL_SET, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindObjectDetectionLevelSet)
-	ON_BN_CLICKED(IDC_CHECK_USE_CALIBRATION_IMAGE, &CEyedeaCheckDefectTabDlg::OnBnClickedCheckUseCalibrationImage)
+	//ON_BN_CLICKED(IDC_BUTTON_CHECK_CAMERA_CALIBOK, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonCheckCameraCalibok)
+	//ON_BN_CLICKED(IDC_CHECK_DEPENDENCY_SEARCHAREA, &CEyedeaCheckDefectTabDlg::OnBnClickedCheckDependencySearcharea)
+	//ON_BN_CLICKED(IDC_BUTTON_SET_ZOOM_IMAGE, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonSetZoomImage)
+	//ON_BN_CLICKED(IDC_BUTTON_RESET_ZOOM_IMAGE, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonResetZoomImage)
+	//ON_BN_CLICKED(IDC_BUTTON_DEP_ID_CHECK, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonDepIdCheck)
+	//ON_BN_CLICKED(IDC_CHECK_FIXED_AREA, &CEyedeaCheckDefectTabDlg::OnBnClickedCheckFixedArea)
+	//ON_BN_CLICKED(IDC_BUTTON_SELECT_CIRCLE, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonSelectCircle)
+	//ON_BN_CLICKED(IDC_BUTTON_FIND_OBJECT_DETECTION_LEVEL_GET, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindObjectDetectionLevelGet)
+	//ON_BN_CLICKED(IDC_BUTTON_FIND_OBJECT_DETECTION_LEVEL_SET, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindObjectDetectionLevelSet)
+	//ON_BN_CLICKED(IDC_CHECK_USE_CALIBRATION_IMAGE, &CEyedeaCheckDefectTabDlg::OnBnClickedCheckUseCalibrationImage)
 	ON_BN_CLICKED(IDC_CHECK_HISTOGRAM, &CEyedeaCheckDefectTabDlg::OnBnClickedCheckHistogram)
 	//ON_LBN_DBLCLK(IDC_LIST_RESULT, &CEyedeaCheckDefectTabDlg::OnLbnDblclkListResult)
 	ON_NOTIFY(NM_DBLCLK, IDC_TREE_RESULT, &CEyedeaCheckDefectTabDlg::OnNMDblclkTreeResult)
-	ON_BN_CLICKED(IDC_CHECK_ONE_OF_SUBS, &CEyedeaCheckDefectTabDlg::OnBnClickedCheckOneOfSubs)
+	//ON_BN_CLICKED(IDC_CHECK_ONE_OF_SUBS, &CEyedeaCheckDefectTabDlg::OnBnClickedCheckOneOfSubs)
 END_MESSAGE_MAP()
 
 
 // CEyedeaCheckDefectTabDlg message handlers
 
-
+#if 0
 void CEyedeaCheckDefectTabDlg::OnBnClickedButtonSetBase()
 {
 	// TODO: Add your control notification handler code here
@@ -120,6 +109,7 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonSetBase()
 	//check for single mode
 	OnBnClickedCheckDependencySearcharea();
 }
+#endif
 
 /*
 void CEyedeaCheckDefectTabDlg::OnBnClickedCheckUsePca()
@@ -184,11 +174,6 @@ BOOL CEyedeaCheckDefectTabDlg::OnInitDialog()
 	m_list_find_objects.SetImageList(&m_ImgList, LVSIL_NORMAL);
 #endif
 
-	m_combo_get_image_option_base.AddString(_T("GET_IMAGE_WITH_INFO"));
-	m_combo_get_image_option_base.AddString(_T("GET_IMAGE_INPUT"));
-	m_combo_get_image_option_base.AddString(_T("GET_IMAGE_BASE_ROI"));
-	m_combo_get_image_option_base.SetCurSel(0);
-
 	//m_combo_object_type.AddString(_T("Circle"));
 	//m_combo_object_type.SetCurSel(0);
 
@@ -227,9 +212,6 @@ BOOL CEyedeaCheckDefectTabDlg::OnInitDialog()
 #endif
 
 	CString str;
-	str.Format(_T("0"));
-	GetDlgItem(IDC_EDIT_DEP_ID)->SetWindowText(str);
-
 	str.Format(_T("10"));
 	GetDlgItem(IDC_EDIT_FIND_MAX_COUNT)->SetWindowText(str);
 
@@ -620,13 +602,6 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedCheckUseFindWithCheckdefect()
 
 void CEyedeaCheckDefectTabDlg::ThreadFunctionDraw()
 {
-	cv::Mat base_image = cv::Mat::zeros(cv::Size(640, 480), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
-	cv::Mat base_image_object = cv::Mat::zeros(cv::Size(640, 480), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
-
-	CRect rect_display_base;													//display rect
-	GetDlgItem(IDC_STATIC_IMAGE_BASE)->GetClientRect(&rect_display_base);			//get rect information on window
-	CClientDC dc_display_base(GetDlgItem(IDC_STATIC_IMAGE_BASE));					//device context for display mfc control
-
 	CRect rect_result_display;													//display rect
 	GetDlgItem(IDC_STATIC_IMAGE_RESULT)->GetClientRect(&rect_result_display);			//get rect information on window
 	CClientDC dc_result_display(GetDlgItem(IDC_STATIC_IMAGE_RESULT));					//device context for display mfc control
@@ -663,7 +638,6 @@ void CEyedeaCheckDefectTabDlg::ThreadFunctionDraw()
 
 	CvvImage vImage;		//display class for display on MFC control
 
-	unsigned int count = 0;
 	while (m_run_thread)
 	{
 		if (m_b_draw_pause)
@@ -692,31 +666,6 @@ void CEyedeaCheckDefectTabDlg::ThreadFunctionDraw()
 
 		//---------------------------------------------------------------------------------
 		//base display on static control
-		int len = 921600;
-		int get_base_image_option = m_combo_get_image_option_base.GetCurSel();
-
-		if (get_base_image_option == 0)
-		{
-			ERVS_GetImage(GET_IMAGE_BASE_WITH_INFO, 0, (char**)&base_image.data, &len);
-		}
-		else if (get_base_image_option == 1)
-		{
-			ERVS_GetImage(GET_IMAGE_BASE, 0, (char**)&base_image.data, &len);
-		}
-		else if (get_base_image_option == 2)
-		{
-			ERVS_GetImage(GET_IMAGE_BASE_ROI, 0, (char**)&base_image.data, &len);
-		}
-
-		//---------------------------------------------------------------------------------
-		//draw user area box
-		DrawBoxForUserArea(base_image);
-		//draw user rect and Pyramid
-		//---------------------------------------------------------------------------------
-
-		vImage.CopyOf(&IplImage(base_image), 1);							//mat to vimage
-		vImage.DrawToHDC(dc_display_base.m_hDC, &rect_display_base);				//draw on display_rect
-
 		vImage.CopyOf(&IplImage(m_result_image), 1);							//mat to vimage
 		vImage.DrawToHDC(dc_result_display.m_hDC, &rect_result_display);				//draw on display_rect
 
@@ -756,16 +705,6 @@ void CEyedeaCheckDefectTabDlg::ThreadFunctionDraw()
 		*/
 		//base display on static control
 		//---------------------------------------------------------------------------------
-
-		OnBnClickedButtonCheckCameraCalibok();
-
-		if (count > 10 || count == 0 )
-		{
-			ManageList();
-			count = 0;
-		}
-
-		count++;
 	};
 }
 
@@ -782,18 +721,6 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonVisionConfigFindObjectSet()
 	// TODO: Add your control notification handler code here
 }
 #endif
-
-void CEyedeaCheckDefectTabDlg::OnBnClickedButtonSelectBase()
-{
-	// TODO: Add your control notification handler code here
-	//((CEyedeaExampleDlg *)GetParent())->m_combo_get_image_option.SetCurSel(1);		//Set Object
-
-	//((CEyedeaExampleDlg *)GetParent())->m_command = USER_COMMAND_SELECT_BASE_OBJECT;
-
-	m_combo_get_image_option_base.SetCurSel(0);		//Get Feature Image
-
-	m_command = USER_COMMAND_SELECT_BASE_OBJECT;
-}
 
 /*
 void CEyedeaCheckDefectTabDlg::OnBnClickedCheckFindMultiObjects()
@@ -824,55 +751,6 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedCheckFindMultiObjects()
 
 }
 */
-
-void CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindObjectFilterSizeGet()
-{
-	// TODO: Add your control notification handler code here
-	int filter_size = ERVS_GetVisionConfigOption(VISION_CONFIG_FIND_OBJECT_FILER_SIZE);
-
-	CString str;
-	str.Format(_T("%d"), filter_size);
-	GetDlgItem(IDC_EDIT_FIND_OBJECT_FILTER_SIZE)->SetWindowText(str);
-}
-
-
-void CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindObjectFilterPaddingGet()
-{
-	// TODO: Add your control notification handler code here
-	int padding_size = ERVS_GetVisionConfigOption(VISION_CONFIG_FIND_OBJECT_FILER_PADDING);
-
-	CString str;
-	str.Format(_T("%d"), padding_size);
-	GetDlgItem(IDC_EDIT_FIND_OBJECT_FILTER_PADDING)->SetWindowText(str);
-}
-
-
-void CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindObjectFilterSizeSet()
-{
-	// TODO: Add your control notification handler code here
-	CString str;
-	GetDlgItem(IDC_EDIT_FIND_OBJECT_FILTER_SIZE)->GetWindowText(str);
-	int filter_size = _ttoi(str);
-
-	ERVS_SetVisionConfigOption(VISION_CONFIG_FIND_OBJECT_FILER_SIZE, filter_size);
-
-	//cross check
-	OnBnClickedButtonFindObjectFilterSizeGet();
-}
-
-
-void CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindObjectFilterPaddingSet()
-{
-	// TODO: Add your control notification handler code here
-	CString str;
-	GetDlgItem(IDC_EDIT_FIND_OBJECT_FILTER_PADDING)->GetWindowText(str);
-	int filter_padding = _ttoi(str);
-
-	ERVS_SetVisionConfigOption(VISION_CONFIG_FIND_OBJECT_FILER_PADDING, filter_padding);
-
-	//cross check
-	OnBnClickedButtonFindObjectFilterPaddingGet();
-}
 
 #if 0
 void CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindGetInfo()
@@ -996,32 +874,6 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindGetInfo()
 #endif
 }
 #endif
-
-void CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindObjectLocalPaddingGet()
-{
-	// TODO: Add your control notification handler code here
-	int local_padding = ERVS_GetVisionConfigOption(VISION_CONFIG_FIND_OBJECT_LOCAL_PADDING);
-
-	CString str;
-	str.Format(_T("%d"), local_padding);
-	GetDlgItem(IDC_EDIT_FIND_OBJECT_LOCAL_PADDING)->SetWindowText(str);
-}
-
-
-void CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindObjectLocalPaddingSet()
-{
-	// TODO: Add your control notification handler code here
-	CString str;
-	GetDlgItem(IDC_EDIT_FIND_OBJECT_LOCAL_PADDING)->GetWindowText(str);
-	int local_padding = _ttoi(str);
-
-	ERVS_SetVisionConfigOption(VISION_CONFIG_FIND_OBJECT_LOCAL_PADDING, local_padding);
-
-	//cross check
-	OnBnClickedButtonFindObjectLocalPaddingGet();
-
-	//m_combo_get_image_option_base.SetCurSel(2);
-}
 
 #if 0
 void CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindGetPose()
@@ -1228,42 +1080,6 @@ CBitmap* CEyedeaCheckDefectTabDlg::IplImageToCBitmap(IplImage* img)
 void CEyedeaCheckDefectTabDlg::RoadAllFromERVS()
 {
 	//OnBnClickedCheckUsePca();
-	OnBnClickedButtonFindObjectLocalPaddingGet();
-	//OnBnClickedButtonVisionConfigFindSearchAreaGet();
-	//OnBnClickedButtonVisionConfigFindIterationGet();
-	//OnBnClickedButtonVisionConfigFindObjectGet();
-	//OnBnClickedButtonVisionConfigFindCenterGet();
-	//OnBnClickedCheckUseFindWithCheckdefect();
-	//OnBnClickedCheckFindMultiObjects();
-	OnBnClickedButtonFindObjectFilterSizeGet();
-	OnBnClickedButtonFindObjectFilterPaddingGet();
-	OnBnClickedButtonFindObjectDetectionLevelGet();
-	OnBnClickedButtonCheckCameraCalibok();
-
-	//OnBnClickedCheckDependencySearcharea();
-	//check
-	float only_one_option = ERVS_GetVisionConfigOption(SEARCHAREA_VISION_CONFIG_ONLY_ONE_OBJECT);
-	if (only_one_option)
-	{
-		CheckDlgButton(IDC_CHECK_DEPENDENCY_SEARCHAREA, TRUE);
-	}
-	else
-	{
-		CheckDlgButton(IDC_CHECK_DEPENDENCY_SEARCHAREA, FALSE);
-	}
-
-	//OnBnClickedCheckUseCalibrationImage();
-	//check
-	float use_calibration_image = ERVS_GetVisionConfigOption(VISION_CONFIG_USE_CALIBRATION_IMAGE);
-
-	if (use_calibration_image)
-	{
-		CheckDlgButton(IDC_CHECK_USE_CALIBRATION_IMAGE, TRUE);
-	}
-	else
-	{
-		CheckDlgButton(IDC_CHECK_USE_CALIBRATION_IMAGE, FALSE);
-	}
 
 	//OnBnClickedCheckHistogram();
 	//check
@@ -1272,35 +1088,14 @@ void CEyedeaCheckDefectTabDlg::RoadAllFromERVS()
 	if (use_histogram)
 	{
 		CheckDlgButton(IDC_CHECK_HISTOGRAM, TRUE);
-	}
+}
 	else
 	{
 		CheckDlgButton(IDC_CHECK_HISTOGRAM, FALSE);
 	}
 
-	//OnBnClickedCheckFixedArea();
-	int ret = ERVS_GetOptionFixArea();
 
-	if (ret > 0)
-	{
-		CheckDlgButton(IDC_CHECK_FIXED_AREA, TRUE);
-	}
-	else
-	{
-		CheckDlgButton(IDC_CHECK_FIXED_AREA, FALSE);
-	}
-
-	//check
-	float only_one_of_subs = ERVS_GetVisionConfigOption(VISION_CONFIG_FIND_ONE_OF_SUBS);
-
-	if (only_one_of_subs)
-	{
-		CheckDlgButton(IDC_CHECK_ONE_OF_SUBS, TRUE);
-}
-	else
-	{
-		CheckDlgButton(IDC_CHECK_ONE_OF_SUBS, FALSE);
-	}
+	
 }
 
 #if 0
@@ -1316,254 +1111,265 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindGetInfo2()
 	//while (m_ImgList.GetImageCount()) m_ImgList.Remove(0);
 	//m_list_result_index.ResetContent();
 
-	m_tree_result.DeleteAllItems();
+	cv::RNG rng(0xFFFFFFFF);
+	unsigned int run_count = 0;
 
-	CString strIndex;
-	GetDlgItem(IDC_EDIT_FIND_GET_INFO)->GetWindowText(strIndex);
-	int user_index = _ttoi(strIndex);
-
-	//Get Select DB Info from Parent List Control
-	int list_num_ui = ((CEyedeaExampleDlg *)GetParent())->m_list_information.GetItemCount();
-	POSITION pos = ((CEyedeaExampleDlg *)GetParent())->m_list_information.GetFirstSelectedItemPosition();
-	
-	//Get DB Count
-	int nDB = ERVS_DB_Get_Count();
-	int select_id = ERVS_DB_Get_Select_ID();
-
-	int* p_id_range = NULL;
-	int id_index = 0;
-	if (nDB > 0)
+	//while (1)
 	{
-		p_id_range = new int[nDB];
+#if 0
+		ERVS_Disconnect();
 
-		for (int nItem = 0; nItem < ((CEyedeaExampleDlg *)GetParent())->m_list_information.GetItemCount(); nItem++)
+		int sleep_time = rng.uniform(1, 1000);
+		Sleep(sleep_time);
+
+		printf("%d : sleep(%d)\n", run_count++, sleep_time);
+
+		char ip_addr[255];
+		sprintf(ip_addr, "%d.%d.%d.%d", (int)192, (int)168, (int)100, (int)3);
+		int ret = ERVS_Connect(ip_addr, 4000);
+#endif
+
+		m_tree_result.DeleteAllItems();
+
+		CString strIndex;
+		GetDlgItem(IDC_EDIT_FIND_GET_INFO)->GetWindowText(strIndex);
+		int user_index = _ttoi(strIndex);
+
+		//Get Select DB Info from Parent List Control
+		int list_num_ui = ((CEyedeaExampleDlg *)GetParent())->m_list_information.GetItemCount();
+		POSITION pos = ((CEyedeaExampleDlg *)GetParent())->m_list_information.GetFirstSelectedItemPosition();
+
+		//Get DB Count
+		int nDB = ERVS_DB_Get_Count();
+		int select_id = ERVS_DB_Get_Select_ID();
+
+		int* p_id_range = NULL;
+		int id_index = 0;
+		if (nDB > 0)
 		{
-			int unState = ((CEyedeaExampleDlg *)GetParent())->m_list_information.GetItemState(nItem, LVIS_STATEIMAGEMASK);
+			p_id_range = new int[nDB];
 
-			if (unState == 0x2000)
+			for (int nItem = 0; nItem < ((CEyedeaExampleDlg *)GetParent())->m_list_information.GetItemCount(); nItem++)
 			{
-				//id check
-				CString list_id;
-				list_id = ((CEyedeaExampleDlg *)GetParent())->m_list_information.GetItemText(nItem, 1/*id*/);
+				int unState = ((CEyedeaExampleDlg *)GetParent())->m_list_information.GetItemState(nItem, LVIS_STATEIMAGEMASK);
 
-				int i_list_id = _ttoi(list_id);
+				if (unState == 0x2000)
+				{
+					//id check
+					CString list_id;
+					list_id = ((CEyedeaExampleDlg *)GetParent())->m_list_information.GetItemText(nItem, 1/*id*/);
 
-				p_id_range[id_index++] = i_list_id;
+					int i_list_id = _ttoi(list_id);
+
+					p_id_range[id_index++] = i_list_id;
+				}
 			}
 		}
-	}
 
-	//for (int i = 0; i < 10000; i++)
-	{
-		float *p_id = NULL;
-		float *p_camera_center_x = NULL;
-		float *p_camera_center_y = NULL;
-		float *p_robot_center_x = NULL;
-		float *p_robot_center_y = NULL;
-
-		float *p_camera_bound_center_x = NULL;
-		float *p_camera_bound_center_y = NULL;
-		float *p_robot_bound_center_x = NULL;
-		float *p_robot_bound_center_y = NULL;
-
-		float *p_camera_mass_center_x = NULL;
-		float *p_camera_mass_center_y = NULL;
-		float *p_robot_mass_center_x = NULL;
-		float *p_robot_mass_center_y = NULL;
-
-
-		float *p_angle = NULL;
-		float *p_type = NULL;
-		float *p_score = NULL;
-
-		//printf("test = %d\n", i);
-		CString str;
-		GetDlgItem(IDC_EDIT_FIND_MAX_COUNT)->GetWindowText(str);
-		int nMaxObjects = _ttoi(str);
-
-		int nObject = 0;
-		BOOL bCheckOptionUsePrevImage = IsDlgButtonChecked(IDC_CHECK_GETINFO_USE_PREV_IMAGE);
-
-		if(bCheckOptionUsePrevImage)
+		//for (int i = 0; i < 10000; i++)
 		{
-			nObject = ERVS_DetectWithPrevImage(user_index, nMaxObjects,
-				&p_id,
-				&p_camera_center_x, &p_camera_center_y, &p_robot_center_x, &p_robot_center_y,
-				&p_camera_bound_center_x, &p_camera_bound_center_y, &p_robot_bound_center_x, &p_robot_bound_center_y,
-				&p_camera_mass_center_x, &p_camera_mass_center_y, &p_robot_mass_center_x, &p_robot_mass_center_y,
-				&p_angle,
-				&p_type,
-				&p_score);
-		}
-		else
-		{
-			nObject = ERVS_DetectWithGrab(user_index, nMaxObjects,
-				&p_id,
-				&p_camera_center_x, &p_camera_center_y, &p_robot_center_x, &p_robot_center_y,
-				&p_camera_bound_center_x, &p_camera_bound_center_y, &p_robot_bound_center_x, &p_robot_bound_center_y,
-				&p_camera_mass_center_x, &p_camera_mass_center_y, &p_robot_mass_center_x, &p_robot_mass_center_y,
-				&p_angle,
-				&p_type,
-				&p_score);
-		}
+			float *p_id = NULL;
+			float *p_camera_center_x = NULL;
+			float *p_camera_center_y = NULL;
+			float *p_robot_center_x = NULL;
+			float *p_robot_center_y = NULL;
 
-		time_t curr_time;
-		struct tm *curr_tm;
-		curr_time = time(NULL);
-		curr_tm = localtime(&curr_time);
+			float *p_camera_bound_center_x = NULL;
+			float *p_camera_bound_center_y = NULL;
+			float *p_robot_bound_center_x = NULL;
+			float *p_robot_bound_center_y = NULL;
 
-		//CString str;
-		str.Format(_T("%d-%d-%d-%d-%d-%d : find object count = %d\r\n"), curr_tm->tm_year + 1900, curr_tm->tm_mon + 1, curr_tm->tm_mday, curr_tm->tm_hour, curr_tm->tm_min, curr_tm->tm_sec, nObject);
-		//printf("%s", str);
-		MyTextOut(str, RGB(0, 0, 255));
+			float *p_camera_mass_center_x = NULL;
+			float *p_camera_mass_center_y = NULL;
+			float *p_robot_mass_center_x = NULL;
+			float *p_robot_mass_center_y = NULL;
 
-		int index = 0;
-		int sub_index = 0;
 
-		HTREEITEM  hRoot = NULL;
+			float *p_angle = NULL;
+			float *p_type = NULL;
+			float *p_score = NULL;
 
-		for (int i = 0; i < nObject; i++)
-		{
-			//printf("%s", str);
-			if ((int)p_id[i] % 1000 == 0)
+			//printf("test = %d\n", i);
+			CString str;
+			GetDlgItem(IDC_EDIT_FIND_MAX_COUNT)->GetWindowText(str);
+			int nMaxObjects = _ttoi(str);
+
+			int nObject = 0;
+			BOOL bCheckOptionUsePrevImage = IsDlgButtonChecked(IDC_CHECK_GETINFO_USE_PREV_IMAGE);
+
+			if (bCheckOptionUsePrevImage)
 			{
-				str.Format(_T(" - [%d] : id=%04d/type=%d/cpos=(%.2f,%.2f)/rpos=(%.2f,%.2f)/cbpos=(%.2f,%.2f)/rbpos=(%.2f,%.2f)/cmpos=(%.2f,%.2f)/rmpos=(%.2f,%.2f)/angle=%d/score=%.2f\n"), 
-							index, (int)p_id[i], (int)p_type[i], 
-							p_camera_center_x[i], p_camera_center_y[i], p_robot_center_x[i], p_robot_center_y[i], 
-							p_camera_bound_center_x[i], p_camera_bound_center_y[i], p_robot_bound_center_x[i], p_robot_bound_center_y[i],
-							p_camera_mass_center_x[i], p_camera_mass_center_y[i], p_robot_mass_center_x[i], p_robot_mass_center_y[i],
-							(int)p_angle[i], p_score[i]);
-
-				MyTextOut(str, RGB(255, 100, 0));
-
-				CString str_tree;
-				str_tree.Format(_T("ID(%04d)-%d"), (int)p_id[i], index);
-
-				hRoot = m_tree_result.InsertItem(str_tree, 0/* nImage */, 1/* nSelectedImage */, TVI_ROOT, TVI_LAST);
-				m_tree_result.Expand(hRoot, TVE_EXPAND);
-
-				//HTREEITEM  hChild;
-				//hChild = m_tree_result.InsertItem(L"image", 1/* nImage */, 1/* nSelectedImage */, hRoot, TVI_LAST);
-				index++;
-				sub_index = 0;
+				nObject = ERVS_DetectWithPrevImage(user_index, nMaxObjects,
+					&p_id,
+					&p_camera_center_x, &p_camera_center_y, &p_robot_center_x, &p_robot_center_y,
+					&p_camera_bound_center_x, &p_camera_bound_center_y, &p_robot_bound_center_x, &p_robot_bound_center_y,
+					&p_camera_mass_center_x, &p_camera_mass_center_y, &p_robot_mass_center_x, &p_robot_mass_center_y,
+					&p_angle,
+					&p_type,
+					&p_score);
 			}
 			else
 			{
-				str.Format(_T("       : id=%04d/type=%d/cpos=(%.2f,%.2f)/rpos=(%.2f,%.2f)/cbpos=(%.2f,%.2f)/rbpos=(%.2f,%.2f)/cmpos=(%.2f,%.2f)/rmpos=(%.2f,%.2f)/angle=%d/score=%.2f\n"),
-							(int)p_id[i], (int)p_type[i], 
-							p_camera_center_x[i], p_camera_center_y[i], p_robot_center_x[i], p_robot_center_y[i], 
-							p_camera_bound_center_x[i], p_camera_bound_center_y[i], p_robot_bound_center_x[i], p_robot_bound_center_y[i],
-							p_camera_mass_center_x[i], p_camera_mass_center_y[i], p_robot_mass_center_x[i], p_robot_mass_center_y[i],
-							(int)p_angle[i], p_score[i]);
-				MyTextOut(str, RGB(0, 100, 255));
-
-				if (hRoot != NULL)
-				{
-					CString str_tree;
-					str_tree.Format(_T("ID(%04d)-%d"), (int)p_id[i], sub_index);
-
-					HTREEITEM  hChild;
-					hChild = m_tree_result.InsertItem(str_tree, 1/* nImage */, 1/* nSelectedImage */, hRoot, TVI_LAST);
-
-					m_tree_result.Expand(hRoot, TVE_EXPAND);
-					m_tree_result.Expand(hChild, TVE_EXPAND);
-				}
-
-				sub_index++;
+				nObject = ERVS_DetectWithGrab(user_index, nMaxObjects,
+					&p_id,
+					&p_camera_center_x, &p_camera_center_y, &p_robot_center_x, &p_robot_center_y,
+					&p_camera_bound_center_x, &p_camera_bound_center_y, &p_robot_bound_center_x, &p_robot_bound_center_y,
+					&p_camera_mass_center_x, &p_camera_mass_center_y, &p_robot_mass_center_x, &p_robot_mass_center_y,
+					&p_angle,
+					&p_type,
+					&p_score);
 			}
-			//MyTextOut(" - [%d] : id=%04d / type=%d / cpos=(%.4f, %.4f) / rpos=(%.4f, %.4f) / angle=%d / score=%.4f\n", i, (int)p_id[i], (int)p_type[i], p_camera_center_x[i], p_camera_center_y[i], p_robot_center_x[i], p_robot_center_y[i], p_angle[i], p_score[i]);
+
+			time_t curr_time;
+			struct tm *curr_tm;
+			curr_time = time(NULL);
+			curr_tm = localtime(&curr_time);
+
+			//CString str;
+			str.Format(_T("%d-%d-%d-%d-%d-%d : find object count = %d\r\n"), curr_tm->tm_year + 1900, curr_tm->tm_mon + 1, curr_tm->tm_mday, curr_tm->tm_hour, curr_tm->tm_min, curr_tm->tm_sec, nObject);
+			//printf("%s", str);
+			MyTextOut(str, RGB(0, 0, 255));
+
+			int index = 0;
+			int sub_index = 0;
+
+			HTREEITEM  hRoot = NULL;
+
+			for (int i = 0; i < nObject; i++)
+			{
+				//printf("%s", str);
+				if ((int)p_id[i] % 1000 == 0)
+				{
+					str.Format(_T(" - [%d] : id=%04d/type=%d/cpos=(%.2f,%.2f)/rpos=(%.2f,%.2f)/cbpos=(%.2f,%.2f)/rbpos=(%.2f,%.2f)/cmpos=(%.2f,%.2f)/rmpos=(%.2f,%.2f)/angle=%d/score=%.2f\n"),
+						index, (int)p_id[i], (int)p_type[i],
+						p_camera_center_x[i], p_camera_center_y[i], p_robot_center_x[i], p_robot_center_y[i],
+						p_camera_bound_center_x[i], p_camera_bound_center_y[i], p_robot_bound_center_x[i], p_robot_bound_center_y[i],
+						p_camera_mass_center_x[i], p_camera_mass_center_y[i], p_robot_mass_center_x[i], p_robot_mass_center_y[i],
+						(int)p_angle[i], p_score[i]);
+
+					MyTextOut(str, RGB(255, 100, 0));
+
+					CString str_tree;
+					str_tree.Format(_T("ID(%04d)-%d"), (int)p_id[i], index);
+
+					hRoot = m_tree_result.InsertItem(str_tree, 0/* nImage */, 1/* nSelectedImage */, TVI_ROOT, TVI_LAST);
+					m_tree_result.Expand(hRoot, TVE_EXPAND);
+
+					//HTREEITEM  hChild;
+					//hChild = m_tree_result.InsertItem(L"image", 1/* nImage */, 1/* nSelectedImage */, hRoot, TVI_LAST);
+					index++;
+					sub_index = 0;
+				}
+				else
+				{
+					str.Format(_T("       : id=%04d/type=%d/cpos=(%.2f,%.2f)/rpos=(%.2f,%.2f)/cbpos=(%.2f,%.2f)/rbpos=(%.2f,%.2f)/cmpos=(%.2f,%.2f)/rmpos=(%.2f,%.2f)/angle=%d/score=%.2f\n"),
+						(int)p_id[i], (int)p_type[i],
+						p_camera_center_x[i], p_camera_center_y[i], p_robot_center_x[i], p_robot_center_y[i],
+						p_camera_bound_center_x[i], p_camera_bound_center_y[i], p_robot_bound_center_x[i], p_robot_bound_center_y[i],
+						p_camera_mass_center_x[i], p_camera_mass_center_y[i], p_robot_mass_center_x[i], p_robot_mass_center_y[i],
+						(int)p_angle[i], p_score[i]);
+					MyTextOut(str, RGB(0, 100, 255));
+
+					if (hRoot != NULL)
+					{
+						CString str_tree;
+						str_tree.Format(_T("ID(%04d)-%d"), (int)p_id[i], sub_index);
+
+						HTREEITEM  hChild;
+						hChild = m_tree_result.InsertItem(str_tree, 1/* nImage */, 1/* nSelectedImage */, hRoot, TVI_LAST);
+
+						m_tree_result.Expand(hRoot, TVE_EXPAND);
+						m_tree_result.Expand(hChild, TVE_EXPAND);
+					}
+
+					sub_index++;
+				}
+				//MyTextOut(" - [%d] : id=%04d / type=%d / cpos=(%.4f, %.4f) / rpos=(%.4f, %.4f) / angle=%d / score=%.4f\n", i, (int)p_id[i], (int)p_type[i], p_camera_center_x[i], p_camera_center_y[i], p_robot_center_x[i], p_robot_center_y[i], p_angle[i], p_score[i]);
+			}
+
+			if (p_camera_center_x != NULL) free(p_camera_center_x);
+			if (p_camera_center_y != NULL) free(p_camera_center_y);
+			if (p_robot_center_x != NULL) free(p_robot_center_x);
+			if (p_robot_center_y != NULL) free(p_robot_center_y);
+			if (p_camera_bound_center_x != NULL) free(p_camera_bound_center_x);
+			if (p_camera_bound_center_y != NULL) free(p_camera_bound_center_y);
+			if (p_robot_bound_center_x != NULL) free(p_robot_bound_center_x);
+			if (p_robot_bound_center_y != NULL) free(p_robot_bound_center_y);
+			if (p_camera_mass_center_x != NULL) free(p_camera_mass_center_x);
+			if (p_camera_mass_center_y != NULL) free(p_camera_mass_center_y);
+			if (p_robot_mass_center_x != NULL) free(p_robot_mass_center_x);
+			if (p_robot_mass_center_y != NULL) free(p_robot_mass_center_y);
+			if (p_angle != NULL) free(p_angle);
+			if (p_type != NULL) free(p_type);
+			if (p_score != NULL) free(p_score);
+
+			//Result image
+			int len = 921600;
+			//ERVS_GetImage(GET_IMAGE_RESULT, -1, (char**)&m_result_image.data, &len);
+			ERVS_GetFindObjectResultImage(-1, -1, (char**)&m_result_image.data, &len);
+
+			Sleep(1);
 		}
-
-		if (p_camera_center_x != NULL) free(p_camera_center_x);
-		if (p_camera_center_y != NULL) free(p_camera_center_y);
-		if (p_robot_center_x != NULL) free(p_robot_center_x);
-		if (p_robot_center_y != NULL) free(p_robot_center_y);
-		if (p_camera_bound_center_x != NULL) free(p_camera_bound_center_x);
-		if (p_camera_bound_center_y != NULL) free(p_camera_bound_center_y);
-		if (p_robot_bound_center_x != NULL) free(p_robot_bound_center_x);
-		if (p_robot_bound_center_y != NULL) free(p_robot_bound_center_y);
-		if (p_camera_mass_center_x != NULL) free(p_camera_mass_center_x);
-		if (p_camera_mass_center_y != NULL) free(p_camera_mass_center_y);
-		if (p_robot_mass_center_x != NULL) free(p_robot_mass_center_x);
-		if (p_robot_mass_center_y != NULL) free(p_robot_mass_center_y);
-		if (p_angle != NULL) free(p_angle);
-		if (p_type != NULL) free(p_type);
-		if (p_score != NULL) free(p_score);
-
-		//Result image
-		int len = 921600;
-		//ERVS_GetImage(GET_IMAGE_RESULT, -1, (char**)&m_result_image.data, &len);
-		ERVS_GetFindObjectResultImage(-1, -1, (char**)&m_result_image.data, &len);
-
-		Sleep(1);
-	}
 
 #if 0
-	int len = 921600;		//640*480*3;
-	cv::Mat find_object_image = cv::Mat(cv::Size(640, 480), CV_8UC3);
+		int len = 921600;		//640*480*3;
+		cv::Mat find_object_image = cv::Mat(cv::Size(640, 480), CV_8UC3);
 
-	if (find_index >= 0)
-	{
-		ERVS_GetFindObjectImage((int)find_index, (char**)&find_object_image.data, &len);
-	}
-
-	//cv::imshow("test", find_object_image);
-	//cv::waitKey(0);
-
-	cv::Mat image;
-	cv::resize(find_object_image, image, cv::Size(160, 120));
-
-	IplImage* iplimage_ = new IplImage(image);
-
-	CBitmap *aCBitmap = IplImageToCBitmap(iplimage_);
-
-	if (aCBitmap)
-	{
-		m_ImgList.Add(aCBitmap, RGB(0, 0, 0)); // 두번째 인자는 마스크로 검정색으로 해야 이미지 주변이 하얗게 나온다.
-		CString str;
-
-		str.Format(_T("- %d object -\n"), nObject);
-
-		std::string std_str;
-
-		for (int i = 0; i < nObject; i++)
+		if (find_index >= 0)
 		{
-			CString str_temp;
-			str_temp.Format(_T("[%d/%.2f] %.2f,%.2f,%d\n"), (int)p_type[i], p_score[i], p_camera_center_x[i], p_camera_center_y[i], (int)p_angle[i]);
-
-			str += str_temp;
+			ERVS_GetFindObjectImage((int)find_index, (char**)&find_object_image.data, &len);
 		}
-		
-		//m_list_find_objects.InsertItem(i, str, i);
-		m_list_find_objects.InsertItem(0, str, 0);
 
-		delete aCBitmap;
-		aCBitmap = NULL;
-	}
+		//cv::imshow("test", find_object_image);
+		//cv::waitKey(0);
 
-	if (iplimage_)
-	{
-		delete iplimage_;
-		iplimage_ = NULL;
-	}
+		cv::Mat image;
+		cv::resize(find_object_image, image, cv::Size(160, 120));
+
+		IplImage* iplimage_ = new IplImage(image);
+
+		CBitmap *aCBitmap = IplImageToCBitmap(iplimage_);
+
+		if (aCBitmap)
+		{
+			m_ImgList.Add(aCBitmap, RGB(0, 0, 0)); // 두번째 인자는 마스크로 검정색으로 해야 이미지 주변이 하얗게 나온다.
+			CString str;
+
+			str.Format(_T("- %d object -\n"), nObject);
+
+			std::string std_str;
+
+			for (int i = 0; i < nObject; i++)
+			{
+				CString str_temp;
+				str_temp.Format(_T("[%d/%.2f] %.2f,%.2f,%d\n"), (int)p_type[i], p_score[i], p_camera_center_x[i], p_camera_center_y[i], (int)p_angle[i]);
+
+				str += str_temp;
+			}
+
+			//m_list_find_objects.InsertItem(i, str, i);
+			m_list_find_objects.InsertItem(0, str, 0);
+
+			delete aCBitmap;
+			aCBitmap = NULL;
+		}
+
+		if (iplimage_)
+		{
+			delete iplimage_;
+			iplimage_ = NULL;
+		}
 #endif
 
-	if (p_id_range != NULL)
-	{
-		delete[] p_id_range;
-		p_id_range = NULL;
+		if (p_id_range != NULL)
+		{
+			delete[] p_id_range;
+			p_id_range = NULL;
+		}
 	}
 }
 
-void CEyedeaCheckDefectTabDlg::OnBnClickedButtonCheckCameraCalibok()
-{
-	int isCalibOK = ERVS_Calibration_isOK();
-	CString strText;
-	isCalibOK != 0 ? strText.Format(_T(" OK ")) : strText.Format(_T(" NO "));
-	GetDlgItem(IDC_EDIT_CHECK_CAMERA_CALIBOK)->SetWindowText(strText);			
-}
-
-#if 1
+#if 0
 void CEyedeaCheckDefectTabDlg::OnBnClickedCheckDependencySearcharea()
 {
 	// TODO: Add your control notification handler code here
@@ -1592,219 +1398,7 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedCheckDependencySearcharea()
 }
 #endif
 
-
-void CEyedeaCheckDefectTabDlg::OnLButtonDown(UINT nFlags, CPoint point)
-{
-	// TODO: Add your message handler code here and/or call default
-	CRect rect;
-	GetDlgItem(IDC_STATIC_IMAGE_BASE)->GetWindowRect(&rect);
-	ScreenToClient(&rect);
-
-	//pattern_window
-	if (point.x >= rect.left && point.x <= rect.right &&
-		point.y >= rect.top && point.y <= rect.bottom)
-	{
-		if (m_command == USER_COMMAND_SELECT_BASE_OBJECT || m_command == USER_COMMAND_SET_ZOOM_IMAGE || m_command == USER_COMMAND_SELECT_OBJECT_CIRCLE )
-		{
-			m_b_mouse_ldown_on_drawwindow = true;
-
-			m_pt_mouse.x = point.x - rect.left;
-			m_pt_mouse.y = point.y - rect.top;
-
-			m_user_rect.x = m_pt_mouse.x;
-			m_user_rect.y = m_pt_mouse.y;
-
-			m_user_rect.width = 1;
-			m_user_rect.height = 1;
-
-			m_user_select_roi = m_user_rect;
-
-			//m_user_select_roi.x = point.x;
-
-			m_select_rate_x = 0.0;
-			m_select_rate_y = 0.0;
-			m_select_rate_w = 0.0;
-			m_select_rate_h = 0.0;
-
-			m_b_mouse_move_pattern = true;
-		}
-		else
-		{
-			m_b_mouse_ldown_on_drawwindow = false;
-		}
-	}
-	else
-	{
-		m_b_mouse_ldown_on_drawwindow = false;
-	}
-
-	CDialogEx::OnLButtonDown(nFlags, point);
-}
-
-
-void CEyedeaCheckDefectTabDlg::OnMouseMove(UINT nFlags, CPoint point)
-{
-	// TODO: Add your message handler code here and/or call default
-	CRect rect;
-	GetDlgItem(IDC_STATIC_IMAGE_BASE)->GetWindowRect(&rect);
-	ScreenToClient(&rect);
-
-	if (m_b_mouse_ldown_on_drawwindow)
-	{
-		//pattern_window
-		if (point.x >= rect.left && point.x <= rect.right &&
-			point.y >= rect.top && point.y <= rect.bottom)
-		{
-			m_b_mouse_move_pattern = true;
-
-			//m_pt_mouse.x = point.x - rect_pattern.left ;
-			//m_pt_mouse.y = point.y - rect_pattern.top ;
-
-			m_user_rect.width = (point.x - rect.left) - m_user_rect.x;
-			m_user_rect.height = (point.y - rect.top) - m_user_rect.y;
-
-		}
-		else
-		{
-			m_user_rect.width = 0;
-			m_user_rect.height = 0;
-
-			m_select_rate_x = 0.0;
-			m_select_rate_y = 0.0;
-			m_select_rate_w = 0.0;
-			m_select_rate_h = 0.0;
-
-			//m_b_mouse_move_pattern = false ;
-			m_b_mouse_ldown_on_drawwindow = false;
-		}
-	}
-
-	CDialogEx::OnMouseMove(nFlags, point);
-}
-
-
-void CEyedeaCheckDefectTabDlg::OnLButtonUp(UINT nFlags, CPoint point)
-{
-	// TODO: Add your message handler code here and/or call default
-	if (m_b_mouse_move_pattern)
-	{
-		//m_b_add_object_pyramid = true;
-
-		//set pyramid
-		if (m_user_select_roi.x > 0 && m_user_select_roi.y > 0 &&
-			m_user_select_roi.width > 0 && m_user_select_roi.height > 0)
-		{
-			CRect rect;
-			GetDlgItem(IDC_STATIC_IMAGE_BASE)->GetClientRect(&rect);
-			CClientDC dc(GetDlgItem(IDC_STATIC_IMAGE_BASE));
-
-			//Set Zoom Area
-			float rate_x = (float)(m_user_select_roi.x) / (float)(rect.Width());
-			float rate_y = (float)(m_user_select_roi.y) / (float)(rect.Height());
-			float rate_w = (float)(m_user_select_roi.width) / (float)(rect.Width());
-			float rate_h = (float)(m_user_select_roi.height) / (float)(rect.Height());
-
-			//pDlg->m_cls_eyedea_rvs.AddObjectPyramid(pDlg->m_user_select_roi);
-			if (m_command == USER_COMMAND_SELECT_BASE_OBJECT)
-			{
-				//m_combo_get_image_option_base.SetCurSel(2);		//Get ROI Image
-
-				//printf("select rate = %f, %f, %f, %f", rate_x, rate_y, rate_w, rate_h);
-				//ERVS_SetSelectBaseObject(rate_x, rate_y, rate_w, rate_h);
-				ERVS_SetSelectBaseObject(m_select_rate_x, m_select_rate_y, m_select_rate_w, m_select_rate_h);
-
-			}
-			else if (m_command == USER_COMMAND_SELECT_OBJECT_CIRCLE)
-			{
-				ERVS_SetObjectCircle(m_select_rate_x, m_select_rate_y, m_select_rate_w, m_select_rate_h);
-			}
-			else if (m_command == USER_COMMAND_SET_ZOOM_IMAGE)
-			{
-				ERVS_SetZoomArea(m_select_rate_x, m_select_rate_y, m_select_rate_w, m_select_rate_h);
-			}
-
-			m_user_select_roi.x = 0;
-			m_user_select_roi.y = 0;
-			m_user_select_roi.width = 0;
-			m_user_select_roi.height = 0;
-
-			m_user_rect.x = 0;
-			m_user_rect.y = 0;
-			m_user_rect.width = 0;
-			m_user_rect.height = 0;
-			//m_rect_sub_pattern = m_user_select_roi;
-
-			m_select_rate_x = 0.0;
-			m_select_rate_y = 0.0;
-			m_select_rate_w = 0.0;
-			m_select_rate_h = 0.0;
-		}
-	}
-
-	m_b_mouse_move_pattern = false;
-
-	m_b_mouse_ldown_on_drawwindow = false;
-
-	m_command = USER_COMMAND_NORMAL;
-
-	CDialogEx::OnLButtonUp(nFlags, point);
-}
-
-void CEyedeaCheckDefectTabDlg::DrawBoxForUserArea(cv::Mat draw)
-{
-	CRect rect;
-	GetDlgItem(IDC_STATIC_IMAGE_BASE)->GetClientRect(&rect);
-	CClientDC dc(GetDlgItem(IDC_STATIC_IMAGE_BASE));
-
-	if (!draw.empty())
-	{
-		float scala_w = (float)draw.cols / (float)rect.Width();
-		float scala_h = (float)draw.rows / (float)rect.Height();
-
-		cv::Point mouse_in_win(
-			(int)((float)m_pt_mouse.x*(float)(scala_w)),
-			(int)((float)m_pt_mouse.y*(float)(scala_h))
-		);
-
-		//cv::Rect roi1 ;
-		m_user_select_roi = m_user_rect;
-		cv::Rect draw_rect = m_user_select_roi;
-
-		draw_rect.x = (int)(m_user_rect.x * scala_w);
-		draw_rect.y = (int)(m_user_rect.y * scala_h);
-		draw_rect.width = (int)(m_user_rect.width * scala_w);
-		draw_rect.height = (int)(m_user_rect.height * scala_h);
-
-		if (draw_rect.x > 0 && draw_rect.y > 0 &&
-			draw_rect.width > 0 && draw_rect.height > 0)
-		{
-			m_select_rate_x = (float)draw_rect.x / (float)draw.cols;
-			m_select_rate_y = (float)draw_rect.y / (float)draw.rows;
-			m_select_rate_w = (float)draw_rect.width / (float)draw.cols;
-			m_select_rate_h = (float)draw_rect.height / (float)draw.rows;
-
-			if (m_command == USER_COMMAND_SELECT_OBJECT_CIRCLE)
-			{
-				//cv::circle(draw, cv::Point(m_user_select_roi.x, m_user_select_roi.y), m_user_select_roi.width, cv::Scalar(255, 255, 0), 3);
-				cv::ellipse(draw, cv::Point(draw_rect.x, draw_rect.y), cv::Size(draw_rect.width, draw_rect.height), 0, 0, 360, cv::Scalar(255, 255, 0), 3, 8, 0);
-				cv::ellipse(draw, cv::Point(draw_rect.x, draw_rect.y), cv::Size(draw_rect.width, draw_rect.height), 0, 0, 360, cv::Scalar(0, 0, 255), 1, 8, 0);
-			}
-			else
-			{
-				cv::rectangle(draw, draw_rect, cv::Scalar(255, 255, 0), 3);
-
-				cv::Rect tempRect;
-				tempRect.x = m_select_rate_x * (float)draw.cols;
-				tempRect.y = m_select_rate_y * (float)draw.rows;
-				tempRect.width = m_select_rate_w * (float)draw.cols;
-				tempRect.height = m_select_rate_h * (float)draw.rows;
-
-				cv::rectangle(draw, tempRect, cv::Scalar(0, 0, 255), 1);
-			}
-		}
-	}
-}
-
+#if 0
 void CEyedeaCheckDefectTabDlg::OnBnClickedButtonSetZoomImage()
 {
 	// TODO: Add your control notification handler code here
@@ -1813,14 +1407,15 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonSetZoomImage()
 
 	m_command = USER_COMMAND_SET_ZOOM_IMAGE;
 }
+#endif
 
-
+#if 0
 void CEyedeaCheckDefectTabDlg::OnBnClickedButtonResetZoomImage()
 {
 	// TODO: Add your control notification handler code here
 	ERVS_ResetZoomArea();
 }
-
+#endif
 
 void CEyedeaCheckDefectTabDlg::ManageList()
 {
@@ -1898,7 +1493,7 @@ void CEyedeaCheckDefectTabDlg::ManageList()
 #endif
 }
 
-
+#if 0
 void CEyedeaCheckDefectTabDlg::OnBnClickedButtonDepIdCheck()
 {
 	// TODO: Add your control notification handler code here
@@ -1931,97 +1526,9 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonDepIdCheck()
 
 	OnBnClickedCheckDependencySearcharea();
 }
+#endif
 
-
-void CEyedeaCheckDefectTabDlg::OnBnClickedCheckFixedArea()
-{
-	// TODO: Add your control notification handler code here
-	BOOL bCheck = IsDlgButtonChecked(IDC_CHECK_FIXED_AREA);
-
-	if (bCheck)
-	{
-		ERVS_OptionFixAreaOn();
-	}
-	else
-	{
-		ERVS_OptionFixAreaOff();
-	}
-
-	int ret = ERVS_GetOptionFixArea();
-
-	if (ret > 0)
-	{
-		CheckDlgButton(IDC_CHECK_FIXED_AREA, TRUE);
-	}
-	else
-	{
-		CheckDlgButton(IDC_CHECK_FIXED_AREA, FALSE);
-	}
-}
-
-
-
-void CEyedeaCheckDefectTabDlg::OnBnClickedButtonSelectCircle()
-{
-	// TODO: Add your control notification handler code here
-
-	m_combo_get_image_option_base.SetCurSel(0);		//Get Feature Image
-
-	m_command = USER_COMMAND_SELECT_OBJECT_CIRCLE;
-}
-
-
-void CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindObjectDetectionLevelGet()
-{
-	// TODO: Add your control notification handler code here
-	int level = ERVS_GetVisionConfigOption(VISION_CONFIG_FIND_OBJECT_LEVEL);
-	float min_angle = ERVS_GetVisionConfigOption(VISION_CONFIG_L_MIN_ANGLE2);
-	float max_angle = ERVS_GetVisionConfigOption(VISION_CONFIG_L_MAX_ANGLE2);
-	float positive_rate = ERVS_GetVisionConfigOption(VISION_CONFIG_POSITIVE_RATE);
-
-	CString str;
-	str.Format(_T("%d"), level);
-	GetDlgItem(IDC_EDIT_FIND_OBJECT_DETECTION_LEVEL)->SetWindowText(str);
-
-	str.Format(_T("%d"), (int)min_angle);
-	GetDlgItem(IDC_EDIT_ANGLE_MIN)->SetWindowText(str);
-	str.Format(_T("%d"), (int)max_angle);
-	GetDlgItem(IDC_EDIT_ANGLE_MAX)->SetWindowText(str);
-
-	str.Format(_T("%.2f"), positive_rate);
-	GetDlgItem(IDC_EDIT_POSITIVE_RATE)->SetWindowText(str);
-}
-
-
-void CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindObjectDetectionLevelSet()
-{
-	// TODO: Add your control notification handler code here
-	CString str;
-	GetDlgItem(IDC_EDIT_FIND_OBJECT_DETECTION_LEVEL)->GetWindowText(str);
-	int level = _ttoi(str);
-
-	ERVS_SetVisionConfigOption(VISION_CONFIG_FIND_OBJECT_LEVEL, level);
-
-	int min_angle = 0; //ERVS_GetVisionConfigOption(VISION_CONFIG_L_MIN_ANGLE);
-	int max_angle = 0; //ERVS_GetVisionConfigOption(VISION_CONFIG_L_MAX_ANGLE);
-	float positive_rate = 0.0;
-
-	GetDlgItem(IDC_EDIT_ANGLE_MIN)->GetWindowText(str);
-	min_angle = _ttoi(str);
-	GetDlgItem(IDC_EDIT_ANGLE_MAX)->GetWindowText(str);
-	max_angle = _ttoi(str);
-	GetDlgItem(IDC_EDIT_POSITIVE_RATE)->GetWindowText(str);
-	positive_rate = _ttof(str);
-
-	ERVS_SetVisionConfigOption(VISION_CONFIG_L_MIN_ANGLE2, min_angle);
-	ERVS_SetVisionConfigOption(VISION_CONFIG_L_MAX_ANGLE2, max_angle);
-	ERVS_SetVisionConfigOption(VISION_CONFIG_POSITIVE_RATE, positive_rate);
-
-	//cross check
-	OnBnClickedButtonFindObjectDetectionLevelGet();
-}
-
-
+#if 0
 void CEyedeaCheckDefectTabDlg::OnBnClickedCheckUseCalibrationImage()
 {
 	BOOL bCheckOptionUseCalibrationImage = IsDlgButtonChecked(IDC_CHECK_USE_CALIBRATION_IMAGE);
@@ -2047,7 +1554,7 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedCheckUseCalibrationImage()
 		CheckDlgButton(IDC_CHECK_USE_CALIBRATION_IMAGE, FALSE);
 	}
 }
-
+#endif
 
 void CEyedeaCheckDefectTabDlg::OnBnClickedCheckHistogram()
 {
@@ -2252,6 +1759,7 @@ void CEyedeaCheckDefectTabDlg::OnNMDblclkTreeResult(NMHDR *pNMHDR, LRESULT *pRes
 	*pResult = 1;
 }
 
+#if 0
 void CEyedeaCheckDefectTabDlg::OnBnClickedCheckOneOfSubs()
 {
 	// TODO: Add your control notification handler code here
@@ -2278,7 +1786,7 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedCheckOneOfSubs()
 		CheckDlgButton(IDC_CHECK_ONE_OF_SUBS, FALSE);
 	}
 }
-
+#endif
 
 BOOL CEyedeaCheckDefectTabDlg::PreTranslateMessage(MSG* pMsg)
 {

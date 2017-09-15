@@ -75,6 +75,7 @@ int ERVS_GetResultCircleInfoRobotBase(float* out_x, float* out_y, float* out_r, 
 int ERVS_GetResultCircleInfoImageBase(float* out_x, float* out_y, float* out_r, int id = -1);
 int ERVS_GetMainObjectInfo(float* out_x, float* out_y, float* out_a);
 int ERVS_SetObjectCircle(float x, float y, float r1, float r2);
+int ERVS_SetObjectLine(float x, float y, float w, float h);
 int ERVS_GetObjectCircle(float *out_x, float *out_y, float *out_r1, float *out_r2);
 int ERVS_SetSelectROI(float x, float y, int width=-1, int height=-1);
 int ERVS_GetSelectROI(float *out_x, float *out_y, int *out_width, int *out_height);

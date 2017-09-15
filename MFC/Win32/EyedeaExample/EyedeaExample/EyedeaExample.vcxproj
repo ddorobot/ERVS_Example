@@ -200,6 +200,7 @@
     <ClInclude Include="EyedeaCalibrationTabDlg.h" />
     <ClInclude Include="EyedeaCameraConfigTabDlg.h" />
     <ClInclude Include="EyedeaCheckDefectTabDlg.h" />
+    <ClInclude Include="EyedeaDemoDlg.h" />
     <ClInclude Include="EyedeaExample.h" />
     <ClInclude Include="EyedeaExampleDlg.h" />
     <ClInclude Include="EyedeaPickAndPlaceTabDlg.h" />
@@ -219,6 +220,7 @@
     <ClCompile Include="EyedeaCalibrationTabDlg.cpp" />
     <ClCompile Include="EyedeaCameraConfigTabDlg.cpp" />
     <ClCompile Include="EyedeaCheckDefectTabDlg.cpp" />
+    <ClCompile Include="EyedeaDemoDlg.cpp" />
     <ClCompile Include="EyedeaExample.cpp" />
     <ClCompile Include="EyedeaExampleDlg.cpp" />
     <ClCompile Include="EyedeaPickAndPlaceTabDlg.cpp" />
@@ -242,10 +244,12 @@
     <Image Include="..\..\..\..\..\Downloads\if_Full_Screen_778085.png" />
     <Image Include="..\..\..\..\..\Downloads\if_icon-ios7-circle-outline_211717 (1).png" />
     <Image Include="..\..\..\..\..\Downloads\if_Social_Delicious_778080.png" />
+    <Image Include="icons\bitmap5.bmp" />
     <Image Include="icons\icon_0000.bmp" />
     <Image Include="icons\icon_0001.bmp" />
     <Image Include="icons\icon_0002.bmp" />
     <Image Include="icons\icon_0003.bmp" />
+    <Image Include="icons\icon_0004.bmp" />
     <Image Include="icons\if_Full_Screen_2_779449.png" />
     <Image Include="icons\if_Full_Screen_778085.png" />
     <Image Include="icons\if_icon-ios7-circle-outline_211717 (1).png" />

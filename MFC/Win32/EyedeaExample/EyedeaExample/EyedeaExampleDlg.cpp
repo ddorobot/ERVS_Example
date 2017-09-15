@@ -121,9 +121,9 @@ BOOL CEyedeaExampleDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
 	// TODO: Add extra initialization here
-	m_tab_mode.InsertItem(0, _T("Vision Config"));
+	m_tab_mode.InsertItem(0, _T("New - Setting"));
 	//m_tab_mode.InsertItem(1, _T("Search Area"));
-	m_tab_mode.InsertItem(1, _T("NEW - Object Detection"));
+	m_tab_mode.InsertItem(1, _T("Demo"));
 	m_tab_mode.InsertItem(2, _T("Calibration"));
 	m_tab_mode.InsertItem(3, _T("SVM Camera Config"));	
 
@@ -313,6 +313,34 @@ void CEyedeaExampleDlg::OnBnClickedButtonConnect()
 
 			//Check Version
 			OnBnClickedButtonGetVersion();
+
+			//Check Select
+			int select_id = ERVS_DB_Get_Select_ID();
+
+			if (select_id >= 1000)
+			{
+				//----------------------------------------------
+				//Goto tab
+				//m_tab_mode.SetCurSel(2);
+				//OnTcnSelchangeTabMy(2);
+				m_tab_mode.SetCurSel(0);
+				OnTcnSelchangeTabMy(0);
+
+				TCITEM tcItem;
+				CString pszString;
+				//pszString.Format(_T("%d - Object Detection"), id);
+				pszString.Format(_T("%d - Setting"), select_id);
+				//  Get the current tab item text.
+				TCHAR buffer[256] = { 0 };
+				tcItem.pszText = buffer;
+				tcItem.cchTextMax = 256;
+				tcItem.mask = TCIF_TEXT;
+				tcItem.pszText = pszString.LockBuffer();
+
+				m_tab_mode.SetItem(0, &tcItem);
+				//Goto tab
+				//----------------------------------------------
+			}
 
 			//start Thread
 			//eyedea - start of thread
@@ -948,12 +976,13 @@ void CEyedeaExampleDlg::OnBnClickedButtonNewModel()
 		*/
 		//--------------------------------------------------------
 		//Go to object detection tab.
-		m_tab_mode.SetCurSel(1);
-		OnTcnSelchangeTabMy(1);
+		m_tab_mode.SetCurSel(0);
+		OnTcnSelchangeTabMy(0);
 
 		TCITEM tcItem;
 		CString pszString;
-		pszString.Format(_T("%d - Object Detection"), newid);
+		//pszString.Format(_T("%d - Object Detection"), newid);
+		pszString.Format(_T("%d - Setting"), newid);
 		//  Get the current tab item text.
 		TCHAR buffer[256] = { 0 };
 		tcItem.pszText = buffer;
@@ -961,7 +990,7 @@ void CEyedeaExampleDlg::OnBnClickedButtonNewModel()
 		tcItem.mask = TCIF_TEXT;
 		tcItem.pszText = pszString.LockBuffer();
 
-		m_tab_mode.SetItem(1, &tcItem);
+		m_tab_mode.SetItem(0, &tcItem);
 	}
 }
 
@@ -1233,12 +1262,13 @@ void CEyedeaExampleDlg::OnNMDblclkListInformation(NMHDR *pNMHDR, LRESULT *pResul
 		//Goto tab
 		//m_tab_mode.SetCurSel(2);
 		//OnTcnSelchangeTabMy(2);
-		m_tab_mode.SetCurSel(1);
-		OnTcnSelchangeTabMy(1);
+		m_tab_mode.SetCurSel(0);
+		OnTcnSelchangeTabMy(0);
 
 		TCITEM tcItem;
 		CString pszString;
-		pszString.Format(_T("%d - Object Detection"), id);
+		//pszString.Format(_T("%d - Object Detection"), id);
+		pszString.Format(_T("%d - Setting"), id);
 		//  Get the current tab item text.
 		TCHAR buffer[256] = { 0 };
 		tcItem.pszText = buffer; 
@@ -1246,7 +1276,7 @@ void CEyedeaExampleDlg::OnNMDblclkListInformation(NMHDR *pNMHDR, LRESULT *pResul
 		tcItem.mask = TCIF_TEXT;
 		tcItem.pszText = pszString.LockBuffer();
 
-		m_tab_mode.SetItem(1, &tcItem);
+		m_tab_mode.SetItem(0, &tcItem);
 		//Goto tab
 		//----------------------------------------------
 	}

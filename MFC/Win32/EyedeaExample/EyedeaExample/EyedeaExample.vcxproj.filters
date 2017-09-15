@@ -84,6 +84,9 @@
     <ClInclude Include="EyedeaSearchAreaDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="EyedeaDemoDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EyedeaExample.cpp">
@@ -126,6 +129,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="EyedeaSearchAreaDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EyedeaDemoDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -177,6 +183,12 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="icons\icon_0003.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="icons\bitmap5.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="icons\icon_0004.bmp">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

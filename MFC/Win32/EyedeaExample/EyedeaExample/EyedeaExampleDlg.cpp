@@ -169,7 +169,7 @@ BOOL CEyedeaExampleDlg::OnInitDialog()
 	m_tab_dlg_vision_config.ShowWindow(SW_SHOW);
 	m_pwndShow = &m_tab_dlg_vision_config;
 
-	m_ip_addr.SetAddress(192, 168, 100, 3);		
+	m_ip_addr.SetAddress(192, 168, 123, 77);		
 	//m_ip_addr.SetAddress(192, 168, 123, 77);		
 	//m_ip_addr.SetAddress(192, 168, 100, 7);
 	//m_ip_addr.SetAddress(192, 168, 137, 11);

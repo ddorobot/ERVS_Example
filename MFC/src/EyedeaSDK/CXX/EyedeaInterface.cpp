@@ -10629,7 +10629,7 @@ int CEyedeaInterface::GetFindObjectResultInfo(int base_index, int sub_index, flo
 	return i_histogram_size;
 }
 
-int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, int option, float** out_id, float** out_cx, float** out_cy, float** out_rx, float** out_ry, float** out_bound_cx, float** out_bound_cy, float** out_bound_rx, float** out_bound_ry, float** out_mass_cx, float** out_mass_cy, float** out_mass_rx, float** out_mass_ry, float** out_angle, float** out_type, float** out_score)
+int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, int option, float** out_id, float** out_cx, float** out_cy, float** out_rx, float** out_ry, float** out_bound_cx, float** out_bound_cy, float** out_bound_rx, float** out_bound_ry, float** out_mass_cx, float** out_mass_cy, float** out_mass_rx, float** out_mass_ry, float** out_circle_rx, float** out_circle_ry, float** out_line1_x, float** out_line1_y, float** out_line2_x, float** out_line2_y, float** out_angle, float** out_type, float** out_score)
 {
 	boost::unique_lock<boost::mutex> scoped_lock(mutex);
 
@@ -10702,6 +10702,12 @@ int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, int op
 	int i_camera_mass_y = 0;
 	int i_robot_mass_x = 0;
 	int i_robot_mass_y = 0;
+	int i_circle_rx = 0;
+	int i_circle_ry = 0;
+	int i_line1_x = 0;
+	int i_line1_y = 0;
+	int i_line2_x = 0;
+	int i_line2_y = 0;
 	int i_angle = 0;
 	int i_type = 0;
 	int i_score = 0;
@@ -10718,7 +10724,7 @@ int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, int op
 		nObject |= ((int)data[index++] << 8) & 0x0000FF00;
 		nObject |= ((int)data[index++]) & 0x000000FF;
 
-		if (nObject > 0 && len >= 4 + ((16*4)* nObject))
+		if (nObject > 0 && len >= 4 + ((22*4)* nObject))
 		{
 			if ((*out_id) != NULL)	free((*out_id));
 			if ((*out_cx) != NULL)	free((*out_cx));
@@ -10733,6 +10739,12 @@ int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, int op
 			if ((*out_mass_cy) != NULL)	free((*out_mass_cy));
 			if ((*out_mass_rx) != NULL)	free((*out_mass_rx));
 			if ((*out_mass_ry) != NULL)	free((*out_mass_ry));
+			if ((*out_circle_rx) != NULL)	free((*out_circle_rx));
+			if ((*out_circle_ry) != NULL)	free((*out_circle_ry));
+			if ((*out_line1_x) != NULL)	free((*out_line1_x));
+			if ((*out_line1_y) != NULL)	free((*out_line1_y));
+			if ((*out_line2_x) != NULL)	free((*out_line2_x));
+			if ((*out_line2_y) != NULL)	free((*out_line2_y));
 			if ((*out_angle) != NULL)	free((*out_angle));
 			if ((*out_type) != NULL)	free((*out_type));
 			if ((*out_score) != NULL)	free((*out_score));
@@ -10751,6 +10763,12 @@ int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, int op
 			(*out_mass_cy) = (float *)malloc(sizeof(float)*nObject);
 			(*out_mass_rx) = (float *)malloc(sizeof(float)*nObject);
 			(*out_mass_ry) = (float *)malloc(sizeof(float)*nObject);
+			(*out_circle_rx) = (float *)malloc(sizeof(float)*nObject);
+			(*out_circle_ry) = (float *)malloc(sizeof(float)*nObject);
+			(*out_line1_x) = (float *)malloc(sizeof(float)*nObject);
+			(*out_line1_y) = (float *)malloc(sizeof(float)*nObject);
+			(*out_line2_x) = (float *)malloc(sizeof(float)*nObject);
+			(*out_line2_y) = (float *)malloc(sizeof(float)*nObject);
 			(*out_angle) = (float *)malloc(sizeof(float)*nObject);
 			(*out_type) = (float *)malloc(sizeof(float)*nObject);
 			(*out_score) = (float *)malloc(sizeof(float)*nObject);
@@ -10838,6 +10856,42 @@ int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, int op
 				i_robot_mass_y |= ((int)data[index++] << 8) & 0x0000FF00;
 				i_robot_mass_y |= ((int)data[index++]) & 0x000000FF;
 
+				//i_circle_rx
+				i_circle_rx = ((int)data[index++] << 24) & 0xFF000000;
+				i_circle_rx |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_circle_rx |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_circle_rx |= ((int)data[index++]) & 0x000000FF;
+
+				//i_circle_ry
+				i_circle_ry = ((int)data[index++] << 24) & 0xFF000000;
+				i_circle_ry |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_circle_ry |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_circle_ry |= ((int)data[index++]) & 0x000000FF;
+
+				//i_line1_x
+				i_line1_x = ((int)data[index++] << 24) & 0xFF000000;
+				i_line1_x |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_line1_x |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_line1_x |= ((int)data[index++]) & 0x000000FF;
+
+				//i_line1_y
+				i_line1_y = ((int)data[index++] << 24) & 0xFF000000;
+				i_line1_y |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_line1_y |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_line1_y |= ((int)data[index++]) & 0x000000FF;
+
+				//i_line2_x
+				i_line2_x = ((int)data[index++] << 24) & 0xFF000000;
+				i_line2_x |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_line2_x |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_line2_x |= ((int)data[index++]) & 0x000000FF;
+
+				//i_line2_y
+				i_line2_y = ((int)data[index++] << 24) & 0xFF000000;
+				i_line2_y |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_line2_y |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_line2_y |= ((int)data[index++]) & 0x000000FF;
+
 				//i_angle
 				i_angle = ((int)data[index++] << 24) & 0xFF000000;
 				i_angle |= ((int)data[index++] << 16) & 0x00FF0000;
@@ -10877,6 +10931,12 @@ int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, int op
 				(*out_mass_cy)[i] = (float)i_camera_mass_y / (float)scale_factor;
 				(*out_mass_rx)[i] = (float)i_robot_mass_x / (float)scale_factor;
 				(*out_mass_ry)[i] = (float)i_robot_mass_y / (float)scale_factor;
+				(*out_circle_rx)[i] = (float)i_circle_rx / (float)scale_factor;
+				(*out_circle_ry)[i] = (float)i_circle_ry / (float)scale_factor;
+				(*out_line1_x)[i] = (float)i_line1_x / (float)scale_factor;
+				(*out_line1_y)[i] = (float)i_line1_y / (float)scale_factor;
+				(*out_line2_x)[i] = (float)i_line2_x / (float)scale_factor;
+				(*out_line2_y)[i] = (float)i_line2_y / (float)scale_factor;
 				(*out_angle)[i] = (float)i_angle / (float)scale_factor;
 				(*out_type)[i] = (float)i_type / (float)scale_factor;
 				(*out_score)[i] = (float)i_score / (float)scale_factor;

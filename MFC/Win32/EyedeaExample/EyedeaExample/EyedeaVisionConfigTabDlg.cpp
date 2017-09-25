@@ -962,12 +962,12 @@ void CEyedeaVisionConfigTabDlg::OnBnClickedButtonVisionConfigGet2()
 	float denoising = ERVS_GetVisionConfigOption(VISION_CONFIG_DENOISING2);
 	float edge_low_thre = ERVS_GetVisionConfigOption(VISION_CONFIG_EDGE_LOW_THRESHOLD2);
 	float edge_max_thre = ERVS_GetVisionConfigOption(VISION_CONFIG_EDGE_MAX_LOW_THRESHOLD2);
-	float edge_ratio = ERVS_GetVisionConfigOption(VISION_CONFIG_EDGE_RATIO2);
+	//float edge_ratio = ERVS_GetVisionConfigOption(VISION_CONFIG_EDGE_RATIO2);
 	float edge_kernel_size = ERVS_GetVisionConfigOption(VISION_CONFIG_EDGE_KERNEL_SIZE2);
-	float morph_size = ERVS_GetVisionConfigOption(VISION_CONFIG_MORPH_SIZE2);
-	float size_filter = ERVS_GetVisionConfigOption(VISION_CONFIG_SIZE_FILTER2);
-	float padding = ERVS_GetVisionConfigOption(VISION_CONFIG_BASE_RECT_PADDING2);
-	float dilation_size = ERVS_GetVisionConfigOption(VISION_CONFIG_DILATION_SIZE2);
+	//float morph_size = ERVS_GetVisionConfigOption(VISION_CONFIG_MORPH_SIZE2);
+	//float size_filter = ERVS_GetVisionConfigOption(VISION_CONFIG_SIZE_FILTER2);
+	//float padding = ERVS_GetVisionConfigOption(VISION_CONFIG_BASE_RECT_PADDING2);
+	//float dilation_size = ERVS_GetVisionConfigOption(VISION_CONFIG_DILATION_SIZE2);
 	float matching_thre = ERVS_GetVisionConfigOption(VISION_CONFIG_MATCHING_THRESHOLD2);
 	float search_value_center = ERVS_GetVisionConfigOption(VISION_CONFIG_SEARCH_VALUE_CENTER2);
 	float search_value_roi = ERVS_GetVisionConfigOption(VISION_CONFIG_SEARCH_VALUE_USER_ROI2);
@@ -1000,18 +1000,8 @@ void CEyedeaVisionConfigTabDlg::OnBnClickedButtonVisionConfigGet2()
 	GetDlgItem(IDC_EDIT_VISION_CONFIG_29)->SetWindowText(str);
 	str.Format(_T("%.2f"), edge_max_thre);
 	GetDlgItem(IDC_EDIT_VISION_CONFIG_30)->SetWindowText(str);
-	str.Format(_T("%.2f"), edge_ratio);
-	GetDlgItem(IDC_EDIT_VISION_CONFIG_31)->SetWindowText(str);
 	str.Format(_T("%.2f"), edge_kernel_size);
 	GetDlgItem(IDC_EDIT_VISION_CONFIG_32)->SetWindowText(str);
-	str.Format(_T("%.2f"), morph_size);
-	GetDlgItem(IDC_EDIT_VISION_CONFIG_33)->SetWindowText(str);
-	str.Format(_T("%.2f"), size_filter);
-	GetDlgItem(IDC_EDIT_VISION_CONFIG_34)->SetWindowText(str);
-	str.Format(_T("%.2f"), padding);
-	GetDlgItem(IDC_EDIT_VISION_CONFIG_35)->SetWindowText(str);
-	str.Format(_T("%.2f"), dilation_size);
-	GetDlgItem(IDC_EDIT_VISION_CONFIG_36)->SetWindowText(str);
 	str.Format(_T("%.2f"), edge_margin);
 	GetDlgItem(IDC_EDIT_VISION_CONFIG_EDGE_MATCHING_MARGIN)->SetWindowText(str);
 	str.Format(_T("%.2f"), masking_option_find_object_threshold);
@@ -1052,9 +1042,9 @@ void CEyedeaVisionConfigTabDlg::OnBnClickedButtonVisionConfigGet2()
 
 	//
 
-	int filter_size = ERVS_GetVisionConfigOption(VISION_CONFIG_FIND_OBJECT_FILER_SIZE);
-	str.Format(_T("%d"), filter_size);
-	GetDlgItem(IDC_EDIT_FIND_OBJECT_FILTER_SIZE)->SetWindowText(str);
+	//int filter_size = ERVS_GetVisionConfigOption(VISION_CONFIG_FIND_OBJECT_FILER_SIZE);
+	//str.Format(_T("%d"), filter_size);
+	//GetDlgItem(IDC_EDIT_FIND_OBJECT_FILTER_SIZE)->SetWindowText(str);
 }
 
 
@@ -1066,12 +1056,12 @@ void CEyedeaVisionConfigTabDlg::OnBnClickedButtonVisionConfigSet2()
 	float denoising = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_DENOISING);
 	float edge_low_thre = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_EDGE_LOW_THRESHOLD);
 	float edge_max_thre = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_EDGE_MAX_LOW_THRESHOLD);
-	float edge_ratio = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_EDGE_RATIO);
+	//float edge_ratio = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_EDGE_RATIO);
 	float edge_kernel_size = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_EDGE_KERNEL_SIZE);
-	float morph_size = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_MORPH_SIZE);
-	float size_filter = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_SIZE_FILTER);
-	float padding = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_BASE_RECT_PADDING);
-	float dilation_size = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_DILATION_SIZE);
+	//float morph_size = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_MORPH_SIZE);
+	//float size_filter = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_SIZE_FILTER);
+	//float padding = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_BASE_RECT_PADDING);
+	//float dilation_size = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_DILATION_SIZE);
 	float matching_thre = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_MATCHING_THRESHOLD);
 	float search_value_center = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_SEARCH_VALUE_CENTER);
 	float search_value_roi = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_SEARCH_VALUE_USER_ROI);
@@ -1103,18 +1093,8 @@ void CEyedeaVisionConfigTabDlg::OnBnClickedButtonVisionConfigSet2()
 	edge_low_thre = _ttof(str);
 	GetDlgItem(IDC_EDIT_VISION_CONFIG_30)->GetWindowText(str);
 	edge_max_thre = _ttof(str);
-	GetDlgItem(IDC_EDIT_VISION_CONFIG_31)->GetWindowText(str);
-	edge_ratio = _ttof(str);
 	GetDlgItem(IDC_EDIT_VISION_CONFIG_32)->GetWindowText(str);
 	edge_kernel_size = _ttof(str);
-	GetDlgItem(IDC_EDIT_VISION_CONFIG_33)->GetWindowText(str);
-	morph_size = _ttof(str);
-	GetDlgItem(IDC_EDIT_VISION_CONFIG_34)->GetWindowText(str);
-	size_filter = _ttof(str);
-	GetDlgItem(IDC_EDIT_VISION_CONFIG_35)->GetWindowText(str);
-	padding = _ttof(str);
-	GetDlgItem(IDC_EDIT_VISION_CONFIG_36)->GetWindowText(str);
-	dilation_size = _ttof(str);
 	GetDlgItem(IDC_EDIT_VISION_CONFIG_EDGE_MATCHING_MARGIN)->GetWindowText(str);
 	edge_margin = _ttof(str);
 	GetDlgItem(IDC_EDIT_VISION_CONFIG_FIND_OBJECT_THRESHOLD)->GetWindowText(str);
@@ -1136,12 +1116,12 @@ void CEyedeaVisionConfigTabDlg::OnBnClickedButtonVisionConfigSet2()
 	ERVS_SetVisionConfigOption(VISION_CONFIG_DENOISING2, denoising);
 	ERVS_SetVisionConfigOption(VISION_CONFIG_EDGE_LOW_THRESHOLD2, edge_low_thre);
 	ERVS_SetVisionConfigOption(VISION_CONFIG_EDGE_MAX_LOW_THRESHOLD2, edge_max_thre);
-	ERVS_SetVisionConfigOption(VISION_CONFIG_EDGE_RATIO2, edge_ratio);
+	//ERVS_SetVisionConfigOption(VISION_CONFIG_EDGE_RATIO2, edge_ratio);
 	ERVS_SetVisionConfigOption(VISION_CONFIG_EDGE_KERNEL_SIZE2, edge_kernel_size);
-	ERVS_SetVisionConfigOption(VISION_CONFIG_MORPH_SIZE2, morph_size);
-	ERVS_SetVisionConfigOption(VISION_CONFIG_SIZE_FILTER2, size_filter);
-	ERVS_SetVisionConfigOption(VISION_CONFIG_BASE_RECT_PADDING2, padding);
-	ERVS_SetVisionConfigOption(VISION_CONFIG_DILATION_SIZE2, dilation_size);
+	//ERVS_SetVisionConfigOption(VISION_CONFIG_MORPH_SIZE2, morph_size);
+	//ERVS_SetVisionConfigOption(VISION_CONFIG_SIZE_FILTER2, size_filter);
+	//ERVS_SetVisionConfigOption(VISION_CONFIG_BASE_RECT_PADDING2, padding);
+	//ERVS_SetVisionConfigOption(VISION_CONFIG_DILATION_SIZE2, dilation_size);
 	ERVS_SetVisionConfigOption(VISION_CONFIG_MATCHING_THRESHOLD2, matching_thre);
 	ERVS_SetVisionConfigOption(VISION_CONFIG_SEARCH_VALUE_CENTER2, search_value_center);
 	ERVS_SetVisionConfigOption(VISION_CONFIG_SEARCH_VALUE_USER_ROI2, search_value_roi);
@@ -1191,9 +1171,9 @@ void CEyedeaVisionConfigTabDlg::OnBnClickedButtonVisionConfigSet2()
 
 	//
 
-	GetDlgItem(IDC_EDIT_FIND_OBJECT_FILTER_SIZE)->GetWindowText(str);
-	int filter_size = _ttoi(str);
-	ERVS_SetVisionConfigOption(VISION_CONFIG_FIND_OBJECT_FILER_SIZE, filter_size);
+	//GetDlgItem(IDC_EDIT_FIND_OBJECT_FILTER_SIZE)->GetWindowText(str);
+	//int filter_size = _ttoi(str);
+	//ERVS_SetVisionConfigOption(VISION_CONFIG_FIND_OBJECT_FILER_SIZE, filter_size);
 
 	//check
 	OnBnClickedButtonVisionConfigGet2();
@@ -1535,9 +1515,9 @@ void CEyedeaVisionConfigTabDlg::OnBnClickedButtonFindObjectDetectionLevelGet()
 	// TODO: Add your control notification handler code here
 	CString str;
 
-	int padding_size = ERVS_GetVisionConfigOption(VISION_CONFIG_FIND_OBJECT_FILER_PADDING);
-	str.Format(_T("%d"), padding_size);
-	GetDlgItem(IDC_EDIT_FIND_OBJECT_FILTER_PADDING)->SetWindowText(str);
+	//int padding_size = ERVS_GetVisionConfigOption(VISION_CONFIG_FIND_OBJECT_FILER_PADDING);
+	//str.Format(_T("%d"), padding_size);
+	//GetDlgItem(IDC_EDIT_FIND_OBJECT_FILTER_PADDING)->SetWindowText(str);
 }
 
 
@@ -1545,9 +1525,9 @@ void CEyedeaVisionConfigTabDlg::OnBnClickedButtonFindObjectDetectionLevelSet()
 {
 	// TODO: Add your control notification handler code here
 	CString str;
-	GetDlgItem(IDC_EDIT_FIND_OBJECT_FILTER_PADDING)->GetWindowText(str);
-	int filter_padding = _ttoi(str);
-	ERVS_SetVisionConfigOption(VISION_CONFIG_FIND_OBJECT_FILER_PADDING, filter_padding);
+	//GetDlgItem(IDC_EDIT_FIND_OBJECT_FILTER_PADDING)->GetWindowText(str);
+	//int filter_padding = _ttoi(str);
+	//ERVS_SetVisionConfigOption(VISION_CONFIG_FIND_OBJECT_FILER_PADDING, filter_padding);
 
 	//cross check
 	OnBnClickedButtonFindObjectDetectionLevelGet();

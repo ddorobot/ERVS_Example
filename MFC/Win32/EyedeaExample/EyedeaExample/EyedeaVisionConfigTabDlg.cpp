@@ -74,8 +74,8 @@ BEGIN_MESSAGE_MAP(CEyedeaVisionConfigTabDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_CHECK_FIXED_AREA2, &CEyedeaVisionConfigTabDlg::OnBnClickedCheckFixedArea)
 	ON_BN_CLICKED(IDC_BUTTON_SELECT_BASE, &CEyedeaVisionConfigTabDlg::OnBnClickedButtonSelectBase)
 	ON_BN_CLICKED(IDC_BUTTON_SELECT_CIRCLE, &CEyedeaVisionConfigTabDlg::OnBnClickedButtonSelectCircle)
-	ON_BN_CLICKED(IDC_BUTTON_FIND_OBJECT_DETECTION_LEVEL_GET, &CEyedeaVisionConfigTabDlg::OnBnClickedButtonFindObjectDetectionLevelGet)
-	ON_BN_CLICKED(IDC_BUTTON_FIND_OBJECT_DETECTION_LEVEL_SET, &CEyedeaVisionConfigTabDlg::OnBnClickedButtonFindObjectDetectionLevelSet)
+	//ON_BN_CLICKED(IDC_BUTTON_FIND_OBJECT_DETECTION_LEVEL_GET, &CEyedeaVisionConfigTabDlg::OnBnClickedButtonFindObjectDetectionLevelGet)
+	//ON_BN_CLICKED(IDC_BUTTON_FIND_OBJECT_DETECTION_LEVEL_SET, &CEyedeaVisionConfigTabDlg::OnBnClickedButtonFindObjectDetectionLevelSet)
 	ON_BN_CLICKED(IDC_BUTTON_CHECK_CAMERA_CALIBOK, &CEyedeaVisionConfigTabDlg::OnBnClickedButtonCheckCameraCalibok)
 	ON_WM_LBUTTONDOWN()
 	ON_WM_LBUTTONUP()
@@ -448,6 +448,11 @@ void CEyedeaVisionConfigTabDlg::ThreadFunctionDraw()
 
 		//vImage.CopyOf(&IplImage(m_check_image2), 1);							//mat to vimage
 		//vImage.DrawToHDC(dc_display_local.m_hDC, &rect_display_local);				//draw on display_rect
+
+		int select_id = ERVS_DB_Get_Select_ID();
+		CString strText;
+		strText.Format(_T("%d"), select_id);
+		GetDlgItem(IDC_EDIT_SETTING_ID)->SetWindowText(strText);
 
 		OnBnClickedButtonCheckCameraCalibok();
 
@@ -1036,9 +1041,9 @@ void CEyedeaVisionConfigTabDlg::OnBnClickedButtonVisionConfigGet2()
 
 	//
 
-	int local_padding = ERVS_GetVisionConfigOption(VISION_CONFIG_FIND_OBJECT_LOCAL_PADDING);
-	str.Format(_T("%d"), local_padding);
-	GetDlgItem(IDC_EDIT_FIND_OBJECT_LOCAL_PADDING)->SetWindowText(str);
+	//int local_padding = ERVS_GetVisionConfigOption(VISION_CONFIG_FIND_OBJECT_LOCAL_PADDING);
+	//str.Format(_T("%d"), local_padding);
+	//GetDlgItem(IDC_EDIT_FIND_OBJECT_LOCAL_PADDING)->SetWindowText(str);
 
 	//
 
@@ -1165,9 +1170,9 @@ void CEyedeaVisionConfigTabDlg::OnBnClickedButtonVisionConfigSet2()
 
 	//
 
-	GetDlgItem(IDC_EDIT_FIND_OBJECT_LOCAL_PADDING)->GetWindowText(str);
-	int local_padding = _ttoi(str);
-	ERVS_SetVisionConfigOption(VISION_CONFIG_FIND_OBJECT_LOCAL_PADDING, local_padding);
+	//GetDlgItem(IDC_EDIT_FIND_OBJECT_LOCAL_PADDING)->GetWindowText(str);
+	//int local_padding = _ttoi(str);
+	//ERVS_SetVisionConfigOption(VISION_CONFIG_FIND_OBJECT_LOCAL_PADDING, local_padding);
 
 	//
 
@@ -1240,7 +1245,7 @@ void CEyedeaVisionConfigTabDlg::RoadAllFromERVS()
 	//OnBnClickedButtonCheckVisionConfigGlobal();
 	OnBnClickedButtonVisionConfigGet2();
 	//OnBnClickedButtonCheckVisionConfigLocal();
-	OnBnClickedButtonFindObjectDetectionLevelGet();
+	//OnBnClickedButtonFindObjectDetectionLevelGet();
 	OnBnClickedButtonCheckCameraCalibok();
 
 	//OnBnClickedCheckDependencySearcharea();
@@ -1509,7 +1514,7 @@ void CEyedeaVisionConfigTabDlg::OnBnClickedButtonSelectCircle()
 	m_command = USER_COMMAND_SELECT_OBJECT_CIRCLE;
 }
 
-
+#if 0
 void CEyedeaVisionConfigTabDlg::OnBnClickedButtonFindObjectDetectionLevelGet()
 {
 	// TODO: Add your control notification handler code here
@@ -1519,8 +1524,9 @@ void CEyedeaVisionConfigTabDlg::OnBnClickedButtonFindObjectDetectionLevelGet()
 	//str.Format(_T("%d"), padding_size);
 	//GetDlgItem(IDC_EDIT_FIND_OBJECT_FILTER_PADDING)->SetWindowText(str);
 }
+#endif
 
-
+#if 0
 void CEyedeaVisionConfigTabDlg::OnBnClickedButtonFindObjectDetectionLevelSet()
 {
 	// TODO: Add your control notification handler code here
@@ -1532,6 +1538,7 @@ void CEyedeaVisionConfigTabDlg::OnBnClickedButtonFindObjectDetectionLevelSet()
 	//cross check
 	OnBnClickedButtonFindObjectDetectionLevelGet();
 }
+#endif
 
 void CEyedeaVisionConfigTabDlg::OnBnClickedButtonCheckCameraCalibok()
 {

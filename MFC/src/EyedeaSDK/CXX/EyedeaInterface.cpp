@@ -9730,6 +9730,66 @@ int CEyedeaInterface::SetObjectAngleWidth(int width)
     return ret;
 }
 
+int CEyedeaInterface::Calibration_GetID(void)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	//printf("SetSearchArea - %d %d %d %d\n", x, y, w, h);
+
+	char command = COMMAND_CALIBRATION_GET_ID;
+	int len = 0;
+	unsigned char* data = NULL;
+
+	unsigned int scale_factor = 1;
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+	if (ret == EYEDEA_ERROR_INVALID_MEMORY)
+	{
+		int sec = 0;
+		while (1)
+		{
+			ret = m_cls_eth_client->Open(m_ip, m_port);
+			if (ret == 0) {
+				ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+				break;
+			}
+			else
+			{
+				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
+				sec++;
+				if (sec >= 60)
+					return ret;
+				continue;
+			}
+		}
+	}
+	if (ret != 0)
+		return ret;
+
+	ret = 0;
+
+	if (len >= 4)
+	{
+		//w
+		ret = ((int)data[0] << 24) & 0xFF000000;
+		ret |= ((int)data[1] << 16) & 0x00FF0000;
+		ret |= ((int)data[2] << 8) & 0x0000FF00;
+		ret |= ((int)data[3]) & 0x000000FF;
+
+	}
+
+	delete (data);
+	data = NULL;
+
+	return ret;
+}
+
 int CEyedeaInterface::Calibration_isOK(void)
 {
 	boost::unique_lock<boost::mutex> scoped_lock(mutex);

@@ -199,6 +199,7 @@ int ERVS_Calibration_isOK(void);
 int ERVS_Calibration_Save(void);
 int ERVS_Calibration_Load(void);
 int ERVS_Calibration_Copy(const int id);
+int ERVS_Calibration_GetID(void);
 
 int ERVS_SetLog(int logoption);
 

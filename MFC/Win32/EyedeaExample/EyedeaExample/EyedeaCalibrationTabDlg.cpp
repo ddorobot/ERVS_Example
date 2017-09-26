@@ -110,6 +110,12 @@ void CEyedeaCalibrationTabDlg::ThreadFunctionDraw()
 
 		vImage.CopyOf(&IplImage(m_calib_image), 1);							//mat to vimage
 		vImage.DrawToHDC(dc_display_ori.m_hDC, &rect_display_ori);				//draw on display_rect
+
+		//ERVS_Calibration_GetID
+		int calibration_id = ERVS_Calibration_GetID();
+		CString strText;
+		strText.Format(_T("%d"), calibration_id);
+		GetDlgItem(IDC_EDIT_CALIBRATION_ID)->SetWindowText(strText);
 	};
 }
 

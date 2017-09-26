@@ -78,8 +78,8 @@ public:
 	afx_msg void OnBnClickedCheckFixedArea();
 	afx_msg void OnBnClickedButtonSelectBase();
 	afx_msg void OnBnClickedButtonSelectCircle();
-	afx_msg void OnBnClickedButtonFindObjectDetectionLevelGet();
-	afx_msg void OnBnClickedButtonFindObjectDetectionLevelSet();
+	//afx_msg void OnBnClickedButtonFindObjectDetectionLevelGet();
+	//afx_msg void OnBnClickedButtonFindObjectDetectionLevelSet();
 	afx_msg void OnBnClickedButtonCheckCameraCalibok();
 	CComboBox m_combo_get_image_option_base;
 	void DrawBoxForUserArea(cv::Mat draw);

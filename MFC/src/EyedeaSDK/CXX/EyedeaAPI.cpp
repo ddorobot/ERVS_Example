@@ -798,6 +798,11 @@ int ERVS_Calibration_isOK(void)
 	return g_cls_interface.Calibration_isOK();
 }
 
+int ERVS_Calibration_GetID(void)
+{
+	return g_cls_interface.Calibration_GetID();
+}
+
 int ERVS_SetLog(int logoption)
 {
 	return g_cls_interface.SetLog(logoption);

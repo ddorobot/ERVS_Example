@@ -121,7 +121,8 @@ BOOL CEyedeaExampleDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
 	// TODO: Add extra initialization here
-	m_tab_mode.InsertItem(0, _T("New - Setting"));
+	//m_tab_mode.InsertItem(0, _T("New - Setting"));
+	m_tab_mode.InsertItem(0, _T("Setting"));
 	//m_tab_mode.InsertItem(1, _T("Search Area"));
 	m_tab_mode.InsertItem(1, _T("Demo"));
 	m_tab_mode.InsertItem(2, _T("Calibration"));
@@ -326,6 +327,7 @@ void CEyedeaExampleDlg::OnBnClickedButtonConnect()
 				m_tab_mode.SetCurSel(0);
 				OnTcnSelchangeTabMy(0);
 
+				/*
 				TCITEM tcItem;
 				CString pszString;
 				//pszString.Format(_T("%d - Object Detection"), id);
@@ -338,6 +340,7 @@ void CEyedeaExampleDlg::OnBnClickedButtonConnect()
 				tcItem.pszText = pszString.LockBuffer();
 
 				m_tab_mode.SetItem(0, &tcItem);
+				*/
 				//Goto tab
 				//----------------------------------------------
 			}
@@ -979,6 +982,7 @@ void CEyedeaExampleDlg::OnBnClickedButtonNewModel()
 		m_tab_mode.SetCurSel(0);
 		OnTcnSelchangeTabMy(0);
 
+		/*
 		TCITEM tcItem;
 		CString pszString;
 		//pszString.Format(_T("%d - Object Detection"), newid);
@@ -991,6 +995,7 @@ void CEyedeaExampleDlg::OnBnClickedButtonNewModel()
 		tcItem.pszText = pszString.LockBuffer();
 
 		m_tab_mode.SetItem(0, &tcItem);
+		*/
 	}
 }
 
@@ -1265,6 +1270,7 @@ void CEyedeaExampleDlg::OnNMDblclkListInformation(NMHDR *pNMHDR, LRESULT *pResul
 		m_tab_mode.SetCurSel(0);
 		OnTcnSelchangeTabMy(0);
 
+		/*
 		TCITEM tcItem;
 		CString pszString;
 		//pszString.Format(_T("%d - Object Detection"), id);
@@ -1277,6 +1283,7 @@ void CEyedeaExampleDlg::OnNMDblclkListInformation(NMHDR *pNMHDR, LRESULT *pResul
 		tcItem.pszText = pszString.LockBuffer();
 
 		m_tab_mode.SetItem(0, &tcItem);
+		*/
 		//Goto tab
 		//----------------------------------------------
 	}

@@ -1453,6 +1453,21 @@ void CEyedeaVisionConfigTabDlg::OnBnClickedButtonSetBase()
 
 	//check for single mode
 	OnBnClickedCheckDependencySearcharea();
+
+	//----------------------------------
+	//check for fixed area
+	int ret = ERVS_GetOptionFixArea();
+
+	if (ret > 0)
+	{
+		CheckDlgButton(IDC_CHECK_FIXED_AREA2, TRUE);
+	}
+	else
+	{
+		CheckDlgButton(IDC_CHECK_FIXED_AREA2, FALSE);
+	}
+	//check for fixed area
+	//----------------------------------
 }
 
 

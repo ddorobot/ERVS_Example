@@ -57,9 +57,30 @@ BOOL CEyedeaCalibrationTabDlg::OnInitDialog()
 	CString str;
 	str.Format(_T("-"));
 
-	GetDlgItem(IDC_EDIT_CALIBRATION_CHESS_NX)->SetWindowText(str);
-	GetDlgItem(IDC_EDIT_CALIBRATION_CHESS_NY)->SetWindowText(str);
-	GetDlgItem(IDC_EDIT_CALIBRATION_CHESS_SIZE)->SetWindowText(str);
+	if (boost::filesystem::exists("ervs_example.ini"))
+	{
+		//last environment from ini
+		boost::property_tree::ptree pt_eyedea;
+		boost::property_tree::ini_parser::read_ini("ervs_example.ini", pt_eyedea);
+		int chess_nx = pt_eyedea.get<int>("ervs_example.calibration_chess_nx");
+		int chess_ny = pt_eyedea.get<int>("ervs_example.calibration_chess_ny");
+		int chess_size = pt_eyedea.get<int>("ervs_example.calibration_chess_size");
+
+		str.Format(_T("%d"), chess_nx);
+		GetDlgItem(IDC_EDIT_CALIBRATION_CHESS_NX)->SetWindowText(str);
+		str.Format(_T("%d"), chess_ny);
+		GetDlgItem(IDC_EDIT_CALIBRATION_CHESS_NY)->SetWindowText(str);
+		str.Format(_T("%d"), chess_size);
+		GetDlgItem(IDC_EDIT_CALIBRATION_CHESS_SIZE)->SetWindowText(str);
+	}
+	else
+	{
+		GetDlgItem(IDC_EDIT_CALIBRATION_CHESS_NX)->SetWindowText(str);
+		GetDlgItem(IDC_EDIT_CALIBRATION_CHESS_NY)->SetWindowText(str);
+		GetDlgItem(IDC_EDIT_CALIBRATION_CHESS_SIZE)->SetWindowText(str);
+	}
+
+	str.Format(_T("-"));
 
 	GetDlgItem(IDC_EDIT_CALIBRATION_MOVE_ROBOT_X)->SetWindowText(str);
 	GetDlgItem(IDC_EDIT_CALIBRATION_MOVE_ROBOT_Y)->SetWindowText(str);
@@ -254,6 +275,12 @@ void CEyedeaCalibrationTabDlg::OnBnClickedButtonCalibrationChessInfoSet()
 	ERVS_SetVisionConfigOption(VISION_CONFIG_CALIBRATION_CHESS_SIZE, square_size);
 
 	OnBnClickedButtonCalibrationChessInfoGet();
+
+	boost::property_tree::ptree pt;
+	pt.put("ervs_example.calibration_chess_nx", (int)number_cols);
+	pt.put("ervs_example.calibration_chess_ny", (int)number_rows);
+	pt.put("ervs_example.calibration_chess_size", (int)square_size);
+	boost::property_tree::ini_parser::write_ini("ervs_example.ini", pt);
 }
 
 

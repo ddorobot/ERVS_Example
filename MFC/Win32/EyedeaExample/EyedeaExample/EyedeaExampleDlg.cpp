@@ -170,12 +170,27 @@ BOOL CEyedeaExampleDlg::OnInitDialog()
 	m_tab_dlg_vision_config.ShowWindow(SW_SHOW);
 	m_pwndShow = &m_tab_dlg_vision_config;
 
-	m_ip_addr.SetAddress(192, 168, 123, 77);		
-	//m_ip_addr.SetAddress(192, 168, 123, 77);		
-	//m_ip_addr.SetAddress(192, 168, 100, 7);
-	//m_ip_addr.SetAddress(192, 168, 137, 11);
-	//m_ip_addr.SetAddress(192, 168, 122, 131);
-	//m_ip_addr.SetAddress(192, 168, 122, 129);
+	if (boost::filesystem::exists("ervs_example.ini"))
+	{
+		//last environment from ini
+		boost::property_tree::ptree pt_eyedea;
+		boost::property_tree::ini_parser::read_ini("ervs_example.ini", pt_eyedea);
+		int ip_a = pt_eyedea.get<int>("ervs_example.ip_a");
+		int ip_b = pt_eyedea.get<int>("ervs_example.ip_b");
+		int ip_c = pt_eyedea.get<int>("ervs_example.ip_c");
+		int ip_d = pt_eyedea.get<int>("ervs_example.ip_d");
+
+		m_ip_addr.SetAddress(ip_a, ip_b, ip_c, ip_d);
+	}
+	else
+	{
+		m_ip_addr.SetAddress(192, 168, 123, 77);
+		//m_ip_addr.SetAddress(192, 168, 123, 77);		
+		//m_ip_addr.SetAddress(192, 168, 100, 7);
+		//m_ip_addr.SetAddress(192, 168, 137, 11);
+		//m_ip_addr.SetAddress(192, 168, 122, 131);
+		//m_ip_addr.SetAddress(192, 168, 122, 129);
+	}
 
 	CString str;
 	str.Format(_T("%d"), 4000);
@@ -357,6 +372,13 @@ void CEyedeaExampleDlg::OnBnClickedButtonConnect()
 			MessageBox(_T("ERVS connection error"), MB_OK);
 		}
 	}
+
+	boost::property_tree::ptree pt;
+	pt.put("ervs_example.ip_a", (int)IP_a);
+	pt.put("ervs_example.ip_b", (int)IP_b);
+	pt.put("ervs_example.ip_c", (int)IP_c);
+	pt.put("ervs_example.ip_d", (int)IP_d);
+	boost::property_tree::ini_parser::write_ini("ervs_example.ini", pt);
 }
 
 

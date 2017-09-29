@@ -869,3 +869,14 @@ int ERVS_FindSearchArea(int level)
 {
 	return g_cls_interface.FindSearchArea(level);
 }
+
+//Geometry
+int ERVS_Geometry_Distance(const int base_id, const int target_id, const float base_info, const float tol, float *out_value)
+{
+	return g_cls_interface.Geometry_Distance(base_id, target_id, base_info, tol, out_value);
+}
+
+int ERVS_Geometry_Angle(const int base_id, const int target_id, const float base_info, const float tol, float *out_value)
+{
+	return g_cls_interface.Geometry_Angle(base_id, target_id, base_info, tol, out_value);
+}

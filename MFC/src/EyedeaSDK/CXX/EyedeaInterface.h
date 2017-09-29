@@ -215,6 +215,11 @@ public:
 
 	int FindSearchArea(int level);
 
+	//Geometry
+	int Geometry_Distance(const int base_id, const int target_id, const float base_info, const float tol, float *out_value);
+	int Geometry_Angle(const int base_id, const int target_id, const float base_info, const float tol, float *out_value);
+
+
 private:
 	//bool m_run_thread_net;			//eyedea - boost thread exit value
 	//boost::thread m_thread_net;		//eyedea - network thread

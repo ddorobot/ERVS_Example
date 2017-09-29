@@ -88,6 +88,8 @@ BEGIN_MESSAGE_MAP(CEyedeaCheckDefectTabDlg, CDialogEx)
 	//ON_LBN_DBLCLK(IDC_LIST_RESULT, &CEyedeaCheckDefectTabDlg::OnLbnDblclkListResult)
 	ON_NOTIFY(NM_DBLCLK, IDC_TREE_RESULT, &CEyedeaCheckDefectTabDlg::OnNMDblclkTreeResult)
 	//ON_BN_CLICKED(IDC_CHECK_ONE_OF_SUBS, &CEyedeaCheckDefectTabDlg::OnBnClickedCheckOneOfSubs)
+	ON_BN_CLICKED(IDC_BUTTON2, &CEyedeaCheckDefectTabDlg::OnBnClickedButton2)
+	ON_BN_CLICKED(IDC_BUTTON_GEO_ANGLE, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonGeoAngle)
 END_MESSAGE_MAP()
 
 
@@ -1837,4 +1839,73 @@ BOOL CEyedeaCheckDefectTabDlg::PreTranslateMessage(MSG* pMsg)
 	}
 
 	return CDialogEx::PreTranslateMessage(pMsg);
+}
+
+
+void CEyedeaCheckDefectTabDlg::OnBnClickedButton2()
+{
+	// TODO: Add your control notification handler code here
+	CString strBaseID;
+	GetDlgItem(IDC_EDIT_GEO_ID1)->GetWindowText(strBaseID);
+	int base_id = _ttoi(strBaseID);
+
+	CString strTargetID;
+	GetDlgItem(IDC_EDIT_GEO_ID2)->GetWindowText(strTargetID);
+	int target_id = _ttoi(strTargetID);
+
+	CString strTolBase;
+	GetDlgItem(IDC_EDIT_GEO_DISTANCE_TOL_BASE)->GetWindowText(strTolBase);
+	float tol_base_value = _ttof(strTolBase);
+
+	CString strTol;
+	GetDlgItem(IDC_EDIT_GEO_DISTANCE_TOL)->GetWindowText(strTol);
+	float tol_value = _ttof(strTol);
+
+	float distance_value = 0;
+	ERVS_Geometry_Distance(base_id, target_id, tol_base_value, tol_value, &distance_value);
+
+	CString strDistance;
+	strDistance.Format(_T("%f"), distance_value);
+	GetDlgItem(IDC_EDIT_GEO_RESULT_DISTANCE)->SetWindowText(strDistance);
+
+	//Get Result Image
+	//Result image
+	int len = 921600;
+	//ERVS_GetImage(GET_IMAGE_RESULT, -1, (char**)&m_result_image.data, &len);
+	ERVS_GetFindObjectResultImage(-1, -1, (char**)&m_result_image.data, &len);
+}
+
+
+void CEyedeaCheckDefectTabDlg::OnBnClickedButtonGeoAngle()
+{
+	// TODO: Add your control notification handler code here
+
+	CString strBaseID;
+	GetDlgItem(IDC_EDIT_GEO_ID1)->GetWindowText(strBaseID);
+	int base_id = _ttoi(strBaseID);
+
+	CString strTargetID;
+	GetDlgItem(IDC_EDIT_GEO_ID2)->GetWindowText(strTargetID);
+	int target_id = _ttoi(strTargetID);
+
+	CString strTolBase;
+	GetDlgItem(IDC_EDIT_GEO_ANGLE_TOL_BASE)->GetWindowText(strTolBase);
+	float tol_base_value = _ttof(strTolBase);
+
+	CString strTol;
+	GetDlgItem(IDC_EDIT_GEO_ANGLE_TOL)->GetWindowText(strTol);
+	float tol_value = _ttof(strTol);
+
+	float angle_value = 0;
+	ERVS_Geometry_Angle(base_id, target_id, tol_base_value, tol_value, &angle_value);
+
+	CString strAngle;
+	strAngle.Format(_T("%f"), angle_value);
+	GetDlgItem(IDC_EDIT_GEO_RESULT_ANGLE)->SetWindowText(strAngle);
+
+	//Get Result Image
+	//Result image
+	int len = 921600;
+	//ERVS_GetImage(GET_IMAGE_RESULT, -1, (char**)&m_result_image.data, &len);
+	ERVS_GetFindObjectResultImage(-1, -1, (char**)&m_result_image.data, &len);
 }

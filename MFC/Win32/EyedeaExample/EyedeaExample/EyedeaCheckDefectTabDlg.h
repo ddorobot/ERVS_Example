@@ -103,4 +103,6 @@ public:
 	afx_msg void OnNMDblclkTreeResult(NMHDR *pNMHDR, LRESULT *pResult);
 	//afx_msg void OnBnClickedCheckOneOfSubs();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
+	afx_msg void OnBnClickedButton2();
+	afx_msg void OnBnClickedButtonGeoAngle();
 };

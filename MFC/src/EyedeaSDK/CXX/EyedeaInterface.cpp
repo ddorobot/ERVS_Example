@@ -11958,6 +11958,36 @@ int CEyedeaInterface::Geometry_Angle(const int base_id, const int target_id, con
 	return ret;
 }
 
+int CEyedeaInterface::Geometry_Clear(void)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_GEOMETRY_CLEAR;
+
+	int len = 0;
+	unsigned char* data = new unsigned char[len];
+	unsigned int scale_factor = 1;
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+
+	if (ret != 0)
+		return ret;
+
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+
+	return ret;
+}
+
 #if 0
 int CEyedeaInterface::ThreadFunctionNetwork(void)
 {

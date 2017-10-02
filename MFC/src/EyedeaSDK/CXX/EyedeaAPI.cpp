@@ -880,3 +880,8 @@ int ERVS_Geometry_Angle(const int base_id, const int target_id, const float base
 {
 	return g_cls_interface.Geometry_Angle(base_id, target_id, base_info, tol, out_value);
 }
+
+int ERVS_Geometry_Clear(void)
+{
+	return g_cls_interface.Geometry_Clear();
+}

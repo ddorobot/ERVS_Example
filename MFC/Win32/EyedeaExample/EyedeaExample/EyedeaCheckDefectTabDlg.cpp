@@ -90,6 +90,7 @@ BEGIN_MESSAGE_MAP(CEyedeaCheckDefectTabDlg, CDialogEx)
 	//ON_BN_CLICKED(IDC_CHECK_ONE_OF_SUBS, &CEyedeaCheckDefectTabDlg::OnBnClickedCheckOneOfSubs)
 	ON_BN_CLICKED(IDC_BUTTON2, &CEyedeaCheckDefectTabDlg::OnBnClickedButton2)
 	ON_BN_CLICKED(IDC_BUTTON_GEO_ANGLE, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonGeoAngle)
+	ON_BN_CLICKED(IDC_BUTTON_GEO_RESULT_CLEAR, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonGeoResultClear)
 END_MESSAGE_MAP()
 
 
@@ -1902,6 +1903,19 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonGeoAngle()
 	CString strAngle;
 	strAngle.Format(_T("%f"), angle_value);
 	GetDlgItem(IDC_EDIT_GEO_RESULT_ANGLE)->SetWindowText(strAngle);
+
+	//Get Result Image
+	//Result image
+	int len = 921600;
+	//ERVS_GetImage(GET_IMAGE_RESULT, -1, (char**)&m_result_image.data, &len);
+	ERVS_GetFindObjectResultImage(-1, -1, (char**)&m_result_image.data, &len);
+}
+
+
+void CEyedeaCheckDefectTabDlg::OnBnClickedButtonGeoResultClear()
+{
+	// TODO: Add your control notification handler code here
+	ERVS_Geometry_Clear();
 
 	//Get Result Image
 	//Result image

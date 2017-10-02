@@ -217,5 +217,6 @@ int ERVS_BackgroundLearning(void);
 //Geometry
 int ERVS_Geometry_Distance(const int base_id, const int target_id, const float base_info, const float tol, float *out_value);
 int ERVS_Geometry_Angle(const int base_id, const int target_id, const float base_info, const float tol, float *out_value);
+int ERVS_Geometry_Clear(void);
 
 #endif

@@ -218,6 +218,7 @@ public:
 	//Geometry
 	int Geometry_Distance(const int base_id, const int target_id, const float base_info, const float tol, float *out_value);
 	int Geometry_Angle(const int base_id, const int target_id, const float base_info, const float tol, float *out_value);
+	int Geometry_Clear(void);
 
 
 private:

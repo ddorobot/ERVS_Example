@@ -105,4 +105,5 @@ public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	afx_msg void OnBnClickedButton2();
 	afx_msg void OnBnClickedButtonGeoAngle();
+	afx_msg void OnBnClickedButtonGeoResultClear();
 };

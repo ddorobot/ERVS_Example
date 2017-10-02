@@ -172,15 +172,22 @@ BOOL CEyedeaExampleDlg::OnInitDialog()
 
 	if (boost::filesystem::exists("ervs_example.ini"))
 	{
-		//last environment from ini
-		boost::property_tree::ptree pt_eyedea;
-		boost::property_tree::ini_parser::read_ini("ervs_example.ini", pt_eyedea);
-		int ip_a = pt_eyedea.get<int>("ervs_example.ip_a");
-		int ip_b = pt_eyedea.get<int>("ervs_example.ip_b");
-		int ip_c = pt_eyedea.get<int>("ervs_example.ip_c");
-		int ip_d = pt_eyedea.get<int>("ervs_example.ip_d");
+		try
+		{
+			//last environment from ini
+			boost::property_tree::ptree pt_eyedea;
+			boost::property_tree::ini_parser::read_ini("ervs_example.ini", pt_eyedea);
+			int ip_a = pt_eyedea.get<int>("ervs_example.ip_a");
+			int ip_b = pt_eyedea.get<int>("ervs_example.ip_b");
+			int ip_c = pt_eyedea.get<int>("ervs_example.ip_c");
+			int ip_d = pt_eyedea.get<int>("ervs_example.ip_d");
 
-		m_ip_addr.SetAddress(ip_a, ip_b, ip_c, ip_d);
+			m_ip_addr.SetAddress(ip_a, ip_b, ip_c, ip_d);
+		}
+		catch (std::exception &ex)
+		{
+			m_ip_addr.SetAddress(192, 168, 123, 77);
+		}
 	}
 	else
 	{
@@ -378,6 +385,7 @@ void CEyedeaExampleDlg::OnBnClickedButtonConnect()
 	pt.put("ervs_example.ip_b", (int)IP_b);
 	pt.put("ervs_example.ip_c", (int)IP_c);
 	pt.put("ervs_example.ip_d", (int)IP_d);
+
 	boost::property_tree::ini_parser::write_ini("ervs_example.ini", pt);
 }
 

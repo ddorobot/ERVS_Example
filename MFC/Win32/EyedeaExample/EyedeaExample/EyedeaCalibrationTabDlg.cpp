@@ -59,19 +59,28 @@ BOOL CEyedeaCalibrationTabDlg::OnInitDialog()
 
 	if (boost::filesystem::exists("ervs_example.ini"))
 	{
-		//last environment from ini
-		boost::property_tree::ptree pt_eyedea;
-		boost::property_tree::ini_parser::read_ini("ervs_example.ini", pt_eyedea);
-		int chess_nx = pt_eyedea.get<int>("ervs_example.calibration_chess_nx");
-		int chess_ny = pt_eyedea.get<int>("ervs_example.calibration_chess_ny");
-		int chess_size = pt_eyedea.get<int>("ervs_example.calibration_chess_size");
+		try
+		{
+			//last environment from ini
+			boost::property_tree::ptree pt_eyedea;
+			boost::property_tree::ini_parser::read_ini("ervs_example.ini", pt_eyedea);
+			int chess_nx = pt_eyedea.get<int>("ervs_example.calibration_chess_nx");
+			int chess_ny = pt_eyedea.get<int>("ervs_example.calibration_chess_ny");
+			int chess_size = pt_eyedea.get<int>("ervs_example.calibration_chess_size");
 
-		str.Format(_T("%d"), chess_nx);
-		GetDlgItem(IDC_EDIT_CALIBRATION_CHESS_NX)->SetWindowText(str);
-		str.Format(_T("%d"), chess_ny);
-		GetDlgItem(IDC_EDIT_CALIBRATION_CHESS_NY)->SetWindowText(str);
-		str.Format(_T("%d"), chess_size);
-		GetDlgItem(IDC_EDIT_CALIBRATION_CHESS_SIZE)->SetWindowText(str);
+			str.Format(_T("%d"), chess_nx);
+			GetDlgItem(IDC_EDIT_CALIBRATION_CHESS_NX)->SetWindowText(str);
+			str.Format(_T("%d"), chess_ny);
+			GetDlgItem(IDC_EDIT_CALIBRATION_CHESS_NY)->SetWindowText(str);
+			str.Format(_T("%d"), chess_size);
+			GetDlgItem(IDC_EDIT_CALIBRATION_CHESS_SIZE)->SetWindowText(str);
+		}
+		catch (std::exception &ex)
+		{
+			GetDlgItem(IDC_EDIT_CALIBRATION_CHESS_NX)->SetWindowText(str);
+			GetDlgItem(IDC_EDIT_CALIBRATION_CHESS_NY)->SetWindowText(str);
+			GetDlgItem(IDC_EDIT_CALIBRATION_CHESS_SIZE)->SetWindowText(str);
+		}
 	}
 	else
 	{

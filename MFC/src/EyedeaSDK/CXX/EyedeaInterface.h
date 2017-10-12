@@ -41,6 +41,9 @@ public:
 	int SetSelectBaseObject(float x, float y, float w, float h);
 	int SetZoomArea(float x, float y, float w, float h);
 	int ResetZoomArea(void);
+	int SetMaskArea(float x, float y, float w, float h, bool inverse);
+	int UndoMaskArea(void);
+	int DelMaskArea(void);
 	int SetObjectCircle(float x, float y, float r1, float r2);
 	int GetObjectCircle(float *out_x, float *out_y, float *out_r1, float *out_r2);
 	int SetObjectLine(float x, float y, float w, float h);

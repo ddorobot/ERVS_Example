@@ -40,6 +40,9 @@ int ERVS_GetOptionFixSearchUserRoi(void);
 unsigned int ERVS_GetNewID(void);
 int ERVS_SetZoomArea(float x, float y, float w, float h);
 int ERVS_ResetZoomArea(void);
+int ERVS_SetMaskArea(float x, float y, float w, float h, bool inverse);
+int ERVS_UndoMaskArea(void);
+int ERVS_DelMaskArea(void);
 
 //Vision Config Option
 int ERVS_SetVisionConfigOption(int option, float value);

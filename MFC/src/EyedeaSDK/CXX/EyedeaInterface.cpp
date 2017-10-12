@@ -4539,6 +4539,188 @@ int CEyedeaInterface::SetZoomArea(float x, float y, float w, float h)
 	return ret;
 }
 
+int CEyedeaInterface::SetMaskArea(float x, float y, float w, float h, bool inverse)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	//printf("SetMasterArea - %d %d %d %d\n", x, y, w, h);
+
+	char command = COMMAND_SET_MASK_AREA;
+	int len = 20;
+	unsigned char* data = new unsigned char[len];
+
+	int _x = x * 10000;
+	int _y = y * 10000;
+	int _w = w * 10000;
+	int _h = h * 10000;
+	int i = 0;
+	if (inverse) i = 1;
+	int _i = i * 10000;
+
+	//x
+	data[0] = (_x & 0xFF000000) >> 24;
+	data[1] = (_x & 0x00FF0000) >> 16;
+	data[2] = (_x & 0x0000FF00) >> 8;
+	data[3] = (_x & 0x000000FF);
+
+	//y
+	data[4] = (_y & 0xFF000000) >> 24;
+	data[5] = (_y & 0x00FF0000) >> 16;
+	data[6] = (_y & 0x0000FF00) >> 8;
+	data[7] = (_y & 0x000000FF);
+
+	//w
+	data[8] = (_w & 0xFF000000) >> 24;
+	data[9] = (_w & 0x00FF0000) >> 16;
+	data[10] = (_w & 0x0000FF00) >> 8;
+	data[11] = (_w & 0x000000FF);
+
+	//h
+	data[12] = (_h & 0xFF000000) >> 24;
+	data[13] = (_h & 0x00FF0000) >> 16;
+	data[14] = (_h & 0x0000FF00) >> 8;
+	data[15] = (_h & 0x000000FF);
+
+	//i
+	data[16] = (_i & 0xFF000000) >> 24;
+	data[17] = (_i & 0x00FF0000) >> 16;
+	data[18] = (_i & 0x0000FF00) >> 8;
+	data[19] = (_i & 0x000000FF);
+
+	unsigned int scale_factor = 10000;
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+	if (ret == EYEDEA_ERROR_INVALID_MEMORY)
+	{
+		int sec = 0;
+		while (1)
+		{
+			ret = m_cls_eth_client->Open(m_ip, m_port);
+			if (ret == 0) {
+				ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+				break;
+			}
+			else
+			{
+				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
+				sec++;
+				if (sec >= 60)
+					return ret;
+				continue;
+			}
+		}
+	}
+	if (ret != 0)
+		return ret;
+
+	delete (data);
+	data = NULL;
+
+	return ret;
+}
+
+int CEyedeaInterface::UndoMaskArea(void)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	//printf("SetMasterArea - %d %d %d %d\n", x, y, w, h);
+
+	char command = COMMAND_UNDO_MASK_AREA;
+	int len = 0;
+	unsigned char* data = NULL;
+
+	unsigned int scale_factor = 10000;
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+	if (ret == EYEDEA_ERROR_INVALID_MEMORY)
+	{
+		int sec = 0;
+		while (1)
+		{
+			ret = m_cls_eth_client->Open(m_ip, m_port);
+			if (ret == 0) {
+				ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+				break;
+			}
+			else
+			{
+				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
+				sec++;
+				if (sec >= 60)
+					return ret;
+				continue;
+			}
+		}
+	}
+	if (ret != 0)
+		return ret;
+
+	delete (data);
+	data = NULL;
+
+	return ret;
+}
+
+int CEyedeaInterface::DelMaskArea(void)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	//printf("SetMasterArea - %d %d %d %d\n", x, y, w, h);
+
+	char command = COMMAND_DEL_MASK_AREA;
+	int len = 0;
+	unsigned char* data = NULL;
+
+	unsigned int scale_factor = 10000;
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+	if (ret == EYEDEA_ERROR_INVALID_MEMORY)
+	{
+		int sec = 0;
+		while (1)
+		{
+			ret = m_cls_eth_client->Open(m_ip, m_port);
+			if (ret == 0) {
+				ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+				break;
+			}
+			else
+			{
+				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
+				sec++;
+				if (sec >= 60)
+					return ret;
+				continue;
+			}
+		}
+	}
+	if (ret != 0)
+		return ret;
+
+	delete (data);
+	data = NULL;
+
+	return ret;
+}
+
 int CEyedeaInterface::ResetZoomArea(void)
 {
 	boost::unique_lock<boost::mutex> scoped_lock(mutex);

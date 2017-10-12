@@ -81,6 +81,9 @@ BEGIN_MESSAGE_MAP(CEyedeaVisionConfigTabDlg, CDialogEx)
 	ON_WM_LBUTTONUP()
 	ON_WM_MOUSEMOVE()
 	ON_BN_CLICKED(IDC_BUTTON_SELECT_LINE, &CEyedeaVisionConfigTabDlg::OnBnClickedButtonSelectLine)
+	ON_BN_CLICKED(IDC_BUTTON_SET_MASK_AREA, &CEyedeaVisionConfigTabDlg::OnBnClickedButtonSetMaskArea)
+	ON_BN_CLICKED(IDC_BUTTON_UNDO_MASK_AREA2, &CEyedeaVisionConfigTabDlg::OnBnClickedButtonUndoMaskArea2)
+	ON_BN_CLICKED(IDC_BUTTON_DEL_MASK_AREA, &CEyedeaVisionConfigTabDlg::OnBnClickedButtonDelMaskArea)
 END_MESSAGE_MAP()
 
 
@@ -1576,7 +1579,11 @@ void CEyedeaVisionConfigTabDlg::OnLButtonDown(UINT nFlags, CPoint point)
 	if (point.x >= rect.left && point.x <= rect.right &&
 		point.y >= rect.top && point.y <= rect.bottom)
 	{
-		if (m_command == USER_COMMAND_SELECT_BASE_OBJECT || m_command == USER_COMMAND_SET_ZOOM_IMAGE || m_command == USER_COMMAND_SELECT_OBJECT_CIRCLE || m_command == USER_COMMAND_SELECT_OBJECT_LINE )
+		if (m_command == USER_COMMAND_SELECT_BASE_OBJECT || 
+			m_command == USER_COMMAND_SET_ZOOM_IMAGE || 
+			m_command == USER_COMMAND_SELECT_OBJECT_CIRCLE ||
+			m_command == USER_COMMAND_SELECT_OBJECT_LINE  || 
+			m_command == USER_COMMAND_SELECT_MASK_AREA 	)
 		{
 			m_b_mouse_ldown_on_drawwindow = true;
 
@@ -1643,7 +1650,15 @@ void CEyedeaVisionConfigTabDlg::OnLButtonUp(UINT nFlags, CPoint point)
 				//printf("select rate = %f, %f, %f, %f", rate_x, rate_y, rate_w, rate_h);
 				//ERVS_SetSelectBaseObject(rate_x, rate_y, rate_w, rate_h);
 				ERVS_SetSelectBaseObject(m_select_rate_x, m_select_rate_y, m_select_rate_w, m_select_rate_h);
+			}
+			else if (m_command == USER_COMMAND_SELECT_MASK_AREA)
+			{
+				//
+				BOOL bCheck = IsDlgButtonChecked(IDC_CHECK_SET_MASK_AREA_INVERSE);
+				bool bcheck = false;
+				if (bCheck) bcheck = true;
 
+				ERVS_SetMaskArea(m_select_rate_x, m_select_rate_y, m_select_rate_w, m_select_rate_h, bcheck);
 			}
 			else if (m_command == USER_COMMAND_SELECT_OBJECT_CIRCLE)
 			{
@@ -1733,4 +1748,26 @@ void CEyedeaVisionConfigTabDlg::OnBnClickedButtonSelectLine()
 	m_combo_get_image_option_base.SetCurSel(0);		//Get Feature Image
 
 	m_command = USER_COMMAND_SELECT_OBJECT_LINE;
+}
+
+
+void CEyedeaVisionConfigTabDlg::OnBnClickedButtonSetMaskArea()
+{
+	// TODO: Add your control notification handler code here
+
+	m_command = USER_COMMAND_SELECT_MASK_AREA;
+}
+
+
+void CEyedeaVisionConfigTabDlg::OnBnClickedButtonUndoMaskArea2()
+{
+	// TODO: Add your control notification handler code here
+	ERVS_UndoMaskArea();
+}
+
+
+void CEyedeaVisionConfigTabDlg::OnBnClickedButtonDelMaskArea()
+{
+	// TODO: Add your control notification handler code here
+	ERVS_DelMaskArea();
 }

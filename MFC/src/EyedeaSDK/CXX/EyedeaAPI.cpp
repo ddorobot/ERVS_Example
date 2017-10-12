@@ -195,6 +195,21 @@ int ERVS_SetZoomArea(float x, float y, float w, float h)
 	return g_cls_interface.SetZoomArea(x, y, w, h);
 }
 
+int ERVS_SetMaskArea(float x, float y, float w, float h, bool inverse)
+{
+	return g_cls_interface.SetMaskArea(x, y, w, h, inverse);
+}
+
+int ERVS_UndoMaskArea(void)
+{
+	return g_cls_interface.UndoMaskArea();
+}
+
+int ERVS_DelMaskArea(void)
+{
+	return g_cls_interface.DelMaskArea();
+}
+
 int ERVS_ResetZoomArea(void)
 {
 	//printf("ERVS_SetSelectBaseObject\n");

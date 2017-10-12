@@ -102,4 +102,7 @@ public:
 	float m_select_rate_w;
 	float m_select_rate_h;
 	afx_msg void OnBnClickedButtonSelectLine();
+	afx_msg void OnBnClickedButtonSetMaskArea();
+	afx_msg void OnBnClickedButtonUndoMaskArea2();
+	afx_msg void OnBnClickedButtonDelMaskArea();
 };

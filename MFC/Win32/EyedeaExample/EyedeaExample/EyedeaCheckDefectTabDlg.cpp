@@ -18,10 +18,10 @@ CEyedeaCheckDefectTabDlg::CEyedeaCheckDefectTabDlg(CWnd* pParent /*=NULL*/)
 	, m_b_draw_pause(true)
 {
 	m_result_image = cv::Mat::zeros(cv::Size(640, 480), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
-	m_result_histogram_image = cv::Mat::zeros(cv::Size(256, 200), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
-	m_result_histogram_r_image = cv::Mat::zeros(cv::Size(256, 200), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
-	m_result_histogram_g_image = cv::Mat::zeros(cv::Size(256, 200), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
-	m_result_histogram_b_image = cv::Mat::zeros(cv::Size(256, 200), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
+	m_result_histogram_image = cv::Mat::zeros(cv::Size(300, 200), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
+	m_result_histogram_r_image = cv::Mat::zeros(cv::Size(300, 200), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
+	m_result_histogram_g_image = cv::Mat::zeros(cv::Size(300, 200), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
+	m_result_histogram_b_image = cv::Mat::zeros(cv::Size(300, 200), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
 }
 
 CEyedeaCheckDefectTabDlg::~CEyedeaCheckDefectTabDlg()
@@ -1674,7 +1674,6 @@ void CEyedeaCheckDefectTabDlg::OnNMDblclkTreeResult(NMHDR *pNMHDR, LRESULT *pRes
 	int mom_index = -1;
 	if ((pos = str_mom_items.find("-")) != std::string::npos)
 	{
-		// "world!"라는 문자열을 찾았을 때의 동작 
 		std::string str_mom_index = str_mom_items.substr(pos + 1, str_mom_items.length());
 
 		//printf("me index = %s\n", str_me_index.c_str());
@@ -1743,20 +1742,39 @@ void CEyedeaCheckDefectTabDlg::OnNMDblclkTreeResult(NMHDR *pNMHDR, LRESULT *pRes
 				m_result_histogram_b_image = cv::Mat::zeros(cv::Size(histogram_size, 255), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
 			}
 
+			int start_x_v = (m_result_histogram_image.cols - histogram_size) / 2;
+			int start_x_r = (m_result_histogram_r_image.cols - histogram_size) / 2;
+			int start_x_g = (m_result_histogram_g_image.cols - histogram_size) / 2;
+			int start_x_b = (m_result_histogram_b_image.cols - histogram_size) / 2;
+
+			//guide line
+			//gray
+			cv::line(m_result_histogram_image, cv::Point(start_x_v, m_result_histogram_image.rows), cv::Point(start_x_v, 0), cv::Scalar(255, 255, 255), 1);
+			cv::line(m_result_histogram_image, cv::Point(start_x_v+ histogram_size, m_result_histogram_image.rows), cv::Point(start_x_v+ histogram_size, 0), cv::Scalar(255, 255, 255), 1);
+			//r
+			cv::line(m_result_histogram_r_image, cv::Point(start_x_r, m_result_histogram_r_image.rows), cv::Point(start_x_r, 0), cv::Scalar(255, 255, 255), 1);
+			cv::line(m_result_histogram_r_image, cv::Point(start_x_r + histogram_size, m_result_histogram_r_image.rows), cv::Point(start_x_r + histogram_size, 0), cv::Scalar(255, 255, 255), 1);
+			//g
+			cv::line(m_result_histogram_g_image, cv::Point(start_x_g, m_result_histogram_g_image.rows), cv::Point(start_x_g, 0), cv::Scalar(255, 255, 255), 1);
+			cv::line(m_result_histogram_g_image, cv::Point(start_x_g + histogram_size, m_result_histogram_g_image.rows), cv::Point(start_x_g + histogram_size, 0), cv::Scalar(255, 255, 255), 1);
+			//b
+			cv::line(m_result_histogram_b_image, cv::Point(start_x_b, m_result_histogram_b_image.rows), cv::Point(start_x_b, 0), cv::Scalar(255, 255, 255), 1);
+			cv::line(m_result_histogram_b_image, cv::Point(start_x_b + histogram_size, m_result_histogram_b_image.rows), cv::Point(start_x_b + histogram_size, 0), cv::Scalar(255, 255, 255), 1);
+
 			for (int i = 0; i < histogram_size; i++)
 			{
 				int value = p_histogram[i] * m_result_histogram_image.rows ;
-				cv::line(m_result_histogram_image, cv::Point(i, m_result_histogram_image.rows), cv::Point(i, m_result_histogram_image.rows - value), cv::Scalar(128, 128, 128), 1);
+				cv::line(m_result_histogram_image, cv::Point(start_x_v+i, m_result_histogram_image.rows), cv::Point(start_x_v + i, m_result_histogram_image.rows - value), cv::Scalar(128, 128, 128), 1);
 
 				//r
 				value = p_histogram_r[i] * m_result_histogram_r_image.rows;
-				cv::line(m_result_histogram_r_image, cv::Point(i, m_result_histogram_r_image.rows), cv::Point(i, m_result_histogram_r_image.rows - value), cv::Scalar(128, 128, 255), 1);
+				cv::line(m_result_histogram_r_image, cv::Point(start_x_r + i, m_result_histogram_r_image.rows), cv::Point(start_x_r + i, m_result_histogram_r_image.rows - value), cv::Scalar(128, 128, 255), 1);
 
 				value = p_histogram_g[i] * m_result_histogram_g_image.rows;
-				cv::line(m_result_histogram_g_image, cv::Point(i, m_result_histogram_g_image.rows), cv::Point(i, m_result_histogram_g_image.rows - value), cv::Scalar(128, 255, 128), 1);
+				cv::line(m_result_histogram_g_image, cv::Point(start_x_g + i, m_result_histogram_g_image.rows), cv::Point(start_x_g + i, m_result_histogram_g_image.rows - value), cv::Scalar(128, 255, 128), 1);
 
 				value = p_histogram_b[i] * m_result_histogram_b_image.rows;
-				cv::line(m_result_histogram_b_image, cv::Point(i, m_result_histogram_b_image.rows), cv::Point(i, m_result_histogram_b_image.rows - value), cv::Scalar(255, 128, 128), 1);
+				cv::line(m_result_histogram_b_image, cv::Point(start_x_b + i, m_result_histogram_b_image.rows), cv::Point(start_x_b + i, m_result_histogram_b_image.rows - value), cv::Scalar(255, 128, 128), 1);
 			}
 
 			//cv::imwrite("histogram.png", m_result_histogram_image);

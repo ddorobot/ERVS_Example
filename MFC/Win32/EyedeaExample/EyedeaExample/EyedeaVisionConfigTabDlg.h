@@ -105,4 +105,54 @@ public:
 	afx_msg void OnBnClickedButtonSetMaskArea();
 	afx_msg void OnBnClickedButtonUndoMaskArea2();
 	afx_msg void OnBnClickedButtonDelMaskArea();
+	afx_msg void OnBnClickedButtonGetHistogram();
+
+	float m_histogram_size;
+	float *m_p_histogram;
+	float *m_p_histogram_r;
+	float *m_p_histogram_g;
+	float *m_p_histogram_b;
+
+	cv::Mat m_result_histogram_image;
+	cv::Mat m_result_histogram_r_image;
+	cv::Mat m_result_histogram_g_image;
+	cv::Mat m_result_histogram_b_image;
+
+	float m_f_histogram_w_scale_v;
+	float m_f_histogram_w_scale_r;
+	float m_f_histogram_w_scale_g;
+	float m_f_histogram_w_scale_b;
+	float m_f_histogram_size_v_on_ui;
+	float m_f_histogram_size_r_on_ui;
+	float m_f_histogram_size_g_on_ui;
+	float m_f_histogram_size_b_on_ui;
+	float m_f_start_x_v_on_ui;
+	float m_f_start_x_r_on_ui;
+	float m_f_start_x_g_on_ui;
+	float m_f_start_x_b_on_ui;
+
+	void DrawHistogram(int select_id);
+
+	int m_i_histogram_lbdwn_object;
+	int m_i_histogmra_gray_min;
+	int m_i_histogmra_gray_max;
+	int m_i_histogmra_red_min;
+	int m_i_histogmra_red_max;
+	int m_i_histogmra_green_min;
+	int m_i_histogmra_green_max;
+	int m_i_histogmra_blue_min;
+	int m_i_histogmra_blue_max;
+	int m_select_id;
+	afx_msg void OnBnClickedButtonHistoGet();
+	afx_msg void OnBnClickedButtonHistoGet2();
+	afx_msg void OnBnClickedButtonHistoGet3();
+	afx_msg void OnBnClickedButtonHistoGet4();
+	afx_msg void OnBnClickedButtonHistoSet();
+	afx_msg void OnBnClickedButtonHistoSet2();
+	afx_msg void OnBnClickedButtonHistoSet3();
+	afx_msg void OnBnClickedButtonHistoSet4();
+	afx_msg void OnBnClickedCheckHistoInspecGray();
+	afx_msg void OnBnClickedCheckHistoInspecRed2();
+	afx_msg void OnBnClickedCheckHistoInspecGreen2();
+	afx_msg void OnBnClickedCheckHistoInspecBlue2();
 };

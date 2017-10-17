@@ -42,6 +42,7 @@ CEyedeaCheckDefectTabDlg::CEyedeaCheckDefectTabDlg(CWnd* pParent /*=NULL*/)
 	, m_f_start_x_r_on_ui(0)
 	, m_f_start_x_g_on_ui(0)
 	, m_f_start_x_b_on_ui(0)
+	, m_select_id(0)
 {
 	m_result_image = cv::Mat::zeros(cv::Size(640, 480), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
 	m_result_histogram_image = cv::Mat::zeros(cv::Size(300, 200), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
@@ -144,6 +145,14 @@ BEGIN_MESSAGE_MAP(CEyedeaCheckDefectTabDlg, CDialogEx)
 	ON_WM_LBUTTONDOWN()
 	ON_WM_LBUTTONUP()
 	ON_WM_MOUSEMOVE()
+	ON_BN_CLICKED(IDC_BUTTON_HISTO_GET, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonHistoGet)
+	ON_BN_CLICKED(IDC_BUTTON_HISTO_GET2, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonHistoGet2)
+	ON_BN_CLICKED(IDC_BUTTON_HISTO_GET3, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonHistoGet3)
+	ON_BN_CLICKED(IDC_BUTTON_HISTO_GET4, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonHistoGet4)
+	ON_BN_CLICKED(IDC_BUTTON_HISTO_SET, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonHistoSet)
+	ON_BN_CLICKED(IDC_BUTTON_HISTO_SET2, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonHistoSet2)
+	ON_BN_CLICKED(IDC_BUTTON_HISTO_SET3, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonHistoSet3)
+	ON_BN_CLICKED(IDC_BUTTON_HISTO_SET4, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonHistoSet4)
 END_MESSAGE_MAP()
 
 
@@ -1689,6 +1698,8 @@ void CEyedeaCheckDefectTabDlg::OnLbnDblclkListResult()
 
 void CEyedeaCheckDefectTabDlg::OnNMDblclkTreeResult(NMHDR *pNMHDR, LRESULT *pResult)
 {
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
 	// TODO: Add your control notification handler code here
 	//CTreeCtrl* tree = &GetTreeCtrl(); // 트리뷰 일 경우
 
@@ -1782,19 +1793,28 @@ void CEyedeaCheckDefectTabDlg::OnNMDblclkTreeResult(NMHDR *pNMHDR, LRESULT *pRes
 
 		ERVS_GetFindObjectResultInfo(mom_index, me_index, &id, &camera_center_x, &camera_center_y, &robot_center_x, &robot_center_y, &angle, &type, &score, &m_p_histogram, &m_p_histogram_r, &m_p_histogram_g, &m_p_histogram_b, &m_histogram_size);
 		
+		m_select_id = (int)id;
+
+		/*
 		CString str;
 		str.Format(_T("camera(%.2f, %.2f), robot(%.2f, %.2f), angle(%.2f)"), camera_center_x, camera_center_y, robot_center_x, robot_center_y, angle);
 		GetDlgItem(IDC_EDIT_RESULT_POSITION)->SetWindowText(str);
 
 		str.Format(_T("edge=%.2f"), score);
 		GetDlgItem(IDC_EDIT_RESULT_EDGE_MATCHING_SCORE)->SetWindowText(str);
-		
+		*/
+
 		printf("histogram size = %f\n", m_histogram_size);
 
 		//Get Result Information from ERVS
 		//Result image
 		int len = 921600;
 		ERVS_GetFindObjectResultImage(mom_index, me_index, (char**)&m_result_image.data, &len);
+
+		OnBnClickedButtonHistoGet();
+		OnBnClickedButtonHistoGet2();
+		OnBnClickedButtonHistoGet3();
+		OnBnClickedButtonHistoGet4();
 	}
 	
 	*pResult = 1;
@@ -1802,37 +1822,40 @@ void CEyedeaCheckDefectTabDlg::OnNMDblclkTreeResult(NMHDR *pNMHDR, LRESULT *pRes
 
 void CEyedeaCheckDefectTabDlg::DrawHistogram(void)
 {
-	if (m_histogram_size > 0)
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	int histogram_size = (int)m_histogram_size;
+	if (histogram_size > 0)
 	{
 		m_result_histogram_image = 0;
 		m_result_histogram_r_image = 0;
 		m_result_histogram_g_image = 0;
 		m_result_histogram_b_image = 0;
 
-		if (m_result_histogram_image.cols < m_histogram_size)
+		if (m_result_histogram_image.cols < histogram_size)
 		{
-			m_result_histogram_image = cv::Mat::zeros(cv::Size(m_histogram_size, 255), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
+			m_result_histogram_image = cv::Mat::zeros(cv::Size(histogram_size, 255), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
 		}
 
-		if (m_result_histogram_r_image.cols < m_histogram_size)
+		if (m_result_histogram_r_image.cols < histogram_size)
 		{
-			m_result_histogram_r_image = cv::Mat::zeros(cv::Size(m_histogram_size, 255), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
+			m_result_histogram_r_image = cv::Mat::zeros(cv::Size(histogram_size, 255), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
 		}
 
-		if (m_result_histogram_g_image.cols < m_histogram_size)
+		if (m_result_histogram_g_image.cols < histogram_size)
 		{
-			m_result_histogram_g_image = cv::Mat::zeros(cv::Size(m_histogram_size, 255), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
+			m_result_histogram_g_image = cv::Mat::zeros(cv::Size(histogram_size, 255), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
 		}
 
-		if (m_result_histogram_b_image.cols < m_histogram_size)
+		if (m_result_histogram_b_image.cols < histogram_size)
 		{
-			m_result_histogram_b_image = cv::Mat::zeros(cv::Size(m_histogram_size, 255), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
+			m_result_histogram_b_image = cv::Mat::zeros(cv::Size(histogram_size, 255), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
 		}
 
-		int start_x_v = (m_result_histogram_image.cols - m_histogram_size) / 2;
-		int start_x_r = (m_result_histogram_r_image.cols - m_histogram_size) / 2;
-		int start_x_g = (m_result_histogram_g_image.cols - m_histogram_size) / 2;
-		int start_x_b = (m_result_histogram_b_image.cols - m_histogram_size) / 2;
+		int start_x_v = (m_result_histogram_image.cols - histogram_size) / 2;
+		int start_x_r = (m_result_histogram_r_image.cols - histogram_size) / 2;
+		int start_x_g = (m_result_histogram_g_image.cols - histogram_size) / 2;
+		int start_x_b = (m_result_histogram_b_image.cols - histogram_size) / 2;
 
 		//scale 
 		CRect rect_histogram_gray;
@@ -1856,10 +1879,10 @@ void CEyedeaCheckDefectTabDlg::DrawHistogram(void)
 		m_f_histogram_w_scale_g = (float)rect_histogram_green.Width() / (float)m_result_histogram_g_image.cols;
 		m_f_histogram_w_scale_b = (float)rect_histogram_blue.Width() / (float)m_result_histogram_b_image.cols;
 
-		m_f_histogram_size_v_on_ui = m_histogram_size * m_f_histogram_w_scale_v;
-		m_f_histogram_size_r_on_ui = m_histogram_size * m_f_histogram_w_scale_r;
-		m_f_histogram_size_g_on_ui = m_histogram_size * m_f_histogram_w_scale_g;
-		m_f_histogram_size_b_on_ui = m_histogram_size * m_f_histogram_w_scale_b;
+		m_f_histogram_size_v_on_ui = histogram_size * m_f_histogram_w_scale_v;
+		m_f_histogram_size_r_on_ui = histogram_size * m_f_histogram_w_scale_r;
+		m_f_histogram_size_g_on_ui = histogram_size * m_f_histogram_w_scale_g;
+		m_f_histogram_size_b_on_ui = histogram_size * m_f_histogram_w_scale_b;
 
 		m_f_start_x_v_on_ui = (float)start_x_v * m_f_histogram_w_scale_v;
 		m_f_start_x_r_on_ui = (float)start_x_r * m_f_histogram_w_scale_r;
@@ -1878,53 +1901,83 @@ void CEyedeaCheckDefectTabDlg::DrawHistogram(void)
 		cv::Scalar guide_line_colof = cv::Scalar(128, 128, 128);
 
 		//gray
-		cv::rectangle(m_result_histogram_image, cv::Rect(start_x_v, 0, m_histogram_size, m_result_histogram_image.rows), guide_rect_fill_colof, CV_FILLED);
+		cv::rectangle(m_result_histogram_image, cv::Rect(start_x_v, 0, histogram_size, m_result_histogram_image.rows), guide_rect_fill_colof, CV_FILLED);
 		cv::line(m_result_histogram_image, cv::Point(start_x_v, m_result_histogram_image.rows), cv::Point(start_x_v, 0), guide_line_colof, 1);
-		cv::line(m_result_histogram_image, cv::Point(start_x_v + m_histogram_size, m_result_histogram_image.rows), cv::Point(start_x_v + m_histogram_size, 0), guide_line_colof, 1);
+		cv::line(m_result_histogram_image, cv::Point(start_x_v + histogram_size, m_result_histogram_image.rows), cv::Point(start_x_v + histogram_size, 0), guide_line_colof, 1);
 		//r
-		cv::rectangle(m_result_histogram_r_image, cv::Rect(start_x_r, 0, m_histogram_size, m_result_histogram_r_image.rows), guide_rect_fill_colof, CV_FILLED);
+		cv::rectangle(m_result_histogram_r_image, cv::Rect(start_x_r, 0, histogram_size, m_result_histogram_r_image.rows), guide_rect_fill_colof, CV_FILLED);
 		cv::line(m_result_histogram_r_image, cv::Point(start_x_r, m_result_histogram_r_image.rows), cv::Point(start_x_r, 0), guide_line_colof, 1);
-		cv::line(m_result_histogram_r_image, cv::Point(start_x_r + m_histogram_size, m_result_histogram_r_image.rows), cv::Point(start_x_r + m_histogram_size, 0), guide_line_colof, 1);
+		cv::line(m_result_histogram_r_image, cv::Point(start_x_r + histogram_size, m_result_histogram_r_image.rows), cv::Point(start_x_r + histogram_size, 0), guide_line_colof, 1);
 		//g
-		cv::rectangle(m_result_histogram_g_image, cv::Rect(start_x_g, 0, m_histogram_size, m_result_histogram_g_image.rows), guide_rect_fill_colof, CV_FILLED);
+		cv::rectangle(m_result_histogram_g_image, cv::Rect(start_x_g, 0, histogram_size, m_result_histogram_g_image.rows), guide_rect_fill_colof, CV_FILLED);
 		cv::line(m_result_histogram_g_image, cv::Point(start_x_g, m_result_histogram_g_image.rows), cv::Point(start_x_g, 0), guide_line_colof, 1);
-		cv::line(m_result_histogram_g_image, cv::Point(start_x_g + m_histogram_size, m_result_histogram_g_image.rows), cv::Point(start_x_g + m_histogram_size, 0), guide_line_colof, 1);
+		cv::line(m_result_histogram_g_image, cv::Point(start_x_g + histogram_size, m_result_histogram_g_image.rows), cv::Point(start_x_g + histogram_size, 0), guide_line_colof, 1);
 		//b
-		cv::rectangle(m_result_histogram_b_image, cv::Rect(start_x_b, 0, m_histogram_size, m_result_histogram_b_image.rows), guide_rect_fill_colof, CV_FILLED);
+		cv::rectangle(m_result_histogram_b_image, cv::Rect(start_x_b, 0, histogram_size, m_result_histogram_b_image.rows), guide_rect_fill_colof, CV_FILLED);
 		cv::line(m_result_histogram_b_image, cv::Point(start_x_b, m_result_histogram_b_image.rows), cv::Point(start_x_b, 0), guide_line_colof, 1);
-		cv::line(m_result_histogram_b_image, cv::Point(start_x_b + m_histogram_size, m_result_histogram_b_image.rows), cv::Point(start_x_b + m_histogram_size, 0), guide_line_colof, 1);
+		cv::line(m_result_histogram_b_image, cv::Point(start_x_b + histogram_size, m_result_histogram_b_image.rows), cv::Point(start_x_b + histogram_size, 0), guide_line_colof, 1);
 
 		//Draw Range
-		cv::rectangle(m_result_histogram_image, cv::Rect(start_x_v+ m_i_histogmra_gray_min, 0, m_i_histogmra_gray_max- m_i_histogmra_gray_min, m_result_histogram_image.rows), cv::Scalar(128,128,128), CV_FILLED);
+		int min_value = 0;
+		int max_value = 0;
+		ERVS_Histogram_Get_Range(m_select_id, 0, &min_value, &max_value);
+
+		cv::rectangle(m_result_histogram_image, cv::Rect(start_x_v+ min_value, 0, max_value - min_value, m_result_histogram_image.rows), cv::Scalar(128,128,128), CV_FILLED);
 		//cv::line(m_result_histogram_image, cv::Point(start_x_v + m_i_histogmra_gray_min, m_result_histogram_image.rows), cv::Point(start_x_v + m_i_histogmra_gray_min, 0), cv::Scalar(128, 128, 128), 2);
 		//cv::line(m_result_histogram_image, cv::Point(start_x_v + m_i_histogmra_gray_max, m_result_histogram_image.rows), cv::Point(start_x_v + m_i_histogmra_gray_max, 0), cv::Scalar(128, 128, 128), 2);
 
-		cv::rectangle(m_result_histogram_r_image, cv::Rect(start_x_r + m_i_histogmra_red_min, 0, m_i_histogmra_red_max - m_i_histogmra_red_min, m_result_histogram_r_image.rows), cv::Scalar(128, 128, 128), CV_FILLED);
+		min_value = 0;
+		max_value = 0;
+		ERVS_Histogram_Get_Range(m_select_id, 1, &min_value, &max_value);
+
+		cv::rectangle(m_result_histogram_r_image, cv::Rect(start_x_r + min_value, 0, max_value - min_value, m_result_histogram_r_image.rows), cv::Scalar(128, 128, 128), CV_FILLED);
 		//cv::line(m_result_histogram_r_image, cv::Point(start_x_r + m_i_histogmra_red_min, m_result_histogram_r_image.rows), cv::Point(start_x_r + m_i_histogmra_red_min, 0), cv::Scalar(0, 0, 255), 2);
 		//cv::line(m_result_histogram_r_image, cv::Point(start_x_r + m_i_histogmra_red_max, m_result_histogram_r_image.rows), cv::Point(start_x_r + m_i_histogmra_red_max, 0), cv::Scalar(0, 0, 255), 2);
 
-		cv::rectangle(m_result_histogram_g_image, cv::Rect(start_x_g + m_i_histogmra_green_min, 0, m_i_histogmra_green_max - m_i_histogmra_green_min, m_result_histogram_g_image.rows), cv::Scalar(128, 128, 128), CV_FILLED);
+		min_value = 0;
+		max_value = 0;
+		ERVS_Histogram_Get_Range(m_select_id, 2, &min_value, &max_value);
+
+		cv::rectangle(m_result_histogram_g_image, cv::Rect(start_x_g + min_value, 0, max_value - min_value, m_result_histogram_g_image.rows), cv::Scalar(128, 128, 128), CV_FILLED);
 		//cv::line(m_result_histogram_g_image, cv::Point(start_x_g + m_i_histogmra_green_min, m_result_histogram_g_image.rows), cv::Point(start_x_g + m_i_histogmra_green_min, 0), cv::Scalar(0, 255, 0), 2);
 		//cv::line(m_result_histogram_g_image, cv::Point(start_x_g + m_i_histogmra_green_max, m_result_histogram_g_image.rows), cv::Point(start_x_g + m_i_histogmra_green_max, 0), cv::Scalar(0, 255, 0), 2);
 
-		cv::rectangle(m_result_histogram_b_image, cv::Rect(start_x_b + m_i_histogmra_blue_min, 0, m_i_histogmra_blue_max - m_i_histogmra_blue_min, m_result_histogram_b_image.rows), cv::Scalar(128, 128, 128), CV_FILLED);
+		min_value = 0;
+		max_value = 0;
+		ERVS_Histogram_Get_Range(m_select_id, 3, &min_value, &max_value);
+
+		cv::rectangle(m_result_histogram_b_image, cv::Rect(start_x_b + min_value, 0, max_value - min_value, m_result_histogram_b_image.rows), cv::Scalar(128, 128, 128), CV_FILLED);
 		//cv::line(m_result_histogram_b_image, cv::Point(start_x_b + m_i_histogmra_blue_min, m_result_histogram_b_image.rows), cv::Point(start_x_b + m_i_histogmra_blue_min, 0), cv::Scalar(255, 0, 0), 2);
 		//cv::line(m_result_histogram_b_image, cv::Point(start_x_b + m_i_histogmra_blue_max, m_result_histogram_b_image.rows), cv::Point(start_x_b + m_i_histogmra_blue_max, 0), cv::Scalar(255, 0, 0), 2);
 
-		for (int i = 0; i < m_histogram_size; i++)
+		for (int i = 0; i < (int)histogram_size; i++)
 		{
-			int value = m_p_histogram[i] * m_result_histogram_image.rows;
-			cv::line(m_result_histogram_image, cv::Point(start_x_v + i, m_result_histogram_image.rows), cv::Point(start_x_v + i, m_result_histogram_image.rows - value), cv::Scalar(255, 255, 255), 1);
+			int value = 0;
+			
+			if (m_p_histogram != NULL)
+			{
+				value = m_p_histogram[i] * m_result_histogram_image.rows;
+				cv::line(m_result_histogram_image, cv::Point(start_x_v + i, m_result_histogram_image.rows), cv::Point(start_x_v + i, m_result_histogram_image.rows - value), cv::Scalar(255, 255, 255), 1);
+			}
 
 			//r
-			value = m_p_histogram_r[i] * m_result_histogram_r_image.rows;
-			cv::line(m_result_histogram_r_image, cv::Point(start_x_r + i, m_result_histogram_r_image.rows), cv::Point(start_x_r + i, m_result_histogram_r_image.rows - value), cv::Scalar(128, 128, 255), 1);
+			if (m_p_histogram_r != NULL)
+			{
+				value = m_p_histogram_r[i] * m_result_histogram_r_image.rows;
+				cv::line(m_result_histogram_r_image, cv::Point(start_x_r + i, m_result_histogram_r_image.rows), cv::Point(start_x_r + i, m_result_histogram_r_image.rows - value), cv::Scalar(128, 128, 255), 1);
+			}
 
-			value = m_p_histogram_g[i] * m_result_histogram_g_image.rows;
-			cv::line(m_result_histogram_g_image, cv::Point(start_x_g + i, m_result_histogram_g_image.rows), cv::Point(start_x_g + i, m_result_histogram_g_image.rows - value), cv::Scalar(128, 255, 128), 1);
+			if (m_p_histogram_g != NULL)
+			{
+				value = m_p_histogram_g[i] * m_result_histogram_g_image.rows;
+				cv::line(m_result_histogram_g_image, cv::Point(start_x_g + i, m_result_histogram_g_image.rows), cv::Point(start_x_g + i, m_result_histogram_g_image.rows - value), cv::Scalar(128, 255, 128), 1);
+			}
 
-			value = m_p_histogram_b[i] * m_result_histogram_b_image.rows;
-			cv::line(m_result_histogram_b_image, cv::Point(start_x_b + i, m_result_histogram_b_image.rows), cv::Point(start_x_b + i, m_result_histogram_b_image.rows - value), cv::Scalar(255, 128, 128), 1);
+			if (m_p_histogram_b != NULL)
+			{
+				value = m_p_histogram_b[i] * m_result_histogram_b_image.rows;
+				cv::line(m_result_histogram_b_image, cv::Point(start_x_b + i, m_result_histogram_b_image.rows), cv::Point(start_x_b + i, m_result_histogram_b_image.rows - value), cv::Scalar(255, 128, 128), 1);
+			}
 		}
 
 		//cv::imwrite("histogram.png", m_result_histogram_image);
@@ -2102,6 +2155,8 @@ void CEyedeaCheckDefectTabDlg::OnLButtonDown(UINT nFlags, CPoint point)
 		//printf("m_f_histogram_w_scale_v = %f\n", m_f_histogram_w_scale_v);
 		//printf("m_f_start_x_v_on_ui = %f\n", m_f_start_x_v_on_ui);
 		//printf("min value = %d, %f\n", value, f_value);
+
+		ERVS_Histogram_Set_Range(m_select_id, m_i_histogram_lbdwn_object, m_i_histogmra_gray_min, m_i_histogmra_gray_max) ;
 	}
 	else if (point.x >= rect_histogram_red.left && point.x <= rect_histogram_red.right &&
 			point.y >= rect_histogram_red.top && point.y <= rect_histogram_red.bottom)
@@ -2115,6 +2170,8 @@ void CEyedeaCheckDefectTabDlg::OnLButtonDown(UINT nFlags, CPoint point)
 
 		if (m_i_histogmra_red_min < 0) m_i_histogmra_red_min = 0;
 		else if (m_i_histogmra_red_min > 255) m_i_histogmra_red_min = 255;
+
+		ERVS_Histogram_Set_Range(m_select_id, m_i_histogram_lbdwn_object, m_i_histogmra_red_min, m_i_histogmra_red_max);
 
 	}
 	else if (point.x >= rect_histogram_green.left && point.x <= rect_histogram_green.right &&
@@ -2130,6 +2187,8 @@ void CEyedeaCheckDefectTabDlg::OnLButtonDown(UINT nFlags, CPoint point)
 		if (m_i_histogmra_green_min < 0) m_i_histogmra_green_min = 0;
 		else if (m_i_histogmra_green_min > 255) m_i_histogmra_green_min = 255;
 
+		ERVS_Histogram_Set_Range(m_select_id, m_i_histogram_lbdwn_object, m_i_histogmra_green_min, m_i_histogmra_green_max);
+
 	}
 	else if (point.x >= rect_histogram_blue.left && point.x <= rect_histogram_blue.right &&
 			point.y >= rect_histogram_blue.top && point.y <= rect_histogram_blue.bottom)
@@ -2144,6 +2203,7 @@ void CEyedeaCheckDefectTabDlg::OnLButtonDown(UINT nFlags, CPoint point)
 		if (m_i_histogmra_blue_min < 0) m_i_histogmra_blue_min = 0;
 		else if (m_i_histogmra_blue_min > 255) m_i_histogmra_blue_min = 255;
 
+		ERVS_Histogram_Set_Range(m_select_id, m_i_histogram_lbdwn_object, m_i_histogmra_blue_min, m_i_histogmra_blue_max);
 	}
 	
 	CDialogEx::OnLButtonDown(nFlags, point);
@@ -2153,6 +2213,31 @@ void CEyedeaCheckDefectTabDlg::OnLButtonDown(UINT nFlags, CPoint point)
 void CEyedeaCheckDefectTabDlg::OnLButtonUp(UINT nFlags, CPoint point)
 {
 	// TODO: Add your message handler code here and/or call default
+	if (m_i_histogram_lbdwn_object == 0)	//gray
+	{
+		ERVS_Histogram_Set_Range(m_select_id, m_i_histogram_lbdwn_object, m_i_histogmra_gray_min, m_i_histogmra_gray_max);
+
+		OnBnClickedButtonHistoGet();
+	}
+	else if (m_i_histogram_lbdwn_object == 1)	//red
+	{
+		ERVS_Histogram_Set_Range(m_select_id, m_i_histogram_lbdwn_object, m_i_histogmra_red_min, m_i_histogmra_red_max);
+
+		OnBnClickedButtonHistoGet2();
+	}
+	else if (m_i_histogram_lbdwn_object == 2)	//green
+	{
+		ERVS_Histogram_Set_Range(m_select_id, m_i_histogram_lbdwn_object, m_i_histogmra_green_min, m_i_histogmra_green_max);
+
+		OnBnClickedButtonHistoGet3();
+	}
+	else if (m_i_histogram_lbdwn_object == 3)	//blue
+	{
+		ERVS_Histogram_Set_Range(m_select_id, m_i_histogram_lbdwn_object, m_i_histogmra_blue_min, m_i_histogmra_blue_max);
+
+		OnBnClickedButtonHistoGet4();
+	}
+
 	m_i_histogram_lbdwn_object = -1;
 
 	CDialogEx::OnLButtonUp(nFlags, point);
@@ -2190,6 +2275,8 @@ void CEyedeaCheckDefectTabDlg::OnMouseMove(UINT nFlags, CPoint point)
 
 			if (m_i_histogmra_gray_max < 0) m_i_histogmra_gray_max = 0;
 			else if (m_i_histogmra_gray_max > 255) m_i_histogmra_gray_max = 255;
+
+			ERVS_Histogram_Set_Range(m_select_id, m_i_histogram_lbdwn_object, m_i_histogmra_gray_min, m_i_histogmra_gray_max);
 		}
 		else
 		{
@@ -2207,6 +2294,8 @@ void CEyedeaCheckDefectTabDlg::OnMouseMove(UINT nFlags, CPoint point)
 
 			if (m_i_histogmra_red_max < 0) m_i_histogmra_red_max = 0;
 			else if (m_i_histogmra_red_max > 255) m_i_histogmra_red_max = 255;
+
+			ERVS_Histogram_Set_Range(m_select_id, m_i_histogram_lbdwn_object, m_i_histogmra_red_min, m_i_histogmra_red_max);
 		}
 		else
 		{
@@ -2224,6 +2313,8 @@ void CEyedeaCheckDefectTabDlg::OnMouseMove(UINT nFlags, CPoint point)
 
 			if (m_i_histogmra_green_max < 0) m_i_histogmra_green_max = 0;
 			else if (m_i_histogmra_green_max > 255) m_i_histogmra_green_max = 255;
+
+			ERVS_Histogram_Set_Range(m_select_id, m_i_histogram_lbdwn_object, m_i_histogmra_green_min, m_i_histogmra_green_max);
 		}
 		else
 		{
@@ -2241,6 +2332,8 @@ void CEyedeaCheckDefectTabDlg::OnMouseMove(UINT nFlags, CPoint point)
 
 			if (m_i_histogmra_blue_max < 0) m_i_histogmra_blue_max = 0;
 			else if (m_i_histogmra_blue_max > 255) m_i_histogmra_blue_max = 255;
+
+			ERVS_Histogram_Set_Range(m_select_id, m_i_histogram_lbdwn_object, m_i_histogmra_blue_min, m_i_histogmra_blue_max);
 		}
 		else
 		{
@@ -2249,4 +2342,132 @@ void CEyedeaCheckDefectTabDlg::OnMouseMove(UINT nFlags, CPoint point)
 	}
 
 	CDialogEx::OnMouseMove(nFlags, point);
+}
+
+
+void CEyedeaCheckDefectTabDlg::OnBnClickedButtonHistoGet()
+{
+	// TODO: Add your control notification handler code here
+	int min_value = 0;
+	int max_value = 0;
+	ERVS_Histogram_Get_Range(m_select_id, 0, &min_value, &max_value);
+
+	CString str;
+	str.Format(_T("%d"), min_value);
+	GetDlgItem(IDC_EDIT_HISTOGRAM_RANGE_MIN)->SetWindowText(str);
+
+	str.Format(_T("%d"), max_value);
+	GetDlgItem(IDC_EDIT_HISTOGRAM_RANGE_MAX)->SetWindowText(str);
+}
+
+
+void CEyedeaCheckDefectTabDlg::OnBnClickedButtonHistoGet2()
+{
+	// TODO: Add your control notification handler code here
+	int min_value = 0;
+	int max_value = 0;
+	ERVS_Histogram_Get_Range(m_select_id, 1, &min_value, &max_value);
+
+	CString str;
+	str.Format(_T("%d"), min_value);
+	GetDlgItem(IDC_EDIT_HISTOGRAM_RANGE_MIN2)->SetWindowText(str);
+
+	str.Format(_T("%d"), max_value);
+	GetDlgItem(IDC_EDIT_HISTOGRAM_RANGE_MAX2)->SetWindowText(str);
+}
+
+
+void CEyedeaCheckDefectTabDlg::OnBnClickedButtonHistoGet3()
+{
+	// TODO: Add your control notification handler code here
+	int min_value = 0;
+	int max_value = 0;
+	ERVS_Histogram_Get_Range(m_select_id, 2, &min_value, &max_value);
+
+	CString str;
+	str.Format(_T("%d"), min_value);
+	GetDlgItem(IDC_EDIT_HISTOGRAM_RANGE_MIN3)->SetWindowText(str);
+
+	str.Format(_T("%d"), max_value);
+	GetDlgItem(IDC_EDIT_HISTOGRAM_RANGE_MAX3)->SetWindowText(str);
+}
+
+
+void CEyedeaCheckDefectTabDlg::OnBnClickedButtonHistoGet4()
+{
+	// TODO: Add your control notification handler code here
+	int min_value = 0;
+	int max_value = 0;
+	ERVS_Histogram_Get_Range(m_select_id, 3, &min_value, &max_value);
+
+	CString str;
+	str.Format(_T("%d"), min_value);
+	GetDlgItem(IDC_EDIT_HISTOGRAM_RANGE_MIN4)->SetWindowText(str);
+
+	str.Format(_T("%d"), max_value);
+	GetDlgItem(IDC_EDIT_HISTOGRAM_RANGE_MAX4)->SetWindowText(str);
+}
+
+
+void CEyedeaCheckDefectTabDlg::OnBnClickedButtonHistoSet()
+{
+	// TODO: Add your control notification handler code here
+	CString str;
+	GetDlgItem(IDC_EDIT_HISTOGRAM_RANGE_MIN)->GetWindowText(str);
+	int min_value = _ttoi(str);
+
+	GetDlgItem(IDC_EDIT_HISTOGRAM_RANGE_MAX)->GetWindowText(str);
+	int max_value = _ttoi(str);
+
+	ERVS_Histogram_Set_Range(m_select_id, 0, min_value, max_value);
+
+	OnBnClickedButtonHistoGet();
+}
+
+
+void CEyedeaCheckDefectTabDlg::OnBnClickedButtonHistoSet2()
+{
+	// TODO: Add your control notification handler code here
+	CString str;
+	GetDlgItem(IDC_EDIT_HISTOGRAM_RANGE_MIN2)->GetWindowText(str);
+	int min_value = _ttoi(str);
+
+	GetDlgItem(IDC_EDIT_HISTOGRAM_RANGE_MAX2)->GetWindowText(str);
+	int max_value = _ttoi(str);
+
+	ERVS_Histogram_Set_Range(m_select_id, 1, min_value, max_value);
+
+	OnBnClickedButtonHistoGet2();
+}
+
+
+void CEyedeaCheckDefectTabDlg::OnBnClickedButtonHistoSet3()
+{
+	// TODO: Add your control notification handler code here
+	CString str;
+	GetDlgItem(IDC_EDIT_HISTOGRAM_RANGE_MIN3)->GetWindowText(str);
+	int min_value = _ttoi(str);
+
+	GetDlgItem(IDC_EDIT_HISTOGRAM_RANGE_MAX3)->GetWindowText(str);
+	int max_value = _ttoi(str);
+
+	ERVS_Histogram_Set_Range(m_select_id, 2, min_value, max_value);
+
+	OnBnClickedButtonHistoGet3();
+}
+
+
+void CEyedeaCheckDefectTabDlg::OnBnClickedButtonHistoSet4()
+{
+	// TODO: Add your control notification handler code here
+	CString str;
+	GetDlgItem(IDC_EDIT_HISTOGRAM_RANGE_MIN4)->GetWindowText(str);
+	int min_value = _ttoi(str);
+
+	GetDlgItem(IDC_EDIT_HISTOGRAM_RANGE_MAX4)->GetWindowText(str);
+	int max_value = _ttoi(str);
+
+	ERVS_Histogram_Set_Range(m_select_id, 3, min_value, max_value);
+
+	OnBnClickedButtonHistoGet4();
 }

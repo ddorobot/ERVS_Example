@@ -229,5 +229,8 @@ int ERVS_Geometry_Clear(void);
 //Histogram 
 int ERVS_Histogram_Set_Range(const int id, const int option, const int min_value, const int max_value);
 int ERVS_Histogram_Get_Range(const int id, const int option, int *out_min_value, int *out_max_value);
+int ERVS_Histogram_Get_Graph(const int id, float** out_histogram, float** out_histogram_b, float** out_histogram_g, float** out_histogram_r, float* out_histogram_size);
+int ERVS_Histogram_Set_Use_Element(const int id, const int option);
+int ERVS_Histogram_Get_Use_Element(const int id, int *out_option);
 
 #endif

@@ -930,3 +930,18 @@ int ERVS_Histogram_Get_Range(const int id, const int option, int *out_min_value,
 {
 	return g_cls_interface.Histogram_Get_Range(id, option, out_min_value, out_max_value);
 }
+
+int ERVS_Histogram_Get_Graph(const int id, float** out_histogram, float** out_histogram_b, float** out_histogram_g, float** out_histogram_r, float* out_histogram_size)
+{
+	return g_cls_interface.Histogram_Get_Graph(id, out_histogram, out_histogram_b, out_histogram_g, out_histogram_r, out_histogram_size);
+}
+
+int ERVS_Histogram_Set_Use_Element(const int id, const int option)
+{
+	return g_cls_interface.Histogram_Set_Use_Element(id, option);
+}
+
+int ERVS_Histogram_Get_Use_Element(const int id, int *out_option)
+{
+	return g_cls_interface.Histogram_Get_Use_Element(id, out_option);
+}

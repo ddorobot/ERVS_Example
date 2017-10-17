@@ -94,18 +94,26 @@ int CEyedeaInterface::SetVisionConfigOption(int option, float value)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
 
-    if(ret != 0)
-        return ret;
-
-	delete data;
-	data = NULL;
+	return ret;
 }
 
 float CEyedeaInterface::GetVisionConfigOption(int option)
@@ -146,14 +154,28 @@ float CEyedeaInterface::GetVisionConfigOption(int option)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	ret = 0.0;
 
@@ -212,17 +234,26 @@ int CEyedeaInterface::SetObjectInformation(int id)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
 
-	delete data;
-	data = NULL;
+	return ret;
 }
 
 int CEyedeaInterface::GetImage(char** out_data, int* len)
@@ -304,14 +335,28 @@ int CEyedeaInterface::GetResultFindSearchAreaCameraBase(float *out_x1, float *ou
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	float x1 = 0;
 	float y1 = 0;
@@ -458,14 +503,29 @@ int CEyedeaInterface::GetResultFindMasterAreaCameraBase(float *out_x1, float *ou
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
+
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	float x1 = 0;
 	float y1 = 0;
@@ -612,14 +672,28 @@ int CEyedeaInterface::GetResultFindSearchAreaRobotBase(float *out_x1, float *out
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	float x1 = 0;
 	float y1 = 0;
@@ -766,14 +840,28 @@ int CEyedeaInterface::GetResultFindMasterAreaRobotBase(float *out_x1, float *out
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	float x1 = 0;
 	float y1 = 0;
@@ -920,14 +1008,29 @@ int CEyedeaInterface::GetResultFindSearchAreaImageBase(float *out_x1, float *out
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
+
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	float x1 = 0;
 	float y1 = 0;
@@ -1074,14 +1177,28 @@ int CEyedeaInterface::GetResultFindMasterAreaImageBase(float *out_x1, float *out
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	float x1 = 0;
 	float y1 = 0;
@@ -1229,14 +1346,28 @@ int CEyedeaInterface::ERVS_DBAddSubObject(int id)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return new_id;
+				}
 				continue;
 			}
 		}
 	}
-    if(new_id != 0)
-        return new_id;
+	if (new_id != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return new_id;
+	}
 
 	new_id = -1;
 
@@ -1290,14 +1421,29 @@ int CEyedeaInterface::DBAddObject(void)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
+
 					return new_id;
+				}
 				continue;
 			}
 		}
 	}
-    if(new_id != 0)
-        return new_id;
+	if (new_id != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return new_id;
+	}
 
 	new_id = -1;
 
@@ -1351,18 +1497,22 @@ int CEyedeaInterface::ResetObject(void)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
-
 	if (data != NULL)
 	{
-		delete (data);
+		delete data;
 		data = NULL;
 	}
 
@@ -1420,14 +1570,28 @@ int CEyedeaInterface::GetSubObjectSearchAreaByIdId(const int host_id, const int 
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	if (len >= 16)
 	{
@@ -1530,14 +1694,28 @@ int CEyedeaInterface::GetSubObjectSearchAreaByIdIndex(const int host_id, const i
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	if (len >= 16)
 	{
@@ -1640,14 +1818,28 @@ int CEyedeaInterface::GetSubObjectUseInspectionByIdId(const int host_id, const i
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	ret = 0;
 	if (len >= 4)
@@ -1717,14 +1909,29 @@ int CEyedeaInterface::GetSubObjectUseInspectionByIdIndex(const int host_id, cons
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+
+		return ret;
+	}
 
 	ret =0;
 
@@ -1794,14 +2001,28 @@ int CEyedeaInterface::GetSubObjectCircleByIdIndex(const int host_id, const int i
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	if (len >= 16)
 	{
@@ -1904,14 +2125,28 @@ int CEyedeaInterface::GetSubObjectCircleByIdId(const int host_id, const int sub_
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	if (len >= 16)
 	{
@@ -2014,14 +2249,28 @@ int CEyedeaInterface::GetSubObjectMasterAreaByIdId(const int host_id, const int 
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	if (len >= 16)
 	{
@@ -2124,14 +2373,29 @@ int CEyedeaInterface::GetSubObjectMasterAreaByIdIndex(const int host_id, const i
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+
+		return ret;
+	}
 
 	if (len >= 16)
 	{
@@ -2234,14 +2498,28 @@ unsigned int CEyedeaInterface::GetSubObjectID(int host_id, int index)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return id;
+				}
 				continue;
 			}
 		}
 	}
-    if(id != 0)
-        return id;
+	if (id != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return id;
+	}
 
 	id = 0;
 
@@ -2317,14 +2595,29 @@ int CEyedeaInterface::GetSubObjectCount(int id)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return count;
+				}
 				continue;
 			}
 		}
 	}
-    if(count != 0)
-        return count;
+	if (count != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+
+		return count;
+	}
 
 	count = 0;
 
@@ -2371,7 +2664,14 @@ int CEyedeaInterface::DB_Del_ID(int id)
 	int ret = 0;
 	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
 	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
 		return ret;
+	}
 
 	if (data != NULL)
 	{
@@ -2402,7 +2702,14 @@ int CEyedeaInterface::GetDB_Select_ID(void)
 	int ret = 0;
 	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
 	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
 		return ret;
+	}
 
 	int ret_id = 0;
 	if (len >= 4)
@@ -2450,7 +2757,14 @@ int CEyedeaInterface::GetDB_Info_Id(int index)
 	int ret = 0;
 	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
 	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
 		return ret;
+	}
 
 	int ret_id = 0;
 	if (len >= 4)
@@ -2492,7 +2806,14 @@ int CEyedeaInterface::GetDBCount(void)
 	int ret = 0;
 	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
 	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
 		return ret;
+	}
 
 	int count = 0;
 	if (len >= 4)
@@ -2553,14 +2874,28 @@ int CEyedeaInterface::SetObject(int id)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	int ret_id = 0;
 	if (len >= 4)
@@ -2621,15 +2956,19 @@ int CEyedeaInterface::SetMode(int option)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
-
 	if (data != NULL)
 	{
 		delete data;
@@ -2672,14 +3011,28 @@ int CEyedeaInterface::GetMode(void)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return mode;
+				}
 				continue;
 			}
 		}
 	}
-    if(mode != 0)
-        return mode;
+	if (mode != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return mode;
+	}
 
 	mode = -1;
 
@@ -2740,14 +3093,29 @@ float CEyedeaInterface::GetResultFindScale(void)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return scale;
+				}
 				continue;
 			}
 		}
 	}
-    if(scale != 0)
-        return scale;
+	if (scale != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+
+		return scale;
+	}
 
 	scale = 0;
 
@@ -2808,14 +3176,28 @@ float CEyedeaInterface::GetResultFindScore(void)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return score;
+				}
 				continue;
 			}
 		}
 	}
-    if(score != 0)
-        return score;
+	if (score != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return score;
+	}
 
 	score = 0;
 
@@ -3191,14 +3573,28 @@ int CEyedeaInterface::GetResultImageLocal(char** out_data, int* len, int id)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data2 != NULL)
+					{
+						delete data2;
+						data2 = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data2 != NULL)
+		{
+			delete data2;
+			data2 = NULL;
+		}
+		return ret;
+	}
 
 	delete (data2);
 	data2 = NULL;
@@ -3223,7 +3619,7 @@ int CEyedeaInterface::GetResultImageLocal(char** out_data, int* len, int id)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
 					return ret;
 				continue;
 			}
@@ -3261,7 +3657,7 @@ int CEyedeaInterface::GetImageWidthUserArea(char** out_data, int* len)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
 					return ret;
 				continue;
 			}
@@ -3332,17 +3728,24 @@ int CEyedeaInterface::SetSearchArea(float x, float y, float w, float h)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;                    
-
-	delete (data);
-	data = NULL;
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
 
     return ret;
 }
@@ -3392,17 +3795,24 @@ int CEyedeaInterface::SetSearchAreaWidth(int width)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
-
-	delete (data);
-	data = NULL;
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
 
     return ret;
 }
@@ -3465,17 +3875,24 @@ int CEyedeaInterface::SetSearchAreaColor(int r, int g, int b)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
-
-	delete (data);
-	data = NULL;
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
 
     return ret;
 }
@@ -3519,14 +3936,28 @@ int CEyedeaInterface::GetSearchAreaWidth(void)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return width;
+				}
 				continue;
 			}
 		}
 	}
-    if(width != 0)
-        return width;
+	if (width != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return width;
+	}
 
 	width = 0;
 
@@ -3585,14 +4016,28 @@ int CEyedeaInterface::GetSearchAreaColor(int* out_r, int* out_g, int* out_b)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	int color_r = 0;
 	int color_g = 0;
@@ -3676,17 +4121,24 @@ int CEyedeaInterface::SetMasterAreaWidth(int width)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
-
-	delete (data);
-	data = NULL;
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
 
     return ret;
 }
@@ -3749,17 +4201,24 @@ int CEyedeaInterface::SetMasterAreaColor(int r, int g, int b)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
-
-	delete (data);
-	data = NULL;
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
 
     return ret;
 }
@@ -3803,14 +4262,28 @@ int CEyedeaInterface::GetMasterAreaWidth(void)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return width;
+				}
 				continue;
 			}
 		}
 	}
-    if(width != 0)
-        return width;
+	if (width != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return width;
+	}
 
 	width = 0;
 
@@ -3869,14 +4342,28 @@ int CEyedeaInterface::GetMasterAreaColor(int* out_r, int* out_g, int* out_b)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	int color_r = 0;
 	int color_g = 0;
@@ -3945,14 +4432,28 @@ int CEyedeaInterface::GetSearchArea(float* out_x, float* out_y, float* out_w, fl
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	if (len >= 16)
 	{
@@ -4067,17 +4568,25 @@ int CEyedeaInterface::SetObjectColor(int object, int r, int g, int b)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
+
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
-
-	delete (data);
-	data = NULL;
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
 
     return ret;
 }
@@ -4126,14 +4635,28 @@ int CEyedeaInterface::GetObjectColor(int object, int* out_r, int* out_g, int* ou
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	int color_r = 0;
 	int color_g = 0;
@@ -4222,17 +4745,24 @@ int CEyedeaInterface::SetObjectWidth(int object, int width)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
-
-	delete (data);
-	data = NULL;
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
 
     return ret;
 }
@@ -4281,14 +4811,28 @@ int CEyedeaInterface::GetObjectWidth(int object)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return width;
+				}
 				continue;
 			}
 		}
 	}
-    if(width != 0)
-        return width;
+	if (width != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return width;
+	}
 
 	width = 0;
 
@@ -4370,17 +4914,24 @@ int CEyedeaInterface::SetMasterArea(float x, float y, float w, float h)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
-
-	delete (data);
-	data = NULL;
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
 
     return ret;
 }
@@ -4447,17 +4998,24 @@ int CEyedeaInterface::SetSelectBaseObject(float x, float y, float w, float h)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
-
-	delete (data);
-	data = NULL;
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
 
     return ret;
 }
@@ -4525,16 +5083,23 @@ int CEyedeaInterface::SetZoomArea(float x, float y, float w, float h)
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
 				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-	if (ret != 0)
-		return ret;
-
-	delete (data);
-	data = NULL;
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
 
 	return ret;
 }
@@ -4611,16 +5176,23 @@ int CEyedeaInterface::SetMaskArea(float x, float y, float w, float h, bool inver
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
 				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-	if (ret != 0)
-		return ret;
-
-	delete (data);
-	data = NULL;
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
 
 	return ret;
 }
@@ -4659,16 +5231,23 @@ int CEyedeaInterface::UndoMaskArea(void)
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
 				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-	if (ret != 0)
-		return ret;
-
-	delete (data);
-	data = NULL;
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
 
 	return ret;
 }
@@ -4707,16 +5286,23 @@ int CEyedeaInterface::DelMaskArea(void)
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
 				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-	if (ret != 0)
-		return ret;
-
-	delete (data);
-	data = NULL;
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
 
 	return ret;
 }
@@ -4755,16 +5341,23 @@ int CEyedeaInterface::ResetZoomArea(void)
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
 				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-	if (ret != 0)
-		return ret;
-
-	delete (data);
-	data = NULL;
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
 
 	return ret;
 }
@@ -4808,14 +5401,29 @@ int CEyedeaInterface::GetObjectCircle(float *out_x, float *out_y, float *out_r1,
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
+
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	if (len >= 16)
 	{
@@ -4939,17 +5547,24 @@ int CEyedeaInterface::SetObjectCircle(float x, float y, float r1, float r2)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
-
-	delete (data);
-	data = NULL;
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
 
     return ret;
 }
@@ -5019,16 +5634,23 @@ int CEyedeaInterface::SetObjectLine(float x, float y, float w, float h)
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
 				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-	if (ret != 0)
-		return ret;
-
-	delete (data);
-	data = NULL;
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
 
 	return ret;
 }
@@ -5064,14 +5686,29 @@ int CEyedeaInterface::GetMainObjectInfo(float* out_x, float* out_y, float* out_a
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
+
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	if (len >= 12)
 	{
@@ -5149,14 +5786,28 @@ int CEyedeaInterface::GetCircleInfoCameraBase(float* out_x, float* out_y, float*
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data2 != NULL)
+					{
+						delete data2;
+						data2 = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data2 != NULL)
+		{
+			delete data2;
+			data2 = NULL;
+		}
+		return ret;
+	}
 
 	delete (data2);
 	data2 = NULL;
@@ -5181,14 +5832,28 @@ int CEyedeaInterface::GetCircleInfoCameraBase(float* out_x, float* out_y, float*
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	if (len >= 12)
 	{
@@ -5266,14 +5931,28 @@ int CEyedeaInterface::GetCircleInfoRobotBase(float* out_x, float* out_y, float* 
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data2 != NULL)
+					{
+						delete data2;
+						data2 = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data2 != NULL)
+		{
+			delete data2;
+			data2 = NULL;
+		}
+		return ret;
+	}
 
 	delete (data2);
 	data2 = NULL;
@@ -5298,14 +5977,29 @@ int CEyedeaInterface::GetCircleInfoRobotBase(float* out_x, float* out_y, float* 
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
+
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	if (len >= 12)
 	{
@@ -5383,14 +6077,29 @@ int CEyedeaInterface::GetCircleInfoImageBase(float* out_x, float* out_y, float* 
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data2 != NULL)
+					{
+						delete data2;
+						data2 = NULL;
+					}
+
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data2 != NULL)
+		{
+			delete data2;
+			data2 = NULL;
+		}
+		return ret;
+	}
 
 	delete (data2);
 	data2 = NULL;
@@ -5415,14 +6124,28 @@ int CEyedeaInterface::GetCircleInfoImageBase(float* out_x, float* out_y, float* 
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	if (len >= 12)
 	{
@@ -5491,14 +6214,29 @@ int CEyedeaInterface::GetMasterArea(float* out_x, float* out_y, float* out_w, fl
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+
+		return ret;
+	}
 
 	if (len >= 16)
 	{
@@ -5584,18 +6322,24 @@ int CEyedeaInterface::OptionPCAOn(void)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
-
-	delete data;
-	data = NULL;
-
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
     return ret;
 }
 
@@ -5633,17 +6377,24 @@ int CEyedeaInterface::SetOptionFindWithCheckDefectOn(void)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
-
-	delete data;
-	data = NULL;
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
 
     return ret;
 }
@@ -5682,17 +6433,24 @@ int CEyedeaInterface::SetOptionFindWithCheckDefectOff(void)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
-
-	delete data;
-	data = NULL;
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
 
     return ret;
 }
@@ -5731,14 +6489,28 @@ int CEyedeaInterface::GetOptionFindWithCheckDefect(void)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	ret = 0;
 
@@ -5787,17 +6559,24 @@ int CEyedeaInterface::SetNextImage(void)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
-
-	delete data;
-	data = NULL;
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
 
     return ret;
 }
@@ -5836,14 +6615,28 @@ int CEyedeaInterface::GetOptionPCA(void)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	ret = 0;
 	
@@ -5892,17 +6685,25 @@ int CEyedeaInterface::OptionPCAOff(void)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
+
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
-
-	delete data;
-	data = NULL;
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
 
     return ret;
 }
@@ -5941,17 +6742,28 @@ int CEyedeaInterface::OptionFixSearchAreaOn(void)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}if (data != NULL)
+				{
+					delete data;
+					data = NULL;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
-
-	delete data;
-	data = NULL;
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
 
     return ret;
 }
@@ -5990,17 +6802,25 @@ int CEyedeaInterface::OptionFixSearchAreaOff(void)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
+				
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
-
-	delete data;
-	data = NULL;
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
 
     return ret;
 }
@@ -6039,17 +6859,24 @@ int CEyedeaInterface::OptionFixSearchUserRoiOn(void)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
-
-	delete data;
-	data = NULL;
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
 
     return ret;
 }
@@ -6088,17 +6915,25 @@ int CEyedeaInterface::OptionFixSearchUserRoiOff(void)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
+
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
-
-	delete data;
-	data = NULL;
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
 
     return ret;
 }
@@ -6141,14 +6976,28 @@ int CEyedeaInterface::FindObject(int id)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	ret = 0;
 
@@ -6201,14 +7050,28 @@ int CEyedeaInterface::FindObjectWithoutPCA(int id)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	ret = 0;
 
@@ -6257,14 +7120,28 @@ int CEyedeaInterface::FindAllObjectWithPCA(void)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	ret = 0;
 
@@ -6313,14 +7190,29 @@ int CEyedeaInterface::FindObjectWithPCA(void)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+
+		return ret;
+	}
 
 	ret = 0;
 
@@ -6369,14 +7261,29 @@ int CEyedeaInterface::GetOptionFixSearchArea(void)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
+
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	ret = 0;
 	
@@ -6428,14 +7335,30 @@ int CEyedeaInterface::GetOptionFixSearchUserRoi(void)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
+
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+
+		return ret;
+	}
 
 	ret = 0;
 
@@ -6487,14 +7410,28 @@ unsigned int CEyedeaInterface::GetNewID(void)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	ret = 0;
 
@@ -6555,14 +7492,29 @@ int CEyedeaInterface::FileLoadObjectListInfo(std::string path)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
+
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	ret = 0;
 
@@ -6624,14 +7576,28 @@ int CEyedeaInterface::FileSaveObjectListInfo(std::string path)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
     ret = 0;
 
@@ -6687,14 +7653,28 @@ int CEyedeaInterface::FileLoadCheckDefectListInfo(void)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	ret = 0;
 
@@ -6753,14 +7733,28 @@ int CEyedeaInterface::FileSaveCheckDefectListInfo(void)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	ret = 0;
 
@@ -6813,14 +7807,28 @@ int CEyedeaInterface::DelObjectListInfo(int id)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	ret = 0;
 
@@ -6873,14 +7881,29 @@ int CEyedeaInterface::DelCheckDefectListInfo(int id)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+
+		return ret;
+	}
 
     ret = 0;
 
@@ -6934,18 +7957,24 @@ int CEyedeaInterface::SetBase(int dep_id)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
-
-
-	delete data;
-	data = NULL;
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
 
     return ret;
 }
@@ -6983,17 +8012,25 @@ int CEyedeaInterface::SaveInformation(void)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
+
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
-	
-	delete data;
-	data = NULL;
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
 
     return ret;
 }
@@ -7031,18 +8068,24 @@ int CEyedeaInterface::LoadInformation(void)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
-
-
-	delete data;
-	data = NULL;
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
 
     return ret;
 }
@@ -7080,14 +8123,29 @@ int CEyedeaInterface::GetSelectObject(float* out_x, float* out_y, int* out_width
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+
+		return ret;
+	}
 
 	if (len >= 16)
 	{
@@ -7190,18 +8248,24 @@ int CEyedeaInterface::SetSelectObject(float x, float y, int width, int height)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
-
-
-	delete data;
-	data = NULL;
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
 
     return ret;
 }
@@ -7275,18 +8339,24 @@ int CEyedeaInterface::SetCheckDefect(int id, bool fixarea, bool checkoption1, fl
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
-
-	delete data;
-	data = NULL;
-
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
     return ret;
 }
 
@@ -7324,14 +8394,30 @@ unsigned int CEyedeaInterface::GetCheckDefectLinstNum(void)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
+
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+
+		return ret;
+	}
 
 	ret = 0;
 
@@ -7382,14 +8468,28 @@ unsigned int CEyedeaInterface::GetObjectLinstNum(void)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	ret = 0;
 
@@ -7510,14 +8610,28 @@ int CEyedeaInterface::GetObjectListInfo(const int index, int *id, int *type)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	if (len >= 5)
 	{
@@ -7578,14 +8692,28 @@ float CEyedeaInterface::GetBaseInfo(int option)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	ret = 0.0;
 
@@ -7645,14 +8773,28 @@ int CEyedeaInterface::GetCheckDefectListInfo(const int index, int *id, bool *fix
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	if (len >= 16)
 	{
@@ -7743,14 +8885,29 @@ int CEyedeaInterface::CheckDefectList(int id)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+
+		return ret;
+	}
 
 	ret = 0;
 
@@ -7827,14 +8984,29 @@ int CEyedeaInterface::CheckDefectUserOption(bool checkoption1, float optionscore
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+
+		return ret;
+	}
 
 	ret = 0;
 	if (len >= 1)
@@ -7889,14 +9061,28 @@ int CEyedeaInterface::CheckDefect(float threshold)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	ret = 0;
 	if (len >= 1)
@@ -7948,14 +9134,28 @@ int CEyedeaInterface::GetObjectFeatureUse(void)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	ret = 0;
 	if (len >= 1)
@@ -8008,14 +9208,28 @@ int CEyedeaInterface::GetObjectFeatureColor(int* out_r, int* out_g, int* out_b)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	int color_r = 0;
 	int color_g = 0;
@@ -8092,14 +9306,29 @@ int CEyedeaInterface::GetObjectFeatureWidth(void)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
+
 					return width;
+				}
 				continue;
 			}
 		}
 	}
-    if(width != 0)
-        return width;
+	if (width != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return width;
+	}
 
 	width = 0;
 
@@ -8162,17 +9391,24 @@ int CEyedeaInterface::SetObjectFeatureUse(int use)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
-
-	delete data;
-	data = NULL;
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
 
     return ret;
 }
@@ -8234,17 +9470,24 @@ int CEyedeaInterface::SetObjectFeatureColor(int r, int g, int b)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
-
-	delete (data);
-	data = NULL;
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
 
     return ret;
 }
@@ -8294,14 +9537,28 @@ int CEyedeaInterface::SetObjectFeatureWidth(int width)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	delete (data);
 	data = NULL;
@@ -8347,14 +9604,28 @@ int CEyedeaInterface::GetObjectOutlineUse(void)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	ret = 0;
 	if (len >= 1)
@@ -8407,14 +9678,28 @@ int CEyedeaInterface::GetObjectOutlineColor(int* out_r, int* out_g, int* out_b)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	int color_r = 0;
 	int color_g = 0;
@@ -8491,14 +9776,29 @@ int CEyedeaInterface::GetObjectOutlineWidth(void)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return width;
+				}
 				continue;
 			}
 		}
 	}
-    if(width != 0)
-        return width;
+	if (width != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+
+		return width;
+	}
 
 	width = 0;
 
@@ -8561,17 +9861,24 @@ int CEyedeaInterface::SetObjectOutlineUse(int use)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
-
-	delete data;
-	data = NULL;
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
 
     return ret;
 }
@@ -8633,17 +9940,24 @@ int CEyedeaInterface::SetObjectOutlineColor(int r, int g, int b)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
-
-	delete (data);
-	data = NULL;
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
 
     return ret;
 }
@@ -8693,17 +10007,24 @@ int CEyedeaInterface::SetObjectOutlineWidth(int width)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
-
-	delete (data);
-	data = NULL;
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
 
     return ret;
 }
@@ -8748,14 +10069,29 @@ int CEyedeaInterface::GetObjectRectUse(void)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+
+		return ret;
+	}
 
 	ret = 0;
 	if (len >= 1)
@@ -8808,14 +10144,28 @@ int CEyedeaInterface::GetObjectRectColor(int* out_r, int* out_g, int* out_b)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	int color_r = 0;
 	int color_g = 0;
@@ -8892,14 +10242,29 @@ int CEyedeaInterface::GetObjectRectWidth(void)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
+
 					return width;
+				}
 				continue;
 			}
 		}
 	}
-    if(width != 0)
-        return width;
+	if (width != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return width;
+	}
 
 	width = 0;
 
@@ -8962,17 +10327,24 @@ int CEyedeaInterface::SetObjectRectUse(int use)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
-
-	delete data;
-	data = NULL;
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
 
     return ret;
 }
@@ -9034,18 +10406,24 @@ int CEyedeaInterface::SetObjectRectColor(int r, int g, int b)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
-
-	delete (data);
-	data = NULL;
-
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
     return ret;
 }
 
@@ -9094,17 +10472,24 @@ int CEyedeaInterface::SetObjectRectWidth(int width)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
-
-	delete (data);
-	data = NULL;
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
 
     return ret;
 }
@@ -9149,14 +10534,28 @@ int CEyedeaInterface::GetObjectCenterUse(void)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	ret = 0;
 
@@ -9210,14 +10609,28 @@ int CEyedeaInterface::GetObjectCenterColor(int* out_r, int* out_g, int* out_b)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	int color_r = 0;
 	int color_g = 0;
@@ -9294,14 +10707,28 @@ int CEyedeaInterface::GetObjectCenterWidth(void)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return width;
+				}
 				continue;
 			}
 		}
 	}
-    if(width != 0)
-        return width;
+	if (width != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return width;
+	}
 
 	width = 0;
 
@@ -9364,17 +10791,25 @@ int CEyedeaInterface::SetObjectCenterUse(int use)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
+
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
-
-	delete data;
-	data = NULL;
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
 
     return ret;
 }
@@ -9436,17 +10871,24 @@ int CEyedeaInterface::SetObjectCenterColor(int r, int g, int b)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
-
-	delete (data);
-	data = NULL;
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
 
     return ret;
 }
@@ -9496,17 +10938,24 @@ int CEyedeaInterface::SetObjectCenterWidth(int width)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
-
-	delete (data);
-	data = NULL;
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
 
     return ret;
 }
@@ -9551,14 +11000,30 @@ int CEyedeaInterface::GetObjectAngleUse(void)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
+
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+
+		return ret;
+	}
 
 	ret = 0;
 	if (len >= 1)
@@ -9611,14 +11076,28 @@ int CEyedeaInterface::GetObjectAngleColor(int* out_r, int* out_g, int* out_b)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	int color_r = 0;
 	int color_g = 0;
@@ -9695,14 +11174,29 @@ int CEyedeaInterface::GetObjectAngleWidth(void)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return width;
+				}
 				continue;
 			}
 		}
 	}
-    if(width != 0)
-        return width;
+	if (width != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+
+		return width;
+	}
 
 	width = 0;
 
@@ -9765,17 +11259,24 @@ int CEyedeaInterface::SetObjectAngleUse(int use)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
-
-	delete data;
-	data = NULL;
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
 
     return ret;
 }
@@ -9837,17 +11338,25 @@ int CEyedeaInterface::SetObjectAngleColor(int r, int g, int b)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
-
-	delete (data);
-	data = NULL;
+    
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
 
     return ret;
 }
@@ -9897,14 +11406,28 @@ int CEyedeaInterface::SetObjectAngleWidth(int width)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	delete (data);
 	data = NULL;
@@ -9946,13 +11469,28 @@ int CEyedeaInterface::Calibration_GetID(void)
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
 				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
 	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+
 		return ret;
+	}
 
 	ret = 0;
 
@@ -10005,14 +11543,30 @@ int CEyedeaInterface::Calibration_isOK(void)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
+
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+
+		return ret;
+	}
 
 	ret =0;
 
@@ -10080,14 +11634,19 @@ int CEyedeaInterface::Calibration_Add(float robot_x, float robot_y)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
 
 	if (data != NULL)
 	{
@@ -10131,14 +11690,29 @@ int CEyedeaInterface::Calibration_GetCount(void)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
+
 					return size;
+				}
 				continue;
 			}
 		}
 	}
-    if(size != 0)
-        return size;
+	if (size != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return size;
+	}
 
 	size = 0;
 
@@ -10240,14 +11814,28 @@ int CEyedeaInterface::Calibration_GetRobotInfo(int index, float *out_robot_x, fl
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	int i_robot_x = 0;
 	int i_robot_y = 0;
@@ -10317,14 +11905,19 @@ int CEyedeaInterface::Calibration_Del(int index)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
 
 	if (data != NULL)
 	{
@@ -10367,14 +11960,19 @@ int CEyedeaInterface::Calibration_Clear(void)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
 
 	if (data != NULL)
 	{
@@ -10417,14 +12015,28 @@ int CEyedeaInterface::Calibration_Run(void)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	if (data != NULL)
 	{
@@ -10484,14 +12096,28 @@ int CEyedeaInterface::Calibration_GetPoint(const float in_px, const float in_py,
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	int i_robot_x = 0;
 	int i_robot_y = 0;
@@ -10564,13 +12190,27 @@ int CEyedeaInterface::Calibration_GetChessPoint(const int index, float* out_rx, 
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
 				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
 	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
 		return ret;
+	}
 
 	int i_robot_x = 0;
 	int i_robot_y = 0;
@@ -10634,14 +12274,29 @@ int CEyedeaInterface::GetFindObjectCount(void)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
+
 					return count;
+				}
 				continue;
 			}
 		}
 	}
-    if(count != 0)
-        return count;
+	if (count != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return count;
+	}
 
 	count = 0;
 
@@ -10709,13 +12364,28 @@ int CEyedeaInterface::GetFindObjectResultInfo(int base_index, int sub_index, flo
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
 				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
 	if (ret != 0)
+	{
+
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
 		return ret;
+	}
 
 	int i_id = 0;
 	int i_camera_x = 0;
@@ -10922,14 +12592,28 @@ int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, int op
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
 	int i_id = 0;
 	int i_camera_x = 0;
@@ -11226,7 +12910,15 @@ int CEyedeaInterface::GetFindObjectInfo2(int index, float* out_cx, float* out_cy
 	int ret = 0;
 	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
 	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+
 		return ret;
+	}
 
 	int i_camera_x = 0;
 	int i_camera_y = 0;
@@ -11333,7 +13025,15 @@ int CEyedeaInterface::GetFindObjectPose(int index, float* out_cx, float* out_cy,
 	int ret = 0;
 	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
 	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+
 		return ret;
+	}
 
 	int i_camera_x = 0;
 	int i_camera_y = 0;
@@ -11437,15 +13137,20 @@ int CEyedeaInterface::SetLog(int logoption)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
-
+    
 	if (data != NULL)
 	{
 		delete data;
@@ -11487,15 +13192,20 @@ int CEyedeaInterface::VisionConfigFileSave(void)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
-
+   
 	if (data != NULL)
 	{
 		delete data;
@@ -11537,15 +13247,20 @@ int CEyedeaInterface::VisionConfigFileLoad(void)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-    if(ret != 0)
-        return ret;
-
+   
 	if (data != NULL)
 	{
 		delete data;
@@ -11664,15 +13379,20 @@ int CEyedeaInterface::Calibration_Save(void)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-	if(ret != 0)
-		return ret;
-
+	
 	if (data != NULL)
 	{
 		delete data;
@@ -11714,15 +13434,21 @@ int CEyedeaInterface::Calibration_Load(void)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
-				if(sec >= 60)
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
+
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-	if(ret != 0)
-		return ret;
-
+	
 	if (data != NULL)
 	{
 		delete data;
@@ -11771,14 +13497,19 @@ int CEyedeaInterface::Calibration_Copy(const int id)
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
 				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-	if (ret != 0)
-		return ret;
-
+	
 	if (data != NULL)
 	{
 		delete data;
@@ -11806,9 +13537,7 @@ int CEyedeaInterface::ApplyAndMakeBaseGlobalInfo(void)
 	unsigned int scale_factor = 1;
 	int ret = 0;
 	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
-	if (ret != 0)
-		return ret;
-
+	
 	if (data != NULL)
 	{
 		delete data;
@@ -11836,9 +13565,7 @@ int CEyedeaInterface::ApplyAndMakeBaseLocalInfo(void)
 	unsigned int scale_factor = 1;
 	int ret = 0;
 	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
-	if (ret != 0)
-		return ret;
-
+	
 	if (data != NULL)
 	{
 		delete data;
@@ -11866,9 +13593,7 @@ int CEyedeaInterface::ApplyAndMakeSearchAreaLocalInfo(void)
 	unsigned int scale_factor = 1;
 	int ret = 0;
 	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
-	if (ret != 0)
-		return ret;
-
+	
 	if (data != NULL)
 	{
 		delete data;
@@ -11911,13 +13636,25 @@ int CEyedeaInterface::SetCameraConfig_Default()
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
 				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-	if (ret != 0)
-		return ret;
+	
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+
 	return ret;
 }
 
@@ -11953,13 +13690,25 @@ int CEyedeaInterface::SetCameraConfig_Save()
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
 				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-	if (ret != 0)
-		return ret;
+	
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+
 	return ret;
 }
 
@@ -11995,13 +13744,26 @@ int CEyedeaInterface::SetCameraConfig_Load()
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
 				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
+
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
-	if (ret != 0)
-		return ret;
+
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+
 	return ret;
 }
 
@@ -12044,13 +13806,28 @@ int CEyedeaInterface::GetCameraConfig(int type)
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 				sec++;
 				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
 					return ret;
+				}
 				continue;
 			}
 		}
 	}
 	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+
 		return ret;
+	}
 
 	ret = 0;
 
@@ -12112,9 +13889,6 @@ int CEyedeaInterface::SetCameraConfig(int type, int value, int value2)
 	int ret = 0;
     ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
 	
-    if(ret != 0)
-        return ret;
-
 	if (data != NULL)
 	{
 		delete data;
@@ -12142,9 +13916,6 @@ int CEyedeaInterface::BackgroundLearning(void)
 	unsigned int scale_factor = 1;
 	int ret = 0;
 	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
-
-	if (ret != 0)
-		return ret;
 
 	if (data != NULL)
 	{
@@ -12179,9 +13950,6 @@ int CEyedeaInterface::FindSearchArea(int level)
 	unsigned int scale_factor = 1;
 	int ret = 0;
 	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
-
-	if (ret != 0)
-		return ret;
 
 	if (data != NULL)
 	{
@@ -12241,7 +14009,15 @@ int CEyedeaInterface::Geometry_Distance(const int base_id, const int target_id, 
 	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
 
 	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+
 		return ret;
+	}
 
 	int i_value = 0;
 	if (len >= 4)
@@ -12313,7 +14089,15 @@ int CEyedeaInterface::Geometry_Angle(const int base_id, const int target_id, con
 	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
 
 	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+
 		return ret;
+	}
 
 	int i_value = 0;
 	if (len >= 4)
@@ -12353,9 +14137,6 @@ int CEyedeaInterface::Geometry_Clear(void)
 	unsigned int scale_factor = 1;
 	int ret = 0;
 	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
-
-	if (ret != 0)
-		return ret;
 
 	if (data != NULL)
 	{
@@ -12412,9 +14193,6 @@ int CEyedeaInterface::Histogram_Set_Range(const int id, const int option, const 
 	int ret = 0;
 	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
 
-	if (ret != 0)
-		return ret;
-
 	if (data != NULL)
 	{
 		delete data;
@@ -12460,7 +14238,15 @@ int CEyedeaInterface::Histogram_Get_Range(const int id, const int option, int *o
 	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
 
 	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+
 		return ret;
+	}
 
 	index = 0;
 	int i_min_value = -1;
@@ -12488,6 +14274,265 @@ int CEyedeaInterface::Histogram_Get_Range(const int id, const int option, int *o
 		delete data;
 		data = NULL;
 	}
+
+	return ret;
+}
+
+int CEyedeaInterface::Histogram_Get_Graph(const int id, float** out_histogram, float** out_histogram_b, float** out_histogram_g, float** out_histogram_r, float* out_histogram_size)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_HISTOGRAM_GET_GRAPH;
+
+	int len = 4;
+	unsigned char* data = new unsigned char[len];
+
+	//index
+	int data_index = 0;
+	data[data_index++] = (id & 0xFF000000) >> 24;
+	data[data_index++] = (id & 0x00FF0000) >> 16;
+	data[data_index++] = (id & 0x0000FF00) >> 8;
+	data[data_index++] = (id & 0x000000FF);
+
+	unsigned int scale_factor = 1;
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+	if (ret == EYEDEA_ERROR_INVALID_MEMORY)
+	{
+		int sec = 0;
+		while (1)
+		{
+			ret = m_cls_eth_client->Open(m_ip, m_port);
+			if (ret == 0) {
+				ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+				break;
+			}
+			else
+			{
+				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
+				sec++;
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
+
+					return ret;
+				}
+				continue;
+			}
+		}
+	}
+	
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+
+		return ret;
+	}
+
+	int i_histogram_size = 0;
+	int i_histogram_data = 0;
+
+	int index = 0;
+
+	printf("len=%d\n", len);
+
+	if (len >= 4)
+	{
+		//i_histogram_size
+		i_histogram_size = ((int)data[index++] << 24) & 0xFF000000;
+		i_histogram_size |= ((int)data[index++] << 16) & 0x00FF0000;
+		i_histogram_size |= ((int)data[index++] << 8) & 0x0000FF00;
+		i_histogram_size |= ((int)data[index++]) & 0x000000FF;
+
+		printf("i_histogram_size=%d, scale_factor=%d\n", i_histogram_size, scale_factor);
+
+		(*out_histogram_size) = (float)i_histogram_size / (float)scale_factor;
+
+		int histogram_size = (int)(*out_histogram_size);
+		if (histogram_size > 0)
+		{
+			//gray
+			if ((*out_histogram) != NULL)	free((*out_histogram));
+			(*out_histogram) = (float *)malloc(sizeof(float)*histogram_size);
+
+			for (int i = 0; i < histogram_size; i++)
+			{
+				//i_score
+				i_histogram_data = ((int)data[index++] << 24) & 0xFF000000;
+				i_histogram_data |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_histogram_data |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_histogram_data |= ((int)data[index++]) & 0x000000FF;
+
+				(*out_histogram)[i] = (float)i_histogram_data / (float)scale_factor;
+			}
+
+			//b
+			if ((*out_histogram_b) != NULL)	free((*out_histogram_b));
+			(*out_histogram_b) = (float *)malloc(sizeof(float)*histogram_size);
+
+			for (int i = 0; i < histogram_size; i++)
+			{
+				//i_score
+				i_histogram_data = ((int)data[index++] << 24) & 0xFF000000;
+				i_histogram_data |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_histogram_data |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_histogram_data |= ((int)data[index++]) & 0x000000FF;
+
+				(*out_histogram_b)[i] = (float)i_histogram_data / (float)scale_factor;
+			}
+
+			//g
+			if ((*out_histogram_g) != NULL)	free((*out_histogram_g));
+			(*out_histogram_g) = (float *)malloc(sizeof(float)*histogram_size);
+
+			for (int i = 0; i < histogram_size; i++)
+			{
+				//i_score
+				i_histogram_data = ((int)data[index++] << 24) & 0xFF000000;
+				i_histogram_data |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_histogram_data |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_histogram_data |= ((int)data[index++]) & 0x000000FF;
+
+				(*out_histogram_g)[i] = (float)i_histogram_data / (float)scale_factor;
+			}
+
+			//r
+			if ((*out_histogram_r) != NULL)	free((*out_histogram_r));
+			(*out_histogram_r) = (float *)malloc(sizeof(float)*histogram_size);
+
+			for (int i = 0; i < histogram_size; i++)
+			{
+				//i_score
+				i_histogram_data = ((int)data[index++] << 24) & 0xFF000000;
+				i_histogram_data |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_histogram_data |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_histogram_data |= ((int)data[index++]) & 0x000000FF;
+
+				(*out_histogram_r)[i] = (float)i_histogram_data / (float)scale_factor;
+			}
+		}
+	}
+
+
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+
+	return i_histogram_size;
+}
+
+int CEyedeaInterface::Histogram_Set_Use_Element(const int id, const int option)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_HISTOGRAM_SET_USE_ELEMENT;
+
+	int len = 4 * 2;
+	unsigned char* data = new unsigned char[len];
+
+	unsigned int scale_factor = 10000;
+
+	int index = 0;
+
+	//id
+	data[index++] = (id & 0xFF000000) >> 24;
+	data[index++] = (id & 0x00FF0000) >> 16;
+	data[index++] = (id & 0x0000FF00) >> 8;
+	data[index++] = (id & 0x000000FF);
+
+	//option
+	data[index++] = (option & 0xFF000000) >> 24;
+	data[index++] = (option & 0x00FF0000) >> 16;
+	data[index++] = (option & 0x0000FF00) >> 8;
+	data[index++] = (option & 0x000000FF);
+
+
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+
+	return ret;
+}
+
+int CEyedeaInterface::Histogram_Get_Use_Element(const int id, int *out_option)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_HISTOGRAM_GET_USE_ELEMENT;
+
+	int len = 4;
+	unsigned char* data = new unsigned char[len];
+
+	unsigned int scale_factor = 10000;
+
+	int index = 0;
+
+	//id
+	data[index++] = (id & 0xFF000000) >> 24;
+	data[index++] = (id & 0x00FF0000) >> 16;
+	data[index++] = (id & 0x0000FF00) >> 8;
+	data[index++] = (id & 0x000000FF);
+
+
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+
+		return ret;
+	}
+
+	index = 0;
+	int i_option = 0;
+	if (len >= 4)
+	{
+		//i_value
+		i_option = ((int)data[index++] << 24) & 0xFF000000;
+		i_option |= ((int)data[index++] << 16) & 0x00FF0000;
+		i_option |= ((int)data[index++] << 8) & 0x0000FF00;
+		i_option |= ((int)data[index++]) & 0x000000FF;
+	}
+
+	(*out_option) = i_option;
 
 	return ret;
 }

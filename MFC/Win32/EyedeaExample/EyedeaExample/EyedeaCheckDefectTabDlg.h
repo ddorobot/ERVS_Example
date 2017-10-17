@@ -140,4 +140,16 @@ public:
 
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 	void DrawHistogram(void);
+
+	int m_select_id;
+
+	boost::mutex mutex;
+	afx_msg void OnBnClickedButtonHistoGet();
+	afx_msg void OnBnClickedButtonHistoGet2();
+	afx_msg void OnBnClickedButtonHistoGet3();
+	afx_msg void OnBnClickedButtonHistoGet4();
+	afx_msg void OnBnClickedButtonHistoSet();
+	afx_msg void OnBnClickedButtonHistoSet2();
+	afx_msg void OnBnClickedButtonHistoSet3();
+	afx_msg void OnBnClickedButtonHistoSet4();
 };

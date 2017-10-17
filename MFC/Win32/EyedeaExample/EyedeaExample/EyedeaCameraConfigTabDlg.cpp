@@ -25,11 +25,11 @@ CEyedeaCameraConfigTabDlg::~CEyedeaCameraConfigTabDlg()
 BOOL CEyedeaCameraConfigTabDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
-	
-//	m_Slider_Camera_Exposure.SetRange(0, 1<<19, TRUE);
-//	m_Slider_Camera_Exposure.SetPos( (1<<19) /2);
-	m_Slider_Camera_Exposure.SetRange(0, 1<<16, TRUE);
-	m_Slider_Camera_Exposure.SetPos( (1<<16) /2);
+
+	//	m_Slider_Camera_Exposure.SetRange(0, 1<<19, TRUE);
+	//	m_Slider_Camera_Exposure.SetPos( (1<<19) /2);
+	m_Slider_Camera_Exposure.SetRange(0, 1 << 16, TRUE);
+	m_Slider_Camera_Exposure.SetPos((1 << 16) / 2);
 
 
 	m_Slider_Camera_GAIN.SetRange(0, 1 << 9, TRUE);
@@ -65,7 +65,8 @@ void CEyedeaCameraConfigTabDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_SLIDER_CAMERA_RANGE_HIGH, m_Slider_Camera_AE_Range_High);
 	DDX_Control(pDX, IDC_SLIDER_CAMERA_RANGE_LOW, m_Slider_Camera_AE_Range_Low);
 	DDX_Control(pDX, IDC_SLIDER_CAMERA_LED_BRIGHTNESS, m_Slider_Camera_LED_Brightness);
-	DDX_Control(pDX, IDC_SLIDER_CAMERA_LED_BRIGHTNESS_TIMER, m_Slider_Camera_LED_Brightness_Timer);		
+	DDX_Control(pDX, IDC_SLIDER_CAMERA_LED_BRIGHTNESS_TIMER, m_Slider_Camera_LED_Brightness_Timer);
+	DDX_Control(pDX, IDC_CHECK_OPTION_CAMERA_EXPOSURE, m_CheckManualExposure);
 }
 
 
@@ -75,6 +76,10 @@ BEGIN_MESSAGE_MAP(CEyedeaCameraConfigTabDlg, CDialogEx)
 	ON_WM_HSCROLL()
 	ON_BN_CLICKED(IDC_BUTTON_CAMERA_TAKEPIC, &CEyedeaCameraConfigTabDlg::OnBnClickedButtonCameraTakepic)
 	ON_BN_CLICKED(IDC_BUTTON_CAMERA_TIMER_LED, &CEyedeaCameraConfigTabDlg::OnBnClickedButtonCameraTimerLed)
+	ON_BN_CLICKED(IDC_BUTTON_CAMERA_SET_DEFAULT, &CEyedeaCameraConfigTabDlg::OnBnClickedButtonCameraSetDefault)
+	ON_BN_CLICKED(IDC_BUTTON_CAMERA_SAVE_PARAM, &CEyedeaCameraConfigTabDlg::OnBnClickedButtonCameraSaveParam)
+	ON_BN_CLICKED(IDC_BUTTON_CAMERA_LOAD_PARAM, &CEyedeaCameraConfigTabDlg::OnBnClickedButtonCameraLoadParam)
+	ON_WM_SHOWWINDOW()
 END_MESSAGE_MAP()
 
 void CEyedeaCameraConfigTabDlg::OnBnClickedCheckOptionCameraExposure()
@@ -146,9 +151,9 @@ void CEyedeaCameraConfigTabDlg::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* p
 		//		printf("%d\n", value);
 		ERVS_SetCameraConfig(SET_CAMERA_LED_BRIGHTNESS, value, 0);
 	}
-	else if( pScrollBar ==(CScrollBar *)&m_Slider_Camera_LED_Brightness_Timer) {
+	else if (pScrollBar == (CScrollBar *)&m_Slider_Camera_LED_Brightness_Timer) {
 		int value = m_Slider_Camera_LED_Brightness_Timer.GetPos();
-		CString str;	
+		CString str;
 		str.Format(_T("%d"), value);
 		GetDlgItem(IDC_EDIT_CAMERA_VAL_LED_BRIGHTNESS_TIMER)->SetWindowText(str);
 		//		printf("%d\n", value);
@@ -172,10 +177,10 @@ void CEyedeaCameraConfigTabDlg::OnBnClickedButtonCameraTimerLed()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	int value = m_Slider_Camera_LED_Brightness_Timer.GetPos();
-	CString str;	
+	CString str;
 	GetDlgItem(IDC_EDIT_CAMERA_VAL_LED_ONTIME)->GetWindowText(str);
 	int ms = (int)_ttof(str);
-	ERVS_SetCameraConfig(SET_CAMERA_LED_TIMER_ON,value,ms);
+	ERVS_SetCameraConfig(SET_CAMERA_LED_TIMER_ON, value, ms);
 }
 
 
@@ -191,4 +196,93 @@ BOOL CEyedeaCameraConfigTabDlg::PreTranslateMessage(MSG* pMsg)
 	}
 
 	return CDialogEx::PreTranslateMessage(pMsg);
+}
+
+void CEyedeaCameraConfigTabDlg::SetCameraConfigUI()
+{
+	int aex_enter = -2;
+	int aex_goout = -2;
+	int isManualExposure = -2;
+	int exposure = -2;
+	int gain = -2;
+	int ledbright = -2;
+	ledbright = ERVS_GetCameraConfig(GET_CAMERA_LED_BRIGHTNESS);
+	isManualExposure = ERVS_GetCameraConfig(GET_CAMERA_MANUAL_EXPOSURE);
+	aex_goout = ERVS_GetCameraConfig(GET_CAMERA_AUTO_EXPOSURE_RANGE_GO_OUT);
+	aex_enter = ERVS_GetCameraConfig(GET_CAMERA_AUTO_EXPOSURE_RANGE_ENTER);
+	exposure = ERVS_GetCameraConfig(GET_CAMERA_MANUAL_EXPOSURE_EXPOSURE);
+	gain = ERVS_GetCameraConfig(GET_CAMERA_MANUAL_EXPOSURE_GAIN);
+
+	printf(" isManualExposure = 0x%x \n", isManualExposure);
+	printf(" aex_goout = 0x%x \n", aex_goout);
+	printf(" aex_enter = 0x%x \n", aex_enter);
+	printf(" exposure = 0x%x \n", exposure);
+	printf(" gain = 0x%x \n", gain);
+	printf(" ledbright = 0x%x \n", ledbright);
+
+
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+
+	if (isManualExposure == 0) // 0 = auto
+	{
+		m_CheckManualExposure.SetCheck(false);
+		OnBnClickedCheckOptionCameraExposure();
+		//GetDlgItem(IDC_CHECK_OPTION_CAMERA_EXPOSURE)->SetCheck(1);
+		m_Slider_Camera_AE_Range_Low.SetPos(aex_enter);
+		CString str;
+		str.Format(_T("%d"), aex_enter);
+		GetDlgItem(IDC_EDIT_CAMERA_VAL_RANGE_LOW_LIMIT)->SetWindowText(str);
+
+		m_Slider_Camera_AE_Range_High.SetPos(aex_goout);
+		str.Format(_T("%d"), aex_goout);
+		GetDlgItem(IDC_EDIT_CAMERA_VAL_RANGE_HIGH_LIMIT)->SetWindowText(str);
+
+	}
+	else
+	{
+		m_CheckManualExposure.SetCheck(true);
+		OnBnClickedCheckOptionCameraExposure();
+		m_Slider_Camera_Exposure.SetPos(exposure);
+
+		CString str;
+		str.Format(_T("%d"), exposure);
+		GetDlgItem(IDC_EDIT_CAMERA_VAL_EXPOSURE)->SetWindowText(str);
+
+		m_Slider_Camera_GAIN.SetPos(gain);
+
+		str.Format(_T("%d"), gain);
+		GetDlgItem(IDC_EDIT_CAMERA_VAL_GAIN)->SetWindowText(str);
+	}
+	m_Slider_Camera_LED_Brightness.SetPos(ledbright);
+	CString str;
+	str.Format(_T("%d"), ledbright);
+	GetDlgItem(IDC_EDIT_CAMERA_VAL_LED_BRIGHTNESS)->SetWindowText(str);
+}
+
+void CEyedeaCameraConfigTabDlg::OnBnClickedButtonCameraSetDefault()
+{
+	ERVS_SetCameraConfig_Default();
+	SetCameraConfigUI();
+}
+
+void CEyedeaCameraConfigTabDlg::OnBnClickedButtonCameraSaveParam()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	ERVS_SetCameraConfig_Save();
+	//	SetCameraConfigUI();
+}
+
+void CEyedeaCameraConfigTabDlg::OnBnClickedButtonCameraLoadParam()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	ERVS_SetCameraConfig_Load();
+	SetCameraConfigUI();
+}
+
+
+void CEyedeaCameraConfigTabDlg::OnShowWindow(BOOL bShow, UINT nStatus)
+{
+	CDialogEx::OnShowWindow(bShow, nStatus);
+	SetCameraConfigUI();
+	// TODO: 여기에 메시지 처리기 코드를 추가합니다.
 }

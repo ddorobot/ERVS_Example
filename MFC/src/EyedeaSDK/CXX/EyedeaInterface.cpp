@@ -11878,6 +11878,202 @@ int CEyedeaInterface::ApplyAndMakeSearchAreaLocalInfo(void)
 	return ret;
 }
 
+#if 1
+int CEyedeaInterface::SetCameraConfig_Default()
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_CAMERA_CONFIG_SET_DEFAULT;
+
+	int len = 0;
+	unsigned char* data = NULL; // new char[len];
+	unsigned int scale_factor = 1;
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+	if (ret == EYEDEA_ERROR_INVALID_MEMORY)
+	{
+		int sec = 0;
+		while (1)
+		{
+			ret = m_cls_eth_client->Open(m_ip, m_port);
+			if (ret == 0) {
+				ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+				break;
+			}
+			else
+			{
+				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
+				sec++;
+				if (sec >= 60)
+					return ret;
+				continue;
+			}
+		}
+	}
+	if (ret != 0)
+		return ret;
+	return ret;
+}
+
+int CEyedeaInterface::SetCameraConfig_Save()
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_CAMERA_CONFIG_SAVE;
+
+	int len = 0;
+	unsigned char* data = NULL; // new char[len];
+	unsigned int scale_factor = 1;
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+	if (ret == EYEDEA_ERROR_INVALID_MEMORY)
+	{
+		int sec = 0;
+		while (1)
+		{
+			ret = m_cls_eth_client->Open(m_ip, m_port);
+			if (ret == 0) {
+				ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+				break;
+			}
+			else
+			{
+				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
+				sec++;
+				if (sec >= 60)
+					return ret;
+				continue;
+			}
+		}
+	}
+	if (ret != 0)
+		return ret;
+	return ret;
+}
+
+int CEyedeaInterface::SetCameraConfig_Load()
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_CAMERA_CONFIG_LOAD;
+	unsigned char* data = NULL; // new char[len];
+	int len = 0;
+
+	unsigned int scale_factor = 1;
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+	if (ret == EYEDEA_ERROR_INVALID_MEMORY)
+	{
+		int sec = 0;
+		while (1)
+		{
+			ret = m_cls_eth_client->Open(m_ip, m_port);
+			if (ret == 0) {
+				ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+				break;
+			}
+			else
+			{
+				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
+				sec++;
+				if (sec >= 60)
+					return ret;
+				continue;
+			}
+		}
+	}
+	if (ret != 0)
+		return ret;
+	return ret;
+}
+
+int CEyedeaInterface::GetCameraConfig(int type)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_CAMERA_CONFIG_GET;
+
+	int len = 4;
+	unsigned char* data = new unsigned char[len];
+
+	//type
+	data[0] = (type & 0xFF000000) >> 24;
+	data[1] = (type & 0x00FF0000) >> 16;
+	data[2] = (type & 0x0000FF00) >> 8;
+	data[3] = (type & 0x000000FF);
+
+	unsigned int scale_factor = 1;
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, (unsigned char **)&data, &len);
+	if (ret == EYEDEA_ERROR_INVALID_MEMORY)
+	{
+		int sec = 0;
+		while (1)
+		{
+			ret = m_cls_eth_client->Open(m_ip, m_port);
+			if (ret == 0) {
+				ret = m_cls_eth_client->Send(command, &scale_factor, (unsigned char **)&data, &len);
+				break;
+			}
+			else
+			{
+				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
+				sec++;
+				if (sec >= 60)
+					return ret;
+				continue;
+			}
+		}
+	}
+	if (ret != 0)
+		return ret;
+
+	ret = 0;
+
+	if (len >= 4)
+	{
+		//x
+		int val = ((int)data[0] << 24) & 0xFF000000;
+		val |= ((int)data[1] << 16) & 0x00FF0000;
+		val |= ((int)data[2] << 8) & 0x0000FF00;
+		val |= ((int)data[3]) & 0x000000FF;
+		ret = val;
+	}
+	//	printf("command val ( 0x%x / 0x%x )\n", type, *retval);
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+
+	return ret;
+}
+#endif
+
 int CEyedeaInterface::SetCameraConfig(int type, int value, int value2)
 {
 	boost::unique_lock<boost::mutex> scoped_lock(mutex);
@@ -12160,6 +12356,132 @@ int CEyedeaInterface::Geometry_Clear(void)
 
 	if (ret != 0)
 		return ret;
+
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+
+	return ret;
+}
+
+int CEyedeaInterface::Histogram_Set_Range(const int id, const int option, const int min_value, const int max_value)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_HISTOGRAM_SET_RANGE;
+
+	int len = 4 * 4;
+	unsigned char* data = new unsigned char[len];
+
+	unsigned int scale_factor = 10000;
+
+	int index = 0;
+
+	//id
+	data[index++] = (id & 0xFF000000) >> 24;
+	data[index++] = (id & 0x00FF0000) >> 16;
+	data[index++] = (id & 0x0000FF00) >> 8;
+	data[index++] = (id & 0x000000FF);
+
+	//option
+	data[index++] = (option & 0xFF000000) >> 24;
+	data[index++] = (option & 0x00FF0000) >> 16;
+	data[index++] = (option & 0x0000FF00) >> 8;
+	data[index++] = (option & 0x000000FF);
+
+	//min value
+	data[index++] = (min_value & 0xFF000000) >> 24;
+	data[index++] = (min_value & 0x00FF0000) >> 16;
+	data[index++] = (min_value & 0x0000FF00) >> 8;
+	data[index++] = (min_value & 0x000000FF);
+
+	//max value
+	data[index++] = (max_value & 0xFF000000) >> 24;
+	data[index++] = (max_value & 0x00FF0000) >> 16;
+	data[index++] = (max_value & 0x0000FF00) >> 8;
+	data[index++] = (max_value & 0x000000FF);
+
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+
+	if (ret != 0)
+		return ret;
+
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+
+	return ret;
+}
+
+int CEyedeaInterface::Histogram_Get_Range(const int id, const int option, int *out_min_value, int *out_max_value)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_HISTOGRAM_GET_RANGE;
+
+	int len = 4 * 2;
+	unsigned char* data = new unsigned char[len];
+
+	unsigned int scale_factor = 10000;
+
+	int index = 0;
+
+	//id
+	data[index++] = (id & 0xFF000000) >> 24;
+	data[index++] = (id & 0x00FF0000) >> 16;
+	data[index++] = (id & 0x0000FF00) >> 8;
+	data[index++] = (id & 0x000000FF);
+
+	//option
+	data[index++] = (option & 0xFF000000) >> 24;
+	data[index++] = (option & 0x00FF0000) >> 16;
+	data[index++] = (option & 0x0000FF00) >> 8;
+	data[index++] = (option & 0x000000FF);
+
+
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+
+	if (ret != 0)
+		return ret;
+
+	index = 0;
+	int i_min_value = -1;
+	int i_max_value = -1;
+	if (len >= 8)
+	{
+		//i_value
+		i_min_value = ((int)data[index++] << 24) & 0xFF000000;
+		i_min_value |= ((int)data[index++] << 16) & 0x00FF0000;
+		i_min_value |= ((int)data[index++] << 8) & 0x0000FF00;
+		i_min_value |= ((int)data[index++]) & 0x000000FF;
+
+		//i_value
+		i_max_value = ((int)data[index++] << 24) & 0xFF000000;
+		i_max_value |= ((int)data[index++] << 16) & 0x00FF0000;
+		i_max_value |= ((int)data[index++] << 8) & 0x0000FF00;
+		i_max_value |= ((int)data[index++]) & 0x000000FF;
+	}
+
+	(*out_min_value) = i_min_value;
+	(*out_max_value) = i_max_value;
 
 	if (data != NULL)
 	{

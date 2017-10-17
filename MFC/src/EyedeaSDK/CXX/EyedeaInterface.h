@@ -213,6 +213,11 @@ public:
 
 	char* GetVersion(void);
 	int SetCameraConfig(int type, int value,int value2);
+	int GetCameraConfig(int type);
+
+	int SetCameraConfig_Default();
+	int SetCameraConfig_Save();
+	int SetCameraConfig_Load();
 
 	int BackgroundLearning(void);
 
@@ -223,6 +228,8 @@ public:
 	int Geometry_Angle(const int base_id, const int target_id, const float base_info, const float tol, float *out_value);
 	int Geometry_Clear(void);
 
+	int Histogram_Set_Range(const int id, const int option, const int min_value, const int max_value);
+	int Histogram_Get_Range(const int id, const int option, int *out_min_value, int *out_max_value);
 
 private:
 	//bool m_run_thread_net;			//eyedea - boost thread exit value

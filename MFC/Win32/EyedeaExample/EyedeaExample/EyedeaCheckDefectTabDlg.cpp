@@ -16,6 +16,32 @@ CEyedeaCheckDefectTabDlg::CEyedeaCheckDefectTabDlg(CWnd* pParent /*=NULL*/)
 	, m_i_checkdefect_ret(0)
 	, m_run_thread(false)
 	, m_b_draw_pause(true)
+	, m_histogram_size(0.0)
+	, m_p_histogram(NULL)
+	, m_p_histogram_r(NULL)
+	, m_p_histogram_g(NULL)
+	, m_p_histogram_b(NULL)
+	, m_i_histogram_lbdwn_object(-1)
+	, m_i_histogmra_gray_min(-1)
+	, m_i_histogmra_gray_max(-1)
+	, m_i_histogmra_red_min(-1)
+	, m_i_histogmra_red_max(-1)
+	, m_i_histogmra_green_min(-1)
+	, m_i_histogmra_green_max(-1)
+	, m_i_histogmra_blue_min(-1)
+	, m_i_histogmra_blue_max(-1)
+	, m_f_histogram_w_scale_v(0)
+	, m_f_histogram_w_scale_r(0)
+	, m_f_histogram_w_scale_g(0)
+	, m_f_histogram_w_scale_b(0)
+	, m_f_histogram_size_v_on_ui(0)
+	, m_f_histogram_size_r_on_ui(0)
+	, m_f_histogram_size_g_on_ui(0)
+	, m_f_histogram_size_b_on_ui(0)
+	, m_f_start_x_v_on_ui(0)
+	, m_f_start_x_r_on_ui(0)
+	, m_f_start_x_g_on_ui(0)
+	, m_f_start_x_b_on_ui(0)
 {
 	m_result_image = cv::Mat::zeros(cv::Size(640, 480), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
 	m_result_histogram_image = cv::Mat::zeros(cv::Size(300, 200), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
@@ -27,6 +53,30 @@ CEyedeaCheckDefectTabDlg::CEyedeaCheckDefectTabDlg(CWnd* pParent /*=NULL*/)
 CEyedeaCheckDefectTabDlg::~CEyedeaCheckDefectTabDlg()
 {
 	m_ImgList.DeleteImageList();
+
+	if (m_p_histogram != NULL)
+	{
+		free(m_p_histogram);
+		m_p_histogram = NULL;
+	}
+
+	if (m_p_histogram_r != NULL)
+	{
+		free(m_p_histogram_r);
+		m_p_histogram_r = NULL;
+	}
+
+	if (m_p_histogram_g != NULL)
+	{
+		free(m_p_histogram_g);
+		m_p_histogram_g = NULL;
+	}
+
+	if (m_p_histogram_b != NULL)
+	{
+		free(m_p_histogram_b);
+		m_p_histogram_b = NULL;
+	}
 
 	m_b_draw_pause = true;
 	m_run_thread = false;
@@ -91,6 +141,9 @@ BEGIN_MESSAGE_MAP(CEyedeaCheckDefectTabDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON2, &CEyedeaCheckDefectTabDlg::OnBnClickedButton2)
 	ON_BN_CLICKED(IDC_BUTTON_GEO_ANGLE, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonGeoAngle)
 	ON_BN_CLICKED(IDC_BUTTON_GEO_RESULT_CLEAR, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonGeoResultClear)
+	ON_WM_LBUTTONDOWN()
+	ON_WM_LBUTTONUP()
+	ON_WM_MOUSEMOVE()
 END_MESSAGE_MAP()
 
 
@@ -672,6 +725,9 @@ void CEyedeaCheckDefectTabDlg::ThreadFunctionDraw()
 		vImage.CopyOf(&IplImage(m_result_image), 1);							//mat to vimage
 		vImage.DrawToHDC(dc_result_display.m_hDC, &rect_result_display);				//draw on display_rect
 
+		DrawHistogram();
+
+		//histogram
 		vImage.CopyOf(&IplImage(m_result_histogram_image), 1);							//mat to vimage
 		vImage.DrawToHDC(dc_histogram_display.m_hDC, &rect_histogram_display);				//draw on display_rect
 
@@ -1698,13 +1754,33 @@ void CEyedeaCheckDefectTabDlg::OnNMDblclkTreeResult(NMHDR *pNMHDR, LRESULT *pRes
 		float angle = 0.0;
 		float type = 0.0;
 		float score = 0.0;
-		float histogram_size = 0.0;
-		float *p_histogram = NULL;
-		float *p_histogram_r = NULL;
-		float *p_histogram_g = NULL;
-		float *p_histogram_b = NULL;
 
-		ERVS_GetFindObjectResultInfo(mom_index, me_index, &id, &camera_center_x, &camera_center_y, &robot_center_x, &robot_center_y, &angle, &type, &score, &p_histogram, &p_histogram_r, &p_histogram_g, &p_histogram_b, &histogram_size);
+		m_histogram_size = 0;
+		if (m_p_histogram != NULL)
+		{
+			free(m_p_histogram);
+			m_p_histogram = NULL;
+		}
+
+		if (m_p_histogram_r != NULL)
+		{
+			free(m_p_histogram_r);
+			m_p_histogram_r = NULL;
+		}
+
+		if (m_p_histogram_g != NULL)
+		{
+			free(m_p_histogram_g);
+			m_p_histogram_g = NULL;
+		}
+
+		if (m_p_histogram_b != NULL)
+		{
+			free(m_p_histogram_b);
+			m_p_histogram_b = NULL;
+		}
+
+		ERVS_GetFindObjectResultInfo(mom_index, me_index, &id, &camera_center_x, &camera_center_y, &robot_center_x, &robot_center_y, &angle, &type, &score, &m_p_histogram, &m_p_histogram_r, &m_p_histogram_g, &m_p_histogram_b, &m_histogram_size);
 		
 		CString str;
 		str.Format(_T("camera(%.2f, %.2f), robot(%.2f, %.2f), angle(%.2f)"), camera_center_x, camera_center_y, robot_center_x, robot_center_y, angle);
@@ -1713,100 +1789,7 @@ void CEyedeaCheckDefectTabDlg::OnNMDblclkTreeResult(NMHDR *pNMHDR, LRESULT *pRes
 		str.Format(_T("edge=%.2f"), score);
 		GetDlgItem(IDC_EDIT_RESULT_EDGE_MATCHING_SCORE)->SetWindowText(str);
 		
-		printf("histogram size = %f\n", histogram_size);
-
-		if (histogram_size > 0)
-		{
-			m_result_histogram_image = 0;
-			m_result_histogram_r_image = 0;
-			m_result_histogram_g_image = 0;
-			m_result_histogram_b_image = 0;
-
-			if (m_result_histogram_image.cols < histogram_size)
-			{
-				m_result_histogram_image = cv::Mat::zeros(cv::Size(histogram_size, 255), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
-			}
-
-			if (m_result_histogram_r_image.cols < histogram_size)
-			{
-				m_result_histogram_r_image = cv::Mat::zeros(cv::Size(histogram_size, 255), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
-			}
-
-			if (m_result_histogram_g_image.cols < histogram_size)
-			{
-				m_result_histogram_g_image = cv::Mat::zeros(cv::Size(histogram_size, 255), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
-			}
-
-			if (m_result_histogram_b_image.cols < histogram_size)
-			{
-				m_result_histogram_b_image = cv::Mat::zeros(cv::Size(histogram_size, 255), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
-			}
-
-			int start_x_v = (m_result_histogram_image.cols - histogram_size) / 2;
-			int start_x_r = (m_result_histogram_r_image.cols - histogram_size) / 2;
-			int start_x_g = (m_result_histogram_g_image.cols - histogram_size) / 2;
-			int start_x_b = (m_result_histogram_b_image.cols - histogram_size) / 2;
-
-			//guide line
-			//gray
-			cv::line(m_result_histogram_image, cv::Point(start_x_v, m_result_histogram_image.rows), cv::Point(start_x_v, 0), cv::Scalar(255, 255, 255), 1);
-			cv::line(m_result_histogram_image, cv::Point(start_x_v+ histogram_size, m_result_histogram_image.rows), cv::Point(start_x_v+ histogram_size, 0), cv::Scalar(255, 255, 255), 1);
-			//r
-			cv::line(m_result_histogram_r_image, cv::Point(start_x_r, m_result_histogram_r_image.rows), cv::Point(start_x_r, 0), cv::Scalar(255, 255, 255), 1);
-			cv::line(m_result_histogram_r_image, cv::Point(start_x_r + histogram_size, m_result_histogram_r_image.rows), cv::Point(start_x_r + histogram_size, 0), cv::Scalar(255, 255, 255), 1);
-			//g
-			cv::line(m_result_histogram_g_image, cv::Point(start_x_g, m_result_histogram_g_image.rows), cv::Point(start_x_g, 0), cv::Scalar(255, 255, 255), 1);
-			cv::line(m_result_histogram_g_image, cv::Point(start_x_g + histogram_size, m_result_histogram_g_image.rows), cv::Point(start_x_g + histogram_size, 0), cv::Scalar(255, 255, 255), 1);
-			//b
-			cv::line(m_result_histogram_b_image, cv::Point(start_x_b, m_result_histogram_b_image.rows), cv::Point(start_x_b, 0), cv::Scalar(255, 255, 255), 1);
-			cv::line(m_result_histogram_b_image, cv::Point(start_x_b + histogram_size, m_result_histogram_b_image.rows), cv::Point(start_x_b + histogram_size, 0), cv::Scalar(255, 255, 255), 1);
-
-			for (int i = 0; i < histogram_size; i++)
-			{
-				int value = p_histogram[i] * m_result_histogram_image.rows ;
-				cv::line(m_result_histogram_image, cv::Point(start_x_v+i, m_result_histogram_image.rows), cv::Point(start_x_v + i, m_result_histogram_image.rows - value), cv::Scalar(128, 128, 128), 1);
-
-				//r
-				value = p_histogram_r[i] * m_result_histogram_r_image.rows;
-				cv::line(m_result_histogram_r_image, cv::Point(start_x_r + i, m_result_histogram_r_image.rows), cv::Point(start_x_r + i, m_result_histogram_r_image.rows - value), cv::Scalar(128, 128, 255), 1);
-
-				value = p_histogram_g[i] * m_result_histogram_g_image.rows;
-				cv::line(m_result_histogram_g_image, cv::Point(start_x_g + i, m_result_histogram_g_image.rows), cv::Point(start_x_g + i, m_result_histogram_g_image.rows - value), cv::Scalar(128, 255, 128), 1);
-
-				value = p_histogram_b[i] * m_result_histogram_b_image.rows;
-				cv::line(m_result_histogram_b_image, cv::Point(start_x_b + i, m_result_histogram_b_image.rows), cv::Point(start_x_b + i, m_result_histogram_b_image.rows - value), cv::Scalar(255, 128, 128), 1);
-			}
-
-			//cv::imwrite("histogram.png", m_result_histogram_image);
-			//cv::imwrite("histogram_r.png", m_result_histogram_r_image);
-			//cv::imwrite("histogram_g.png", m_result_histogram_g_image);
-			//cv::imwrite("histogram_b.png", m_result_histogram_b_image);
-
-		}
-
-		if (p_histogram != NULL)
-		{
-			free(p_histogram);
-			p_histogram = NULL;
-		}
-
-		if (p_histogram_r != NULL)
-		{
-			free(p_histogram_r);
-			p_histogram_r = NULL;
-		}
-
-		if (p_histogram_g != NULL)
-		{
-			free(p_histogram_g);
-			p_histogram_g = NULL;
-		}
-
-		if (p_histogram_b != NULL)
-		{
-			free(p_histogram_b);
-			p_histogram_b = NULL;
-		}
+		printf("histogram size = %f\n", m_histogram_size);
 
 		//Get Result Information from ERVS
 		//Result image
@@ -1815,6 +1798,141 @@ void CEyedeaCheckDefectTabDlg::OnNMDblclkTreeResult(NMHDR *pNMHDR, LRESULT *pRes
 	}
 	
 	*pResult = 1;
+}
+
+void CEyedeaCheckDefectTabDlg::DrawHistogram(void)
+{
+	if (m_histogram_size > 0)
+	{
+		m_result_histogram_image = 0;
+		m_result_histogram_r_image = 0;
+		m_result_histogram_g_image = 0;
+		m_result_histogram_b_image = 0;
+
+		if (m_result_histogram_image.cols < m_histogram_size)
+		{
+			m_result_histogram_image = cv::Mat::zeros(cv::Size(m_histogram_size, 255), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
+		}
+
+		if (m_result_histogram_r_image.cols < m_histogram_size)
+		{
+			m_result_histogram_r_image = cv::Mat::zeros(cv::Size(m_histogram_size, 255), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
+		}
+
+		if (m_result_histogram_g_image.cols < m_histogram_size)
+		{
+			m_result_histogram_g_image = cv::Mat::zeros(cv::Size(m_histogram_size, 255), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
+		}
+
+		if (m_result_histogram_b_image.cols < m_histogram_size)
+		{
+			m_result_histogram_b_image = cv::Mat::zeros(cv::Size(m_histogram_size, 255), CV_8UC3); //cv::imread("base.png");		//opencv mat for display
+		}
+
+		int start_x_v = (m_result_histogram_image.cols - m_histogram_size) / 2;
+		int start_x_r = (m_result_histogram_r_image.cols - m_histogram_size) / 2;
+		int start_x_g = (m_result_histogram_g_image.cols - m_histogram_size) / 2;
+		int start_x_b = (m_result_histogram_b_image.cols - m_histogram_size) / 2;
+
+		//scale 
+		CRect rect_histogram_gray;
+		GetDlgItem(IDC_STATIC_HISTOGRAM)->GetWindowRect(&rect_histogram_gray);
+		ScreenToClient(&rect_histogram_gray);
+
+		CRect rect_histogram_red;
+		GetDlgItem(IDC_STATIC_HISTOGRAM_R)->GetWindowRect(&rect_histogram_red);
+		ScreenToClient(&rect_histogram_red);
+
+		CRect rect_histogram_green;
+		GetDlgItem(IDC_STATIC_HISTOGRAM_G)->GetWindowRect(&rect_histogram_green);
+		ScreenToClient(&rect_histogram_green);
+
+		CRect rect_histogram_blue;
+		GetDlgItem(IDC_STATIC_HISTOGRAM_B)->GetWindowRect(&rect_histogram_blue);
+		ScreenToClient(&rect_histogram_blue);
+
+		m_f_histogram_w_scale_v = (float)rect_histogram_gray.Width() / (float)m_result_histogram_image.cols;
+		m_f_histogram_w_scale_r = (float)rect_histogram_red.Width() / (float)m_result_histogram_r_image.cols;
+		m_f_histogram_w_scale_g = (float)rect_histogram_green.Width() / (float)m_result_histogram_g_image.cols;
+		m_f_histogram_w_scale_b = (float)rect_histogram_blue.Width() / (float)m_result_histogram_b_image.cols;
+
+		m_f_histogram_size_v_on_ui = m_histogram_size * m_f_histogram_w_scale_v;
+		m_f_histogram_size_r_on_ui = m_histogram_size * m_f_histogram_w_scale_r;
+		m_f_histogram_size_g_on_ui = m_histogram_size * m_f_histogram_w_scale_g;
+		m_f_histogram_size_b_on_ui = m_histogram_size * m_f_histogram_w_scale_b;
+
+		m_f_start_x_v_on_ui = (float)start_x_v * m_f_histogram_w_scale_v;
+		m_f_start_x_r_on_ui = (float)start_x_r * m_f_histogram_w_scale_r;
+		m_f_start_x_g_on_ui = (float)start_x_g * m_f_histogram_w_scale_g;
+		m_f_start_x_b_on_ui = (float)start_x_b * m_f_histogram_w_scale_b;
+
+		//float scale_x = 
+		//m_f_histogram_size_on_ui
+		//m_f_start_x_v_on_ui
+		//m_f_start_x_r_on_ui
+		//m_f_start_x_g_on_ui
+		//m_f_start_x_b_on_ui
+
+		//guide line
+		cv::Scalar guide_rect_fill_colof = cv::Scalar(50, 50, 50);
+		cv::Scalar guide_line_colof = cv::Scalar(128, 128, 128);
+
+		//gray
+		cv::rectangle(m_result_histogram_image, cv::Rect(start_x_v, 0, m_histogram_size, m_result_histogram_image.rows), guide_rect_fill_colof, CV_FILLED);
+		cv::line(m_result_histogram_image, cv::Point(start_x_v, m_result_histogram_image.rows), cv::Point(start_x_v, 0), guide_line_colof, 1);
+		cv::line(m_result_histogram_image, cv::Point(start_x_v + m_histogram_size, m_result_histogram_image.rows), cv::Point(start_x_v + m_histogram_size, 0), guide_line_colof, 1);
+		//r
+		cv::rectangle(m_result_histogram_r_image, cv::Rect(start_x_r, 0, m_histogram_size, m_result_histogram_r_image.rows), guide_rect_fill_colof, CV_FILLED);
+		cv::line(m_result_histogram_r_image, cv::Point(start_x_r, m_result_histogram_r_image.rows), cv::Point(start_x_r, 0), guide_line_colof, 1);
+		cv::line(m_result_histogram_r_image, cv::Point(start_x_r + m_histogram_size, m_result_histogram_r_image.rows), cv::Point(start_x_r + m_histogram_size, 0), guide_line_colof, 1);
+		//g
+		cv::rectangle(m_result_histogram_g_image, cv::Rect(start_x_g, 0, m_histogram_size, m_result_histogram_g_image.rows), guide_rect_fill_colof, CV_FILLED);
+		cv::line(m_result_histogram_g_image, cv::Point(start_x_g, m_result_histogram_g_image.rows), cv::Point(start_x_g, 0), guide_line_colof, 1);
+		cv::line(m_result_histogram_g_image, cv::Point(start_x_g + m_histogram_size, m_result_histogram_g_image.rows), cv::Point(start_x_g + m_histogram_size, 0), guide_line_colof, 1);
+		//b
+		cv::rectangle(m_result_histogram_b_image, cv::Rect(start_x_b, 0, m_histogram_size, m_result_histogram_b_image.rows), guide_rect_fill_colof, CV_FILLED);
+		cv::line(m_result_histogram_b_image, cv::Point(start_x_b, m_result_histogram_b_image.rows), cv::Point(start_x_b, 0), guide_line_colof, 1);
+		cv::line(m_result_histogram_b_image, cv::Point(start_x_b + m_histogram_size, m_result_histogram_b_image.rows), cv::Point(start_x_b + m_histogram_size, 0), guide_line_colof, 1);
+
+		//Draw Range
+		cv::rectangle(m_result_histogram_image, cv::Rect(start_x_v+ m_i_histogmra_gray_min, 0, m_i_histogmra_gray_max- m_i_histogmra_gray_min, m_result_histogram_image.rows), cv::Scalar(128,128,128), CV_FILLED);
+		//cv::line(m_result_histogram_image, cv::Point(start_x_v + m_i_histogmra_gray_min, m_result_histogram_image.rows), cv::Point(start_x_v + m_i_histogmra_gray_min, 0), cv::Scalar(128, 128, 128), 2);
+		//cv::line(m_result_histogram_image, cv::Point(start_x_v + m_i_histogmra_gray_max, m_result_histogram_image.rows), cv::Point(start_x_v + m_i_histogmra_gray_max, 0), cv::Scalar(128, 128, 128), 2);
+
+		cv::rectangle(m_result_histogram_r_image, cv::Rect(start_x_r + m_i_histogmra_red_min, 0, m_i_histogmra_red_max - m_i_histogmra_red_min, m_result_histogram_r_image.rows), cv::Scalar(128, 128, 128), CV_FILLED);
+		//cv::line(m_result_histogram_r_image, cv::Point(start_x_r + m_i_histogmra_red_min, m_result_histogram_r_image.rows), cv::Point(start_x_r + m_i_histogmra_red_min, 0), cv::Scalar(0, 0, 255), 2);
+		//cv::line(m_result_histogram_r_image, cv::Point(start_x_r + m_i_histogmra_red_max, m_result_histogram_r_image.rows), cv::Point(start_x_r + m_i_histogmra_red_max, 0), cv::Scalar(0, 0, 255), 2);
+
+		cv::rectangle(m_result_histogram_g_image, cv::Rect(start_x_g + m_i_histogmra_green_min, 0, m_i_histogmra_green_max - m_i_histogmra_green_min, m_result_histogram_g_image.rows), cv::Scalar(128, 128, 128), CV_FILLED);
+		//cv::line(m_result_histogram_g_image, cv::Point(start_x_g + m_i_histogmra_green_min, m_result_histogram_g_image.rows), cv::Point(start_x_g + m_i_histogmra_green_min, 0), cv::Scalar(0, 255, 0), 2);
+		//cv::line(m_result_histogram_g_image, cv::Point(start_x_g + m_i_histogmra_green_max, m_result_histogram_g_image.rows), cv::Point(start_x_g + m_i_histogmra_green_max, 0), cv::Scalar(0, 255, 0), 2);
+
+		cv::rectangle(m_result_histogram_b_image, cv::Rect(start_x_b + m_i_histogmra_blue_min, 0, m_i_histogmra_blue_max - m_i_histogmra_blue_min, m_result_histogram_b_image.rows), cv::Scalar(128, 128, 128), CV_FILLED);
+		//cv::line(m_result_histogram_b_image, cv::Point(start_x_b + m_i_histogmra_blue_min, m_result_histogram_b_image.rows), cv::Point(start_x_b + m_i_histogmra_blue_min, 0), cv::Scalar(255, 0, 0), 2);
+		//cv::line(m_result_histogram_b_image, cv::Point(start_x_b + m_i_histogmra_blue_max, m_result_histogram_b_image.rows), cv::Point(start_x_b + m_i_histogmra_blue_max, 0), cv::Scalar(255, 0, 0), 2);
+
+		for (int i = 0; i < m_histogram_size; i++)
+		{
+			int value = m_p_histogram[i] * m_result_histogram_image.rows;
+			cv::line(m_result_histogram_image, cv::Point(start_x_v + i, m_result_histogram_image.rows), cv::Point(start_x_v + i, m_result_histogram_image.rows - value), cv::Scalar(255, 255, 255), 1);
+
+			//r
+			value = m_p_histogram_r[i] * m_result_histogram_r_image.rows;
+			cv::line(m_result_histogram_r_image, cv::Point(start_x_r + i, m_result_histogram_r_image.rows), cv::Point(start_x_r + i, m_result_histogram_r_image.rows - value), cv::Scalar(128, 128, 255), 1);
+
+			value = m_p_histogram_g[i] * m_result_histogram_g_image.rows;
+			cv::line(m_result_histogram_g_image, cv::Point(start_x_g + i, m_result_histogram_g_image.rows), cv::Point(start_x_g + i, m_result_histogram_g_image.rows - value), cv::Scalar(128, 255, 128), 1);
+
+			value = m_p_histogram_b[i] * m_result_histogram_b_image.rows;
+			cv::line(m_result_histogram_b_image, cv::Point(start_x_b + i, m_result_histogram_b_image.rows), cv::Point(start_x_b + i, m_result_histogram_b_image.rows - value), cv::Scalar(255, 128, 128), 1);
+		}
+
+		//cv::imwrite("histogram.png", m_result_histogram_image);
+		//cv::imwrite("histogram_r.png", m_result_histogram_r_image);
+		//cv::imwrite("histogram_g.png", m_result_histogram_g_image);
+		//cv::imwrite("histogram_b.png", m_result_histogram_b_image);
+
+	}
 }
 
 #if 0
@@ -1940,4 +2058,195 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonGeoResultClear()
 	int len = 921600;
 	//ERVS_GetImage(GET_IMAGE_RESULT, -1, (char**)&m_result_image.data, &len);
 	ERVS_GetFindObjectResultImage(-1, -1, (char**)&m_result_image.data, &len);
+}
+
+
+void CEyedeaCheckDefectTabDlg::OnLButtonDown(UINT nFlags, CPoint point)
+{
+	// TODO: Add your message handler code here and/or call default
+	//IDC_STATIC_HISTOGRAM
+	//IDC_STATIC_HISTOGRAM_R
+	//IDC_STATIC_HISTOGRAM_G
+	//IDC_STATIC_HISTOGRAM_B
+
+	CRect rect_histogram_gray;
+	GetDlgItem(IDC_STATIC_HISTOGRAM)->GetWindowRect(&rect_histogram_gray);
+	ScreenToClient(&rect_histogram_gray);
+
+	CRect rect_histogram_red;
+	GetDlgItem(IDC_STATIC_HISTOGRAM_R)->GetWindowRect(&rect_histogram_red);
+	ScreenToClient(&rect_histogram_red);
+
+	CRect rect_histogram_green;
+	GetDlgItem(IDC_STATIC_HISTOGRAM_G)->GetWindowRect(&rect_histogram_green);
+	ScreenToClient(&rect_histogram_green);
+
+	CRect rect_histogram_blue;
+	GetDlgItem(IDC_STATIC_HISTOGRAM_B)->GetWindowRect(&rect_histogram_blue);
+	ScreenToClient(&rect_histogram_blue);
+
+	//gray
+	if (point.x >= rect_histogram_gray.left && point.x <= rect_histogram_gray.right &&
+		point.y >= rect_histogram_gray.top && point.y <= rect_histogram_gray.bottom)
+	{
+		m_i_histogram_lbdwn_object = 0;
+
+		int value = point.x - rect_histogram_gray.left;
+		float f_value = ((float)((float)value- m_f_start_x_v_on_ui) / m_f_histogram_w_scale_v)  ;
+		
+		m_i_histogmra_gray_min = f_value;
+
+		if (m_i_histogmra_gray_min < 0) m_i_histogmra_gray_min = 0;
+		else if (m_i_histogmra_gray_min > 255) m_i_histogmra_gray_min = 255;
+
+		//printf("m_f_histogram_w_scale_v = %f\n", m_f_histogram_w_scale_v);
+		//printf("m_f_start_x_v_on_ui = %f\n", m_f_start_x_v_on_ui);
+		//printf("min value = %d, %f\n", value, f_value);
+	}
+	else if (point.x >= rect_histogram_red.left && point.x <= rect_histogram_red.right &&
+			point.y >= rect_histogram_red.top && point.y <= rect_histogram_red.bottom)
+	{
+		m_i_histogram_lbdwn_object = 1;
+
+		int value = point.x - rect_histogram_red.left;
+		float f_value = ((float)((float)value - m_f_start_x_r_on_ui) / m_f_histogram_w_scale_r);
+
+		m_i_histogmra_red_min = f_value;
+
+		if (m_i_histogmra_red_min < 0) m_i_histogmra_red_min = 0;
+		else if (m_i_histogmra_red_min > 255) m_i_histogmra_red_min = 255;
+
+	}
+	else if (point.x >= rect_histogram_green.left && point.x <= rect_histogram_green.right &&
+			point.y >= rect_histogram_green.top && point.y <= rect_histogram_green.bottom)
+	{
+		m_i_histogram_lbdwn_object = 2;
+
+		int value = point.x - rect_histogram_green.left;
+		float f_value = ((float)((float)value - m_f_start_x_g_on_ui) / m_f_histogram_w_scale_g);
+
+		m_i_histogmra_green_min = f_value;
+
+		if (m_i_histogmra_green_min < 0) m_i_histogmra_green_min = 0;
+		else if (m_i_histogmra_green_min > 255) m_i_histogmra_green_min = 255;
+
+	}
+	else if (point.x >= rect_histogram_blue.left && point.x <= rect_histogram_blue.right &&
+			point.y >= rect_histogram_blue.top && point.y <= rect_histogram_blue.bottom)
+	{
+		m_i_histogram_lbdwn_object = 3;
+
+		int value = point.x - rect_histogram_blue.left;
+		float f_value = ((float)((float)value - m_f_start_x_b_on_ui) / m_f_histogram_w_scale_b);
+
+		m_i_histogmra_blue_min = f_value;
+
+		if (m_i_histogmra_blue_min < 0) m_i_histogmra_blue_min = 0;
+		else if (m_i_histogmra_blue_min > 255) m_i_histogmra_blue_min = 255;
+
+	}
+	
+	CDialogEx::OnLButtonDown(nFlags, point);
+}
+
+
+void CEyedeaCheckDefectTabDlg::OnLButtonUp(UINT nFlags, CPoint point)
+{
+	// TODO: Add your message handler code here and/or call default
+	m_i_histogram_lbdwn_object = -1;
+
+	CDialogEx::OnLButtonUp(nFlags, point);
+}
+
+
+void CEyedeaCheckDefectTabDlg::OnMouseMove(UINT nFlags, CPoint point)
+{
+	// TODO: Add your message handler code here and/or call default
+
+	CRect rect_histogram_gray;
+	GetDlgItem(IDC_STATIC_HISTOGRAM)->GetWindowRect(&rect_histogram_gray);
+	ScreenToClient(&rect_histogram_gray);
+
+	CRect rect_histogram_red;
+	GetDlgItem(IDC_STATIC_HISTOGRAM_R)->GetWindowRect(&rect_histogram_red);
+	ScreenToClient(&rect_histogram_red);
+
+	CRect rect_histogram_green;
+	GetDlgItem(IDC_STATIC_HISTOGRAM_G)->GetWindowRect(&rect_histogram_green);
+	ScreenToClient(&rect_histogram_green);
+
+	CRect rect_histogram_blue;
+	GetDlgItem(IDC_STATIC_HISTOGRAM_B)->GetWindowRect(&rect_histogram_blue);
+	ScreenToClient(&rect_histogram_blue);
+
+	if (m_i_histogram_lbdwn_object == 0)	//gray
+	{
+		int value = point.x - rect_histogram_gray.left;
+		float f_value = ((float)((float)value - m_f_start_x_v_on_ui) / m_f_histogram_w_scale_v);
+
+		if (m_i_histogmra_gray_min < f_value)
+		{
+			m_i_histogmra_gray_max = f_value;
+
+			if (m_i_histogmra_gray_max < 0) m_i_histogmra_gray_max = 0;
+			else if (m_i_histogmra_gray_max > 255) m_i_histogmra_gray_max = 255;
+		}
+		else
+		{
+			m_i_histogmra_gray_max = -1;
+		}
+	}
+	else if (m_i_histogram_lbdwn_object == 1)	//red
+	{
+		int value = point.x - rect_histogram_red.left;
+		float f_value = ((float)((float)value - m_f_start_x_r_on_ui) / m_f_histogram_w_scale_r);
+
+		if (m_i_histogmra_red_min < f_value)
+		{
+			m_i_histogmra_red_max = f_value;
+
+			if (m_i_histogmra_red_max < 0) m_i_histogmra_red_max = 0;
+			else if (m_i_histogmra_red_max > 255) m_i_histogmra_red_max = 255;
+		}
+		else
+		{
+			m_i_histogmra_red_max = -1;
+		}
+	}
+	else if (m_i_histogram_lbdwn_object == 2)	//green
+	{
+		int value = point.x - rect_histogram_green.left;
+		float f_value = ((float)((float)value - m_f_start_x_g_on_ui) / m_f_histogram_w_scale_g);
+
+		if (m_i_histogmra_green_min < f_value)
+		{
+			m_i_histogmra_green_max = f_value;
+
+			if (m_i_histogmra_green_max < 0) m_i_histogmra_green_max = 0;
+			else if (m_i_histogmra_green_max > 255) m_i_histogmra_green_max = 255;
+		}
+		else
+		{
+			m_i_histogmra_green_max = -1;
+		}
+	}
+	else if (m_i_histogram_lbdwn_object == 3)	//blue
+	{
+		int value = point.x - rect_histogram_blue.left;
+		float f_value = ((float)((float)value - m_f_start_x_b_on_ui) / m_f_histogram_w_scale_b);
+
+		if (m_i_histogmra_blue_min < f_value)
+		{
+			m_i_histogmra_blue_max = f_value;
+
+			if (m_i_histogmra_blue_max < 0) m_i_histogmra_blue_max = 0;
+			else if (m_i_histogmra_blue_max > 255) m_i_histogmra_blue_max = 255;
+		}
+		else
+		{
+			m_i_histogmra_blue_max = -1;
+		}
+	}
+
+	CDialogEx::OnMouseMove(nFlags, point);
 }

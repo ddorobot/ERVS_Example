@@ -213,6 +213,10 @@ char* ERVS_GetVersion(void);
 
 //Camera Setting
 int ERVS_SetCameraConfig(int type, int value, int value2);
+int ERVS_GetCameraConfig(int type);
+int ERVS_SetCameraConfig_Default();
+int ERVS_SetCameraConfig_Save();
+int ERVS_SetCameraConfig_Load();
 
 //Background Learning
 int ERVS_BackgroundLearning(void);
@@ -221,5 +225,9 @@ int ERVS_BackgroundLearning(void);
 int ERVS_Geometry_Distance(const int base_id, const int target_id, const float base_info, const float tol, float *out_value);
 int ERVS_Geometry_Angle(const int base_id, const int target_id, const float base_info, const float tol, float *out_value);
 int ERVS_Geometry_Clear(void);
+
+//Histogram 
+int ERVS_Histogram_Set_Range(const int id, const int option, const int min_value, const int max_value);
+int ERVS_Histogram_Get_Range(const int id, const int option, int *out_min_value, int *out_max_value);
 
 #endif

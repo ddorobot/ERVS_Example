@@ -873,6 +873,26 @@ int ERVS_SetCameraConfig(int type, int value, int value2)
 	return g_cls_interface.SetCameraConfig(type,value,value2);
 }
 
+int ERVS_GetCameraConfig(int type)
+{
+	return g_cls_interface.GetCameraConfig(type);
+}
+
+int ERVS_SetCameraConfig_Default()
+{
+	return g_cls_interface.SetCameraConfig_Default();
+}
+
+int ERVS_SetCameraConfig_Save()
+{
+	return g_cls_interface.SetCameraConfig_Save();
+}
+
+int ERVS_SetCameraConfig_Load()
+{
+	return g_cls_interface.SetCameraConfig_Load();
+}
+
 //Background Learning
 int ERVS_BackgroundLearning(void)
 {
@@ -899,4 +919,14 @@ int ERVS_Geometry_Angle(const int base_id, const int target_id, const float base
 int ERVS_Geometry_Clear(void)
 {
 	return g_cls_interface.Geometry_Clear();
+}
+
+int ERVS_Histogram_Set_Range(const int id, const int option, const int min_value, const int max_value)
+{
+	return g_cls_interface.Histogram_Set_Range(id, option, min_value, max_value);
+}
+
+int ERVS_Histogram_Get_Range(const int id, const int option, int *out_min_value, int *out_max_value)
+{
+	return g_cls_interface.Histogram_Get_Range(id, option, out_min_value, out_max_value);
 }

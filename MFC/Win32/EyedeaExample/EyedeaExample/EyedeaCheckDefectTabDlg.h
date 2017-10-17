@@ -106,4 +106,38 @@ public:
 	afx_msg void OnBnClickedButton2();
 	afx_msg void OnBnClickedButtonGeoAngle();
 	afx_msg void OnBnClickedButtonGeoResultClear();
+	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
+	
+	float m_histogram_size;
+	float *m_p_histogram;
+	float *m_p_histogram_r;
+	float *m_p_histogram_g;
+	float *m_p_histogram_b;
+
+	int m_i_histogram_lbdwn_object ;
+	int m_i_histogmra_gray_min;
+	int m_i_histogmra_gray_max;
+	int m_i_histogmra_red_min;
+	int m_i_histogmra_red_max;
+	int m_i_histogmra_green_min;
+	int m_i_histogmra_green_max;
+	int m_i_histogmra_blue_min;
+	int m_i_histogmra_blue_max;
+	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
+
+	float m_f_histogram_w_scale_v;
+	float m_f_histogram_w_scale_r;
+	float m_f_histogram_w_scale_g;
+	float m_f_histogram_w_scale_b;
+	float m_f_histogram_size_v_on_ui;
+	float m_f_histogram_size_r_on_ui;
+	float m_f_histogram_size_g_on_ui;
+	float m_f_histogram_size_b_on_ui;
+	float m_f_start_x_v_on_ui;
+	float m_f_start_x_r_on_ui;
+	float m_f_start_x_g_on_ui;
+	float m_f_start_x_b_on_ui;
+
+	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
+	void DrawHistogram(void);
 };

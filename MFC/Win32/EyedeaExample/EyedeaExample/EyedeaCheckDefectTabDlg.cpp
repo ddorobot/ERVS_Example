@@ -153,6 +153,7 @@ BEGIN_MESSAGE_MAP(CEyedeaCheckDefectTabDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_HISTO_SET2, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonHistoSet2)
 	ON_BN_CLICKED(IDC_BUTTON_HISTO_SET3, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonHistoSet3)
 	ON_BN_CLICKED(IDC_BUTTON_HISTO_SET4, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonHistoSet4)
+	ON_BN_CLICKED(IDC_BUTTON_BASE_PIXEL_COUNT_GET, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonBasePixelCountGet)
 END_MESSAGE_MAP()
 
 
@@ -1263,6 +1264,7 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindGetInfo2()
 			float *p_angle = NULL;
 			float *p_type = NULL;
 			float *p_score = NULL;
+			float *p_pass = NULL;
 
 			//printf("test = %d\n", i);
 			CString str;
@@ -1283,7 +1285,8 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindGetInfo2()
 					&p_line1_x, &p_line1_y, &p_line2_x, &p_line2_y,
 					&p_angle,
 					&p_type,
-					&p_score);
+					&p_score,
+					&p_pass);
 			}
 			else
 			{
@@ -1296,7 +1299,8 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindGetInfo2()
 					&p_line1_x, &p_line1_y, &p_line2_x, &p_line2_y,
 					&p_angle,
 					&p_type,
-					&p_score);
+					&p_score,
+					&p_pass);
 			}
 
 			time_t curr_time;
@@ -1747,6 +1751,9 @@ void CEyedeaCheckDefectTabDlg::OnNMDblclkTreeResult(NMHDR *pNMHDR, LRESULT *pRes
 		mom_index = atoi(str_mom_index.c_str());
 	}
 
+	m_select_result_index1 = -1;
+	m_select_result_index2 = -1;
+
 	int index = -1;
 	if (me_index >= 0)
 	{
@@ -1793,6 +1800,9 @@ void CEyedeaCheckDefectTabDlg::OnNMDblclkTreeResult(NMHDR *pNMHDR, LRESULT *pRes
 
 		ERVS_GetFindObjectResultInfo(mom_index, me_index, &id, &camera_center_x, &camera_center_y, &robot_center_x, &robot_center_y, &angle, &type, &score, &m_p_histogram, &m_p_histogram_r, &m_p_histogram_g, &m_p_histogram_b, &m_histogram_size);
 		
+		m_select_result_index1 = mom_index;
+		m_select_result_index2 = me_index;
+
 		m_select_id = (int)id;
 
 		/*
@@ -1804,7 +1814,7 @@ void CEyedeaCheckDefectTabDlg::OnNMDblclkTreeResult(NMHDR *pNMHDR, LRESULT *pRes
 		GetDlgItem(IDC_EDIT_RESULT_EDGE_MATCHING_SCORE)->SetWindowText(str);
 		*/
 
-		printf("histogram size = %f\n", m_histogram_size);
+		//printf("histogram size = %f\n", m_histogram_size);
 
 		//Get Result Information from ERVS
 		//Result image
@@ -1815,6 +1825,56 @@ void CEyedeaCheckDefectTabDlg::OnNMDblclkTreeResult(NMHDR *pNMHDR, LRESULT *pRes
 		OnBnClickedButtonHistoGet2();
 		OnBnClickedButtonHistoGet3();
 		OnBnClickedButtonHistoGet4();
+
+		//Inspection Elem. Option
+		int option = 0;
+		ERVS_Histogram_Get_Use_Element(m_select_id, &option);
+		//Gray
+		if (option & HISTOGRAM_USE_GRAY)
+		{
+			CheckDlgButton(IDC_CHECK_HISTO_INSPEC_GRAY, TRUE);
+		}
+		else
+		{
+			CheckDlgButton(IDC_CHECK_HISTO_INSPEC_GRAY, FALSE);
+		}
+		//Red
+		if (option & HISTOGRAM_USE_RED)
+		{
+			CheckDlgButton(IDC_CHECK_HISTO_INSPEC_RED, TRUE);
+		}
+		else
+		{
+			CheckDlgButton(IDC_CHECK_HISTO_INSPEC_RED, FALSE);
+		}
+		//Green
+		if (option & HISTOGRAM_USE_GREEN)
+		{
+			CheckDlgButton(IDC_CHECK_HISTO_INSPEC_GREEN, TRUE);
+		}
+		else
+		{
+			CheckDlgButton(IDC_CHECK_HISTO_INSPEC_GREEN, FALSE);
+		}
+		//Blue
+		if (option & HISTOGRAM_USE_BLUE)
+		{
+			CheckDlgButton(IDC_CHECK_HISTO_INSPEC_BLUE, TRUE);
+		}
+		else
+		{
+			CheckDlgButton(IDC_CHECK_HISTO_INSPEC_BLUE, FALSE);
+		}
+
+		//Get Base Information
+		OnBnClickedButtonBasePixelCountGet();
+
+		int pixel_count = 0;
+		ERVS_Histogram_Get_Pixel_Count(m_select_result_index1, m_select_result_index2, &pixel_count);
+
+		CString str;
+		str.Format(_T("%d"), pixel_count);
+		GetDlgItem(IDC_EDIT_PIXEL_COUNT)->SetWindowText(str);
 	}
 	
 	*pResult = 1;
@@ -2470,4 +2530,23 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonHistoSet4()
 	ERVS_Histogram_Set_Range(m_select_id, 3, min_value, max_value);
 
 	OnBnClickedButtonHistoGet4();
+}
+
+
+void CEyedeaCheckDefectTabDlg::OnBnClickedButtonBasePixelCountGet()
+{
+	// TODO: Add your control notification handler code here
+	//Get Base Information
+	int inspection_pixel_count = 0;
+	ERVS_Histogram_Get_Inspection_Pixel_Count(m_select_id, &inspection_pixel_count);
+
+	CString str;
+	str.Format(_T("%d"), inspection_pixel_count);
+	GetDlgItem(IDC_EDIT_HISTOGRAM_INSPECTION_BASE_PIXEL_COUNT)->SetWindowText(str);
+
+	float tol_rate = 0.0;
+	ERVS_Histogram_Get_Inspection_Pixel_Count_Tolerance_Rate(m_select_id, &tol_rate);
+
+	str.Format(_T("%.2f"), tol_rate);
+	GetDlgItem(IDC_EDIT_PIXEL_COUNT_TOL)->SetWindowText(str);
 }

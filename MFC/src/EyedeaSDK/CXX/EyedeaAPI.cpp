@@ -783,19 +783,19 @@ int ERVS_GetFindObjectResultInfo(int base_index, int sub_index, float* out_id, f
 	return g_cls_interface.GetFindObjectResultInfo(base_index, sub_index, out_id, out_cx, out_cy, out_rx, out_ry, out_angle, out_type, out_score, out_histogram, out_histogram_b, out_histogram_g, out_histogram_r, out_histogram_size);
 }
 
-int ERVS_GetFindObjectInfo(int index, int max_objects_count, float** out_id, float** out_cx, float** out_cy, float** out_rx, float** out_ry, float** out_bound_cx, float** out_bound_cy, float** out_bound_rx, float** out_bound_ry, float** out_mass_cx, float** out_mass_cy, float** out_mass_rx, float** out_mass_ry,float** out_circle_rx, float** out_circle_ry, float** out_line1_x, float** out_line1_y, float** out_line2_x, float** out_line2_y, float** out_angle, float** out_type, float** out_score)
+int ERVS_GetFindObjectInfo(int index, int max_objects_count, float** out_id, float** out_cx, float** out_cy, float** out_rx, float** out_ry, float** out_bound_cx, float** out_bound_cy, float** out_bound_rx, float** out_bound_ry, float** out_mass_cx, float** out_mass_cy, float** out_mass_rx, float** out_mass_ry,float** out_circle_rx, float** out_circle_ry, float** out_line1_x, float** out_line1_y, float** out_line2_x, float** out_line2_y, float** out_angle, float** out_type, float** out_score, float** out_pass)
 {
-	return g_cls_interface.GetFindObjectInfo(index, max_objects_count, 0/*grab*/, out_id, out_cx, out_cy, out_rx, out_ry, out_bound_cx, out_bound_cy, out_bound_rx, out_bound_ry, out_mass_cx, out_mass_cy, out_mass_rx, out_mass_ry, out_circle_rx, out_circle_ry, out_line1_x, out_line1_y, out_line2_x, out_line2_y, out_angle, out_type, out_score) ;
+	return g_cls_interface.GetFindObjectInfo(index, max_objects_count, 0/*grab*/, out_id, out_cx, out_cy, out_rx, out_ry, out_bound_cx, out_bound_cy, out_bound_rx, out_bound_ry, out_mass_cx, out_mass_cy, out_mass_rx, out_mass_ry, out_circle_rx, out_circle_ry, out_line1_x, out_line1_y, out_line2_x, out_line2_y, out_angle, out_type, out_score, out_pass) ;
 }
 
-int ERVS_DetectWithGrab(int index, int max_objects_count, float** out_id, float** out_cx, float** out_cy, float** out_rx, float** out_ry, float** out_bound_cx, float** out_bound_cy, float** out_bound_rx, float** out_bound_ry, float** out_mass_cx, float** out_mass_cy, float** out_mass_rx, float** out_mass_ry, float** out_circle_rx, float** out_circle_ry, float** out_line1_x, float** out_line1_y, float** out_line2_x, float** out_line2_y, float** out_angle, float** out_type, float** out_score)
+int ERVS_DetectWithGrab(int index, int max_objects_count, float** out_id, float** out_cx, float** out_cy, float** out_rx, float** out_ry, float** out_bound_cx, float** out_bound_cy, float** out_bound_rx, float** out_bound_ry, float** out_mass_cx, float** out_mass_cy, float** out_mass_rx, float** out_mass_ry, float** out_circle_rx, float** out_circle_ry, float** out_line1_x, float** out_line1_y, float** out_line2_x, float** out_line2_y, float** out_angle, float** out_type, float** out_score, float** out_pass)
 {
-	return g_cls_interface.GetFindObjectInfo(index, max_objects_count, 0/*grab*/, out_id, out_cx, out_cy, out_rx, out_ry, out_bound_cx, out_bound_cy, out_bound_rx, out_bound_ry, out_mass_cx, out_mass_cy, out_mass_rx, out_mass_ry, out_circle_rx, out_circle_ry, out_line1_x, out_line1_y, out_line2_x, out_line2_y, out_angle, out_type, out_score);
+	return g_cls_interface.GetFindObjectInfo(index, max_objects_count, 0/*grab*/, out_id, out_cx, out_cy, out_rx, out_ry, out_bound_cx, out_bound_cy, out_bound_rx, out_bound_ry, out_mass_cx, out_mass_cy, out_mass_rx, out_mass_ry, out_circle_rx, out_circle_ry, out_line1_x, out_line1_y, out_line2_x, out_line2_y, out_angle, out_type, out_score, out_pass);
 }
 
-int ERVS_DetectWithPrevImage(int index, int max_objects_count, float** out_id, float** out_cx, float** out_cy, float** out_rx, float** out_ry, float** out_bound_cx, float** out_bound_cy, float** out_bound_rx, float** out_bound_ry, float** out_mass_cx, float** out_mass_cy, float** out_mass_rx, float** out_mass_ry, float** out_circle_rx, float** out_circle_ry, float** out_line1_x, float** out_line1_y, float** out_line2_x, float** out_line2_y, float** out_angle, float** out_type, float** out_score)
+int ERVS_DetectWithPrevImage(int index, int max_objects_count, float** out_id, float** out_cx, float** out_cy, float** out_rx, float** out_ry, float** out_bound_cx, float** out_bound_cy, float** out_bound_rx, float** out_bound_ry, float** out_mass_cx, float** out_mass_cy, float** out_mass_rx, float** out_mass_ry, float** out_circle_rx, float** out_circle_ry, float** out_line1_x, float** out_line1_y, float** out_line2_x, float** out_line2_y, float** out_angle, float** out_type, float** out_score, float** out_pass)
 {
-	return g_cls_interface.GetFindObjectInfo(index, max_objects_count, 1/*prev*/, out_id, out_cx, out_cy, out_rx, out_ry, out_bound_cx, out_bound_cy, out_bound_rx, out_bound_ry, out_mass_cx, out_mass_cy, out_mass_rx, out_mass_ry, out_circle_rx, out_circle_ry, out_line1_x, out_line1_y, out_line2_x, out_line2_y, out_angle, out_type, out_score);
+	return g_cls_interface.GetFindObjectInfo(index, max_objects_count, 1/*prev*/, out_id, out_cx, out_cy, out_rx, out_ry, out_bound_cx, out_bound_cy, out_bound_rx, out_bound_ry, out_mass_cx, out_mass_cy, out_mass_rx, out_mass_ry, out_circle_rx, out_circle_ry, out_line1_x, out_line1_y, out_line2_x, out_line2_y, out_angle, out_type, out_score, out_pass);
 }
 
 int ERVS_GetFindObjectInfo2(int index, float* out_cx, float* out_cy, float* out_rx, float* out_ry, float* out_angle, float* out_type, float* out_score)
@@ -944,4 +944,34 @@ int ERVS_Histogram_Set_Use_Element(const int id, const int option)
 int ERVS_Histogram_Get_Use_Element(const int id, int *out_option)
 {
 	return g_cls_interface.Histogram_Get_Use_Element(id, out_option);
+}
+
+int ERVS_Histogram_Get_Pixel_Count(const int index1, const int index2, int *out_count)
+{
+	return g_cls_interface.Histogram_Get_Pixel_Count(index1, index2, out_count);
+}
+
+int ERVS_Histogram_Get_Pixel_Count(const int id, int *out_count)
+{
+	return g_cls_interface.Histogram_Get_Pixel_Count(id, out_count);
+}
+
+int ERVS_Histogram_Set_Inspection_Pixel_Count(const int id, const int count)
+{
+	return g_cls_interface.Histogram_Set_Inspection_Pixel_Count(id, count);
+}
+
+int ERVS_Histogram_Get_Inspection_Pixel_Count(const int id, int *out_count)
+{
+	return g_cls_interface.Histogram_Get_Inspection_Pixel_Count(id, out_count);
+}
+
+int ERVS_Histogram_Set_Inspection_Pixel_Count_Tolerance_Rate(const int id, const float rate)
+{
+	return g_cls_interface.Histogram_Set_Inspection_Pixel_Count_Tolerance_Rate(id, rate);
+}
+
+int ERVS_Histogram_Get_Inspection_Pixel_Count_Tolerance_Rate(const int id, float *out_rate)
+{
+	return g_cls_interface.Histogram_Get_Inspection_Pixel_Count_Tolerance_Rate(id, out_rate);
 }

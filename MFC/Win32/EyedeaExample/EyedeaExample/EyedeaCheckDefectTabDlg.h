@@ -142,6 +142,8 @@ public:
 	void DrawHistogram(void);
 
 	int m_select_id;
+	int m_select_result_index1;
+	int m_select_result_index2;
 
 	boost::mutex mutex;
 	afx_msg void OnBnClickedButtonHistoGet();
@@ -152,4 +154,6 @@ public:
 	afx_msg void OnBnClickedButtonHistoSet2();
 	afx_msg void OnBnClickedButtonHistoSet3();
 	afx_msg void OnBnClickedButtonHistoSet4();
+	afx_msg void OnBnClickedButtonBasePixelCountGet();
+	afx_msg void OnBnClickedButtonHistogramInspectionRun();
 };

@@ -151,7 +151,7 @@ public:
 	int GetSubObjectCircleByIdIndex(const int host_id, const int index, float* out_circle_x, float* out_circle_y, float* out_circle_rx, float* out_circle_ry);
 	int GetSubObjectCircleByIdId(const int host_id, const int sub_id, float* out_circle_x, float* out_circle_y, float* out_circle_rx, float* out_circle_ry);
 	int GetFindObjectCount(void);
-	int GetFindObjectInfo(int index, int max_objects_count, int option, float** out_id, float** out_cx, float** out_cy, float** out_rx, float** out_ry, float** out_bound_cx, float** out_bound_cy, float** out_bound_rx, float** out_bound_ry, float** out_mass_cx, float** out_mass_cy, float** out_mass_rx, float** out_mass_ry, float** out_circle_rx, float** out_circle_ry, float** out_line1_x, float** out_line1_y, float** out_line2_x, float** out_line2_y, float** out_angle, float** out_type, float** out_score);
+	int GetFindObjectInfo(int index, int max_objects_count, int option, float** out_id, float** out_cx, float** out_cy, float** out_rx, float** out_ry, float** out_bound_cx, float** out_bound_cy, float** out_bound_rx, float** out_bound_ry, float** out_mass_cx, float** out_mass_cy, float** out_mass_rx, float** out_mass_ry, float** out_circle_rx, float** out_circle_ry, float** out_line1_x, float** out_line1_y, float** out_line2_x, float** out_line2_y, float** out_angle, float** out_type, float** out_score, float** out_pass);
 	int GetFindObjectResultInfo(int base_index, int sub_index, float* out_id, float* out_cx, float* out_cy, float* out_rx, float* out_ry, float* out_angle, float* out_type, float* out_score, float** out_histogram, float** out_histogram_b, float** out_histogram_g, float** out_histogram_r, float* out_histogram_size);
 	int GetFindObjectInfo2(int index, float* out_cx, float* out_cy, float* out_rx, float* out_ry, float* out_angle, float* out_type, float* out_score);
 	int GetFindObjectPose(int index, float* out_cx, float* out_cy, float* out_rx, float* out_ry, float* out_angle);
@@ -233,6 +233,12 @@ public:
 	int Histogram_Get_Graph(const int id, float** out_histogram, float** out_histogram_b, float** out_histogram_g, float** out_histogram_r, float* out_histogram_size);
 	int Histogram_Set_Use_Element(const int id, const int option);
 	int Histogram_Get_Use_Element(const int id, int *out_option);
+	int Histogram_Get_Pixel_Count(const int index1, const int index2, int *out_count);
+	int Histogram_Get_Pixel_Count(const int id, int *out_count);
+	int Histogram_Set_Inspection_Pixel_Count(const int id, const int count);
+	int Histogram_Get_Inspection_Pixel_Count(const int id, int *out_count);
+	int Histogram_Set_Inspection_Pixel_Count_Tolerance_Rate(const int id, const float rate);
+	int Histogram_Get_Inspection_Pixel_Count_Tolerance_Rate(const int id, float *out_rate);
 
 private:
 	//bool m_run_thread_net;			//eyedea - boost thread exit value

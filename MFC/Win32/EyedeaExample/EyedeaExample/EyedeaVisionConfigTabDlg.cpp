@@ -138,6 +138,8 @@ BEGIN_MESSAGE_MAP(CEyedeaVisionConfigTabDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_CHECK_HISTO_INSPEC_RED2, &CEyedeaVisionConfigTabDlg::OnBnClickedCheckHistoInspecRed2)
 	ON_BN_CLICKED(IDC_CHECK_HISTO_INSPEC_GREEN2, &CEyedeaVisionConfigTabDlg::OnBnClickedCheckHistoInspecGreen2)
 	ON_BN_CLICKED(IDC_CHECK_HISTO_INSPEC_BLUE2, &CEyedeaVisionConfigTabDlg::OnBnClickedCheckHistoInspecBlue2)
+	ON_BN_CLICKED(IDC_BUTTON_GET_PIXEL_COUNT, &CEyedeaVisionConfigTabDlg::OnBnClickedButtonGetPixelCount)
+	ON_BN_CLICKED(IDC_BUTTON_SET_INSPECTION_PIXEL_COUNT, &CEyedeaVisionConfigTabDlg::OnBnClickedButtonSetInspectionPixelCount)
 END_MESSAGE_MAP()
 
 
@@ -362,6 +364,7 @@ BOOL CEyedeaVisionConfigTabDlg::OnInitDialog()
 	m_combo_get_image_option_base.AddString(_T("GET_IMAGE_WITH_INFO"));
 	m_combo_get_image_option_base.AddString(_T("GET_IMAGE_INPUT"));
 	m_combo_get_image_option_base.AddString(_T("GET_IMAGE_BASE_ROI"));
+	m_combo_get_image_option_base.AddString(_T("GET_IMAGE_HISTOGRAM_MASK"));
 	m_combo_get_image_option_base.SetCurSel(0);
 
 	//start Thread
@@ -502,6 +505,10 @@ void CEyedeaVisionConfigTabDlg::ThreadFunctionDraw()
 		else if (get_base_image_option == 2)
 		{
 			ERVS_GetImage(GET_IMAGE_BASE_ROI, 0, (char**)&base_image.data, &len);
+		}
+		else if (get_base_image_option == 3)
+		{
+			ERVS_GetImage(GET_IMAGE_BASE_HISTORY_MASK, 0, (char**)&base_image.data, &len);
 		}
 
 		//---------------------------------------------------------------------------------
@@ -2413,18 +2420,21 @@ void CEyedeaVisionConfigTabDlg::OnBnClickedCheckHistoInspecGray()
 	{
 		option = option | HISTOGRAM_USE_GRAY;
 
+		//printf("set option = %d\n", option);
 		ERVS_Histogram_Set_Use_Element(m_select_id, option);
 	}
 	else
 	{
 		option = option & (~HISTOGRAM_USE_GRAY);
 
+		//printf("set option = %d\n", option);
 		ERVS_Histogram_Set_Use_Element(m_select_id, option);
 	}
 
+	//Inspection Elem. Option
 	option = 0;
 	ERVS_Histogram_Get_Use_Element(m_select_id, &option);
-
+	//Gray
 	if (option & HISTOGRAM_USE_GRAY)
 	{
 		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_GRAY, TRUE);
@@ -2433,8 +2443,33 @@ void CEyedeaVisionConfigTabDlg::OnBnClickedCheckHistoInspecGray()
 	{
 		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_GRAY, FALSE);
 	}
-
-	//Histogram_Set_Use_Element
+	//Red
+	if (option & HISTOGRAM_USE_RED)
+	{
+		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_RED2, TRUE);
+	}
+	else
+	{
+		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_RED2, FALSE);
+	}
+	//Green
+	if (option & HISTOGRAM_USE_GREEN)
+	{
+		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_GREEN2, TRUE);
+	}
+	else
+	{
+		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_GREEN2, FALSE);
+	}
+	//Blue
+	if (option & HISTOGRAM_USE_BLUE)
+	{
+		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_BLUE2, TRUE);
+	}
+	else
+	{
+		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_BLUE2, FALSE);
+	}
 }
 
 
@@ -2445,31 +2480,64 @@ void CEyedeaVisionConfigTabDlg::OnBnClickedCheckHistoInspecRed2()
 	int option = 0;
 	ERVS_Histogram_Get_Use_Element(m_select_id, &option);
 
-	BOOL bCheck = IsDlgButtonChecked(IDC_CHECK_HISTO_INSPEC_RED);
+	//printf("get option = %d\n", option);
+
+	BOOL bCheck = IsDlgButtonChecked(IDC_CHECK_HISTO_INSPEC_RED2);
 
 	if (bCheck)
 	{
 		option = option | HISTOGRAM_USE_RED;
 
+		//printf("set option = %d\n", option);
 		ERVS_Histogram_Set_Use_Element(m_select_id, option);
 	}
 	else
 	{
 		option = option & (~HISTOGRAM_USE_RED);
 
+		//printf("set option = %d\n", option);
 		ERVS_Histogram_Set_Use_Element(m_select_id, option);
 	}
 
+	//
+	//Inspection Elem. Option
 	option = 0;
 	ERVS_Histogram_Get_Use_Element(m_select_id, &option);
-
-	if (option & HISTOGRAM_USE_RED)
+	//Gray
+	if (option & HISTOGRAM_USE_GRAY)
 	{
-		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_RED, TRUE);
+		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_GRAY, TRUE);
 	}
 	else
 	{
-		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_RED, FALSE);
+		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_GRAY, FALSE);
+	}
+	//Red
+	if (option & HISTOGRAM_USE_RED)
+	{
+		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_RED2, TRUE);
+	}
+	else
+	{
+		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_RED2, FALSE);
+	}
+	//Green
+	if (option & HISTOGRAM_USE_GREEN)
+	{
+		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_GREEN2, TRUE);
+	}
+	else
+	{
+		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_GREEN2, FALSE);
+	}
+	//Blue
+	if (option & HISTOGRAM_USE_BLUE)
+	{
+		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_BLUE2, TRUE);
+	}
+	else
+	{
+		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_BLUE2, FALSE);
 	}
 }
 
@@ -2480,31 +2548,62 @@ void CEyedeaVisionConfigTabDlg::OnBnClickedCheckHistoInspecGreen2()
 	int option = 0;
 	ERVS_Histogram_Get_Use_Element(m_select_id, &option);
 
-	BOOL bCheck = IsDlgButtonChecked(IDC_CHECK_HISTO_INSPEC_GREEN);
+	BOOL bCheck = IsDlgButtonChecked(IDC_CHECK_HISTO_INSPEC_GREEN2);
 
 	if (bCheck)
 	{
 		option = option | HISTOGRAM_USE_GREEN;
 
+		//printf("set option = %d\n", option);
 		ERVS_Histogram_Set_Use_Element(m_select_id, option);
 	}
 	else
 	{
 		option = option & (~HISTOGRAM_USE_GREEN);
 
+		//printf("set option = %d\n", option);
 		ERVS_Histogram_Set_Use_Element(m_select_id, option);
 	}
 
+	//
+	//Inspection Elem. Option
 	option = 0;
 	ERVS_Histogram_Get_Use_Element(m_select_id, &option);
-
-	if (option & HISTOGRAM_USE_GREEN)
+	//Gray
+	if (option & HISTOGRAM_USE_GRAY)
 	{
-		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_GREEN, TRUE);
+		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_GRAY, TRUE);
 	}
 	else
 	{
-		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_GREEN, FALSE);
+		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_GRAY, FALSE);
+	}
+	//Red
+	if (option & HISTOGRAM_USE_RED)
+	{
+		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_RED2, TRUE);
+	}
+	else
+	{
+		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_RED2, FALSE);
+	}
+	//Green
+	if (option & HISTOGRAM_USE_GREEN)
+	{
+		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_GREEN2, TRUE);
+	}
+	else
+	{
+		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_GREEN2, FALSE);
+	}
+	//Blue
+	if (option & HISTOGRAM_USE_BLUE)
+	{
+		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_BLUE2, TRUE);
+	}
+	else
+	{
+		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_BLUE2, FALSE);
 	}
 }
 
@@ -2515,30 +2614,110 @@ void CEyedeaVisionConfigTabDlg::OnBnClickedCheckHistoInspecBlue2()
 	int option = 0;
 	ERVS_Histogram_Get_Use_Element(m_select_id, &option);
 
-	BOOL bCheck = IsDlgButtonChecked(IDC_CHECK_HISTO_INSPEC_BLUE);
+	BOOL bCheck = IsDlgButtonChecked(IDC_CHECK_HISTO_INSPEC_BLUE2);
 
 	if (bCheck)
 	{
 		option = option | HISTOGRAM_USE_BLUE;
 
+		//printf("set option = %d\n", option);
 		ERVS_Histogram_Set_Use_Element(m_select_id, option);
 	}
 	else
 	{
 		option = option & (~HISTOGRAM_USE_BLUE);
 
+		//printf("set option = %d\n", option);
 		ERVS_Histogram_Set_Use_Element(m_select_id, option);
 	}
 
+	//
+	//Inspection Elem. Option
 	option = 0;
 	ERVS_Histogram_Get_Use_Element(m_select_id, &option);
-
-	if (option & HISTOGRAM_USE_BLUE)
+	//Gray
+	if (option & HISTOGRAM_USE_GRAY)
 	{
-		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_BLUE, TRUE);
+		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_GRAY, TRUE);
 	}
 	else
 	{
-		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_BLUE, FALSE);
+		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_GRAY, FALSE);
 	}
+	//Red
+	if (option & HISTOGRAM_USE_RED)
+	{
+		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_RED2, TRUE);
+	}
+	else
+	{
+		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_RED2, FALSE);
+	}
+	//Green
+	if (option & HISTOGRAM_USE_GREEN)
+	{
+		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_GREEN2, TRUE);
+	}
+	else
+	{
+		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_GREEN2, FALSE);
+	}
+	//Blue
+	if (option & HISTOGRAM_USE_BLUE)
+	{
+		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_BLUE2, TRUE);
+	}
+	else
+	{
+		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_BLUE2, FALSE);
+	}
+}
+
+
+void CEyedeaVisionConfigTabDlg::OnBnClickedButtonGetPixelCount()
+{
+	// TODO: Add your control notification handler code here
+
+	int pixel_count = 0;
+	ERVS_Histogram_Get_Pixel_Count(m_select_id, &pixel_count);
+
+	CString str;
+	str.Format(_T("%d"), pixel_count);
+	GetDlgItem(IDC_EDIT_PIXEL_COUNT)->SetWindowText(str);
+
+	if (pixel_count > 0)
+	{
+		m_combo_get_image_option_base.SetCurSel(3);		//Get History Masking Image
+	}
+}
+
+
+void CEyedeaVisionConfigTabDlg::OnBnClickedButtonSetInspectionPixelCount()
+{
+	// TODO: Add your control notification handler code here
+
+	//pixel count
+	CString str;
+	GetDlgItem(IDC_EDIT_PIXEL_COUNT)->GetWindowText(str);
+	int pixel_count = _ttoi(str);
+
+	ERVS_Histogram_Set_Inspection_Pixel_Count(m_select_id, pixel_count);
+	
+	pixel_count = 0;
+	ERVS_Histogram_Get_Inspection_Pixel_Count(m_select_id, &pixel_count);
+
+	str.Format(_T("%d"), pixel_count);
+	GetDlgItem(IDC_EDIT_PIXEL_COUNT)->SetWindowText(str);
+
+	//tol rate
+	GetDlgItem(IDC_EDIT_PIXEL_COUNT_TOL)->GetWindowText(str);
+	float tol_rate = _ttof(str);
+
+	ERVS_Histogram_Set_Inspection_Pixel_Count_Tolerance_Rate(m_select_id, tol_rate);
+
+	tol_rate = 0.0;
+	ERVS_Histogram_Get_Inspection_Pixel_Count_Tolerance_Rate(m_select_id, &tol_rate);
+
+	str.Format(_T("%.2f"), tol_rate);
+	GetDlgItem(IDC_EDIT_PIXEL_COUNT_TOL)->SetWindowText(str);
 }

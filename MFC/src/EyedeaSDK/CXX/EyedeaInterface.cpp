@@ -12541,7 +12541,7 @@ int CEyedeaInterface::GetFindObjectResultInfo(int base_index, int sub_index, flo
 	return i_histogram_size;
 }
 
-int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, int option, float** out_id, float** out_cx, float** out_cy, float** out_rx, float** out_ry, float** out_bound_cx, float** out_bound_cy, float** out_bound_rx, float** out_bound_ry, float** out_mass_cx, float** out_mass_cy, float** out_mass_rx, float** out_mass_ry, float** out_circle_rx, float** out_circle_ry, float** out_line1_x, float** out_line1_y, float** out_line2_x, float** out_line2_y, float** out_angle, float** out_type, float** out_score)
+int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, int option, float** out_id, float** out_cx, float** out_cy, float** out_rx, float** out_ry, float** out_bound_cx, float** out_bound_cy, float** out_bound_rx, float** out_bound_ry, float** out_mass_cx, float** out_mass_cy, float** out_mass_rx, float** out_mass_ry, float** out_circle_rx, float** out_circle_ry, float** out_line1_x, float** out_line1_y, float** out_line2_x, float** out_line2_y, float** out_angle, float** out_type, float** out_score, float** out_pass)
 {
 	boost::unique_lock<boost::mutex> scoped_lock(mutex);
 
@@ -12637,6 +12637,7 @@ int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, int op
 	int i_angle = 0;
 	int i_type = 0;
 	int i_score = 0;
+	int i_pass = 0;
 
 	int nObject = 0;
 	//int index = 0;
@@ -12650,7 +12651,7 @@ int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, int op
 		nObject |= ((int)data[index++] << 8) & 0x0000FF00;
 		nObject |= ((int)data[index++]) & 0x000000FF;
 
-		if (nObject > 0 && len >= 4 + ((22*4)* nObject))
+		if (nObject > 0 && len >= 4 + ((23*4)* nObject))
 		{
 			if ((*out_id) != NULL)	free((*out_id));
 			if ((*out_cx) != NULL)	free((*out_cx));
@@ -12674,6 +12675,7 @@ int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, int op
 			if ((*out_angle) != NULL)	free((*out_angle));
 			if ((*out_type) != NULL)	free((*out_type));
 			if ((*out_score) != NULL)	free((*out_score));
+			if ((*out_pass) != NULL)	free((*out_pass));
 			//if ((*out_index) != NULL)	free((*out_index));
 
 			(*out_id) = (float *)malloc(sizeof(float)*nObject);
@@ -12698,6 +12700,7 @@ int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, int op
 			(*out_angle) = (float *)malloc(sizeof(float)*nObject);
 			(*out_type) = (float *)malloc(sizeof(float)*nObject);
 			(*out_score) = (float *)malloc(sizeof(float)*nObject);
+			(*out_pass) = (float *)malloc(sizeof(float)*nObject);
 			//(*out_index) = (float *)malloc(sizeof(float)*nObject);
 
 			for (int i = 0; i < nObject; i++)
@@ -12836,6 +12839,12 @@ int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, int op
 				i_score |= ((int)data[index++] << 8) & 0x0000FF00;
 				i_score |= ((int)data[index++]) & 0x000000FF;
 
+				//i_pass
+				i_pass = ((int)data[index++] << 24) & 0xFF000000;
+				i_pass |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_pass |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_pass |= ((int)data[index++]) & 0x000000FF;
+
 				/*
 				//i_index
 				i_index = ((int)data[index++] << 24) & 0xFF000000;
@@ -12866,6 +12875,7 @@ int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, int op
 				(*out_angle)[i] = (float)i_angle / (float)scale_factor;
 				(*out_type)[i] = (float)i_type / (float)scale_factor;
 				(*out_score)[i] = (float)i_score / (float)scale_factor;
+				(*out_pass)[i] = (float)i_pass / (float)scale_factor;
 				//(*out_index)[i] = (float)i_index / (float)scale_factor;
 			}
 		}
@@ -14348,7 +14358,7 @@ int CEyedeaInterface::Histogram_Get_Graph(const int id, float** out_histogram, f
 
 	int index = 0;
 
-	printf("len=%d\n", len);
+	//printf("len=%d\n", len);
 
 	if (len >= 4)
 	{
@@ -14533,6 +14543,320 @@ int CEyedeaInterface::Histogram_Get_Use_Element(const int id, int *out_option)
 	}
 
 	(*out_option) = i_option;
+
+	return ret;
+}
+
+int CEyedeaInterface::Histogram_Get_Pixel_Count(const int index1, const int index2, int *out_count)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_HISTOGRAM_GET_PIXEL_COUNT_RESULT;
+
+	int len = 4*2;
+	unsigned char* data = new unsigned char[len];
+
+	unsigned int scale_factor = 10000;
+
+	int index = 0;
+
+	//id
+	data[index++] = (index1 & 0xFF000000) >> 24;
+	data[index++] = (index1 & 0x00FF0000) >> 16;
+	data[index++] = (index1 & 0x0000FF00) >> 8;
+	data[index++] = (index1 & 0x000000FF);
+
+	data[index++] = (index2 & 0xFF000000) >> 24;
+	data[index++] = (index2 & 0x00FF0000) >> 16;
+	data[index++] = (index2 & 0x0000FF00) >> 8;
+	data[index++] = (index2 & 0x000000FF);
+
+
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+
+		return ret;
+	}
+
+	index = 0;
+	int i_count = 0;
+	if (len >= 4)
+	{
+		//i_value
+		i_count = ((int)data[index++] << 24) & 0xFF000000;
+		i_count |= ((int)data[index++] << 16) & 0x00FF0000;
+		i_count |= ((int)data[index++] << 8) & 0x0000FF00;
+		i_count |= ((int)data[index++]) & 0x000000FF;
+	}
+
+	(*out_count) = i_count;
+
+	return ret;
+}
+
+int CEyedeaInterface::Histogram_Get_Pixel_Count(const int id, int *out_count)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_HISTOGRAM_GET_PIXEL_COUNT_ID;
+
+	int len = 4 * 2;
+	unsigned char* data = new unsigned char[len];
+
+	unsigned int scale_factor = 10000;
+
+	int index = 0;
+
+	//id
+	data[index++] = (id & 0xFF000000) >> 24;
+	data[index++] = (id & 0x00FF0000) >> 16;
+	data[index++] = (id & 0x0000FF00) >> 8;
+	data[index++] = (id & 0x000000FF);
+
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+
+		return ret;
+	}
+
+	index = 0;
+	int i_count = 0;
+	if (len >= 4)
+	{
+		//i_value
+		i_count = ((int)data[index++] << 24) & 0xFF000000;
+		i_count |= ((int)data[index++] << 16) & 0x00FF0000;
+		i_count |= ((int)data[index++] << 8) & 0x0000FF00;
+		i_count |= ((int)data[index++]) & 0x000000FF;
+	}
+
+	(*out_count) = i_count;
+
+	return ret;
+}
+
+int CEyedeaInterface::Histogram_Set_Inspection_Pixel_Count(const int id, const int count)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_HISTOGRAM_SET_INSPECTION_PIXEL_COUNT;
+
+	int len = 4 * 2;
+	unsigned char* data = new unsigned char[len];
+
+	unsigned int scale_factor = 10000;
+
+	int index = 0;
+
+	//id
+	data[index++] = (id & 0xFF000000) >> 24;
+	data[index++] = (id & 0x00FF0000) >> 16;
+	data[index++] = (id & 0x0000FF00) >> 8;
+	data[index++] = (id & 0x000000FF);
+
+	data[index++] = (count & 0xFF000000) >> 24;
+	data[index++] = (count & 0x00FF0000) >> 16;
+	data[index++] = (count & 0x0000FF00) >> 8;
+	data[index++] = (count & 0x000000FF);
+
+
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+
+	return ret;
+}
+
+int CEyedeaInterface::Histogram_Get_Inspection_Pixel_Count(const int id, int *out_count)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_HISTOGRAM_GET_INSPECTION_PIXEL_COUNT;
+
+	int len = 4;
+	unsigned char* data = new unsigned char[len];
+
+	unsigned int scale_factor = 10000;
+
+	int index = 0;
+
+	//id
+	data[index++] = (id & 0xFF000000) >> 24;
+	data[index++] = (id & 0x00FF0000) >> 16;
+	data[index++] = (id & 0x0000FF00) >> 8;
+	data[index++] = (id & 0x000000FF);
+
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+
+		return ret;
+	}
+
+	index = 0;
+	int i_count = 0;
+	if (len >= 4)
+	{
+		//i_value
+		i_count = ((int)data[index++] << 24) & 0xFF000000;
+		i_count |= ((int)data[index++] << 16) & 0x00FF0000;
+		i_count |= ((int)data[index++] << 8) & 0x0000FF00;
+		i_count |= ((int)data[index++]) & 0x000000FF;
+	}
+
+	(*out_count) = i_count;
+
+	return ret;
+}
+
+int CEyedeaInterface::Histogram_Set_Inspection_Pixel_Count_Tolerance_Rate(const int id, const float rate)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_HISTOGRAM_SET_INSPECTION_PIXEL_COUNT_TOL_RATE;
+
+	int len = 4 * 2;
+	unsigned char* data = new unsigned char[len];
+
+	unsigned int scale_factor = 10000;
+
+	int i_rate = rate * scale_factor;
+
+	int index = 0;
+
+	//id
+	data[index++] = (id & 0xFF000000) >> 24;
+	data[index++] = (id & 0x00FF0000) >> 16;
+	data[index++] = (id & 0x0000FF00) >> 8;
+	data[index++] = (id & 0x000000FF);
+
+	data[index++] = (i_rate & 0xFF000000) >> 24;
+	data[index++] = (i_rate & 0x00FF0000) >> 16;
+	data[index++] = (i_rate & 0x0000FF00) >> 8;
+	data[index++] = (i_rate & 0x000000FF);
+
+
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+
+	return ret;
+}
+
+int CEyedeaInterface::Histogram_Get_Inspection_Pixel_Count_Tolerance_Rate(const int id, float *out_rate)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_HISTOGRAM_GET_INSPECTION_PIXEL_COUNT_TOL_RATE;
+
+	int len = 4;
+	unsigned char* data = new unsigned char[len];
+
+	unsigned int scale_factor = 10000;
+
+	int index = 0;
+
+	//id
+	data[index++] = (id & 0xFF000000) >> 24;
+	data[index++] = (id & 0x00FF0000) >> 16;
+	data[index++] = (id & 0x0000FF00) >> 8;
+	data[index++] = (id & 0x000000FF);
+
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+
+		return ret;
+	}
+
+	index = 0;
+	int i_count = 0;
+	if (len >= 4)
+	{
+		//i_value
+		i_count = ((int)data[index++] << 24) & 0xFF000000;
+		i_count |= ((int)data[index++] << 16) & 0x00FF0000;
+		i_count |= ((int)data[index++] << 8) & 0x0000FF00;
+		i_count |= ((int)data[index++]) & 0x000000FF;
+}
+
+	(*out_rate) = (float)i_count / (float)scale_factor;
 
 	return ret;
 }

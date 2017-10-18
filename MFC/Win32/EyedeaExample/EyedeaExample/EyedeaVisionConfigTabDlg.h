@@ -155,4 +155,6 @@ public:
 	afx_msg void OnBnClickedCheckHistoInspecRed2();
 	afx_msg void OnBnClickedCheckHistoInspecGreen2();
 	afx_msg void OnBnClickedCheckHistoInspecBlue2();
+	afx_msg void OnBnClickedButtonGetPixelCount();
+	afx_msg void OnBnClickedButtonSetInspectionPixelCount();
 };

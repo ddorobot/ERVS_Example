@@ -13871,7 +13871,8 @@ int CEyedeaInterface::SetCameraConfig(int type, int value, int value2)
 		return EYEDEA_ERROR_INVALID_MEMORY;
 	}
 
-	char command = COMMAND_SET_CAMERA_CONFIG;
+	//char command = COMMAND_SET_CAMERA_CONFIG;
+	char command = COMMAND_CAMERA_CONFIG_SET;
 
 	int len = 12;
 	unsigned char* data = new unsigned char[len];

@@ -19,10 +19,8 @@
 #include "afxwin.h"
 #include "EyedeaVisionConfigTabDlg.h"
 #include "EyedeaCheckDefectTabDlg.h"
-#include "EyedeaPickAndPlaceTabDlg.h"
 #include "EyedeaCalibrationTabDlg.h"
 #include "EyedeaCameraConfigTabDlg.h"
-#include "EyedeaSearchAreaDlg.h"
 
 #include "use_opencv_static.h"
 
@@ -110,7 +108,6 @@ public:
 	CTabCtrl m_tab_mode;
 	CWnd* m_pwndShow;
 	CEyedeaVisionConfigTabDlg m_tab_dlg_vision_config;
-	CEyedeaSearchAreaDlg m_tab_dlg_searcharea;
 	CEyedeaCheckDefectTabDlg m_tab_dlg_check_defect;
 	//CEyedeaPickAndPlaceTabDlg m_tab_dlg_pick_and_place;
 	CEyedeaCalibrationTabDlg m_tab_dlg_calibration;

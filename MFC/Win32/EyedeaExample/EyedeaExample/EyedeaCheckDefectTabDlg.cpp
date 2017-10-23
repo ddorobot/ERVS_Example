@@ -177,35 +177,6 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonSetBase()
 }
 #endif
 
-/*
-void CEyedeaCheckDefectTabDlg::OnBnClickedCheckUsePca()
-{
-	// TODO: Add your control notification handler code here
-	BOOL bCheckOptionPCA = IsDlgButtonChecked(IDC_CHECK_USE_PCA);
-
-	if (bCheckOptionPCA)
-	{
-		ERVS_SetOptionPCAOn();
-	}
-	else
-	{
-		ERVS_SetOptionPCAOff();
-	}
-
-	//Get
-	int ret = ERVS_GetOptionPCA();
-
-	if (ret > 0)
-	{
-		CheckDlgButton(IDC_CHECK_USE_PCA, TRUE);
-	}
-	else
-	{
-		CheckDlgButton(IDC_CHECK_USE_PCA, FALSE);
-	}
-}
-*/
-
 void CEyedeaCheckDefectTabDlg::MyTextOut(LPCTSTR strText, COLORREF TextColor)
 {
 	// 마지막 행으로 이동하기
@@ -625,46 +596,6 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonFind()
 	ERVS_GetImage(GET_IMAGE_RESULT_FOUND_MASTER, 0, (char**)&m_found_image_object.data, &len);
 }
 #endif
-
-#if 0
-void CEyedeaCheckDefectTabDlg::OnBnClickedCheckUseFindWithCheckdefect()
-{
-	// TODO: Add your control notification handler code here
-	BOOL bCheckOptionDefect = IsDlgButtonChecked(IDC_CHECK_USE_FIND_WITH_CHECKDEFECT);
-
-	if (bCheckOptionDefect)
-	{
-		ERVS_SetOptionFindWithCheckDefectOn();
-	}
-	else
-	{
-		ERVS_SetOptionFindWithCheckDefectOff();
-	}
-
-	//Get
-	int ret = ERVS_GetOptionFindWithCheckDefect(); //ERVS_GetOptionPCA();
-
-	if (ret > 0)
-	{
-		CheckDlgButton(IDC_CHECK_USE_FIND_WITH_CHECKDEFECT, TRUE);
-	}
-	else
-	{
-		CheckDlgButton(IDC_CHECK_USE_FIND_WITH_CHECKDEFECT, FALSE);
-	}
-
-	//-------------------------------------------------------------------------
-	//Display on List Control
-	CString str;
-	if (ret > 0) 	str.Format(_T("Y"));
-	else			str.Format(_T("N"));
-
-	((CEyedeaExampleDlg *)GetParent())->m_list_information.SetItem(((CEyedeaExampleDlg *)GetParent())->m_select_list_number, 5, LVIF_TEXT, str, 0, 0, 0, NULL);
-	//Display on List Control
-	//-------------------------------------------------------------------------
-}
-#endif
-
 
 void CEyedeaCheckDefectTabDlg::ThreadFunctionDraw()
 {
@@ -1875,6 +1806,11 @@ void CEyedeaCheckDefectTabDlg::OnNMDblclkTreeResult(NMHDR *pNMHDR, LRESULT *pRes
 		CString str;
 		str.Format(_T("%d"), pixel_count);
 		GetDlgItem(IDC_EDIT_PIXEL_COUNT)->SetWindowText(str);
+
+		m_result_histogram_image = 0;
+		m_result_histogram_r_image = 0;
+		m_result_histogram_g_image = 0;
+		m_result_histogram_b_image = 0;
 	}
 	
 	*pResult = 1;

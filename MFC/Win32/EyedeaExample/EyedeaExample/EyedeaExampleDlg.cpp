@@ -217,9 +217,6 @@ BOOL CEyedeaExampleDlg::OnInitDialog()
 	m_combo_get_image_option.SetCurSel(0);
 #endif
 
-	str.Format(_T("-"));
-	GetDlgItem(IDC_EDIT_MODE)->SetWindowText(str);
-
 	TCHAR szPath[512] = { 0 };
 	SHGetSpecialFolderPath(NULL, szPath, CSIDL_COMMON_DESKTOPDIRECTORY, FALSE);
 
@@ -314,8 +311,6 @@ void CEyedeaExampleDlg::OnBnClickedButtonConnect()
 
 		if (ret == 0)
 		{
-			ERVS_SetMode(ERVS_MODE_NORMAL);
-
 			//-----------------------------------------------
 			//tab control
 			if (m_pwndShow != NULL)
@@ -514,16 +509,6 @@ void CEyedeaExampleDlg::ThreadFunctionDraw()
 		//draw display on static control
 		//---------------------------------------------------------------------------------
 
-		//check ERVS mode
-		int mode = ERVS_GetMode();
-		CString str;
-		CString strMode ;
-		if (mode == ERVS_MODE_NORMAL) strMode.Format(_T("Normal"));
-		else if (mode == ERVS_MODE_CALIBRATION) strMode.Format(_T("Calibration"));
-		else strMode.Format(_T("-"));
-
-		str.Format(_T("%d : %s"), mode, strMode);
-		GetDlgItem(IDC_EDIT_MODE)->SetWindowText(str);
 	};
 
 	ERVS_Disconnect();
@@ -906,8 +891,6 @@ void CEyedeaExampleDlg::OnTcnSelchangeTabMy(int index)
 	{
 	case 0:		//Vision Config
 	{
-		ERVS_SetMode(ERVS_MODE_NORMAL);
-
 		m_tab_dlg_check_defect.m_b_draw_pause = true;
 		m_tab_dlg_calibration.m_b_draw_pause = true;
 		m_tab_dlg_vision_config.m_b_draw_pause = false;
@@ -935,8 +918,6 @@ void CEyedeaExampleDlg::OnTcnSelchangeTabMy(int index)
 	*/
 	case 1:		//Object Detection and Check Defect
 	{
-		ERVS_SetMode(ERVS_MODE_NORMAL);
-
 		//m_tab_dlg_check_defect.OnBnClickedCheckFindMultiObjects();
 
 		m_tab_dlg_check_defect.m_b_draw_pause = false;
@@ -953,7 +934,6 @@ void CEyedeaExampleDlg::OnTcnSelchangeTabMy(int index)
 	}
 	case 2:		//calibration
 	{
-		ERVS_SetMode(ERVS_MODE_CALIBRATION);
 		m_tab_dlg_check_defect.m_b_draw_pause = true;
 		m_tab_dlg_calibration.m_b_draw_pause = false;
 		m_tab_dlg_vision_config.m_b_draw_pause = true;

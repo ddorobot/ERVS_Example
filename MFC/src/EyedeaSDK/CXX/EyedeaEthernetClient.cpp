@@ -191,17 +191,11 @@ int CEyedeaEthernetClient::Send(char command, unsigned int* scalefactor, unsigne
 	//write(client_socket, &command, sizeof(command));
 
 	unsigned int leng = (*len);
-	if (command == COMMAND_GET_ZOOM_IMAGE || command == COMMAND_GET_IMAGE || command == COMMAND_GET_BASE_IMAGE ||
-		command == COMMAND_GET_RESULT_IMAGE || command == COMMAND_GET_RESULT_IMAGE_LOCAL || command == COMMAND_GET_RESULT_IMAGE_GLOBAL ||
-		command == COMMAND_GET_OBJECT_IMAGE || command == GET_IMAGE_SEARCH_AREA_INFO )
-	{
-		leng = 0;
-	}
-	else if (command == COMMAND_GET_IMAGE_W_OPTION || command == COMMAND_GET_RESULT_IMAGE_FIND_OBJECTS)
+	if (command == COMMAND_GET_IMAGE_W_OPTION || command == COMMAND_GET_RESULT_IMAGE_FIND_OBJECTS)
 	{
 		leng = 8;
 	}
-	else if (command == COMMAND_CALIBRATION_GET_IMAGE || command == COMMAND_GET_FIND_OBJECT_IMAGE )
+	else if (command == COMMAND_CALIBRATION_GET_IMAGE )
 	{
 		leng = 4;
 	}
@@ -332,10 +326,7 @@ int CEyedeaEthernetClient::Send(char command, unsigned int* scalefactor, unsigne
 		//head data
 		//-------------------------------------------------------------
 
-		if (get_command != COMMAND_GET_ZOOM_IMAGE && get_command != COMMAND_GET_IMAGE && get_command != COMMAND_GET_BASE_IMAGE &&
-			get_command != COMMAND_GET_RESULT_IMAGE && get_command != COMMAND_GET_RESULT_IMAGE_LOCAL && get_command != COMMAND_GET_RESULT_IMAGE_GLOBAL &&
-			get_command != COMMAND_GET_OBJECT_IMAGE && get_command != COMMAND_GET_IMAGE_W_OPTION && get_command != COMMAND_CALIBRATION_GET_IMAGE &&
-			get_command != COMMAND_GET_FIND_OBJECT_IMAGE) {
+		if (get_command != COMMAND_GET_IMAGE_W_OPTION && get_command != COMMAND_CALIBRATION_GET_IMAGE ) {
 			if (data_length > (*len))
 			{
 				if ((*out_data) != NULL)

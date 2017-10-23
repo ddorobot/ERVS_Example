@@ -200,11 +200,8 @@
     <ClInclude Include="EyedeaCalibrationTabDlg.h" />
     <ClInclude Include="EyedeaCameraConfigTabDlg.h" />
     <ClInclude Include="EyedeaCheckDefectTabDlg.h" />
-    <ClInclude Include="EyedeaDemoDlg.h" />
     <ClInclude Include="EyedeaExample.h" />
     <ClInclude Include="EyedeaExampleDlg.h" />
-    <ClInclude Include="EyedeaPickAndPlaceTabDlg.h" />
-    <ClInclude Include="EyedeaSearchAreaDlg.h" />
     <ClInclude Include="EyedeaVisionConfigTabDlg.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -220,11 +217,8 @@
     <ClCompile Include="EyedeaCalibrationTabDlg.cpp" />
     <ClCompile Include="EyedeaCameraConfigTabDlg.cpp" />
     <ClCompile Include="EyedeaCheckDefectTabDlg.cpp" />
-    <ClCompile Include="EyedeaDemoDlg.cpp" />
     <ClCompile Include="EyedeaExample.cpp" />
     <ClCompile Include="EyedeaExampleDlg.cpp" />
-    <ClCompile Include="EyedeaPickAndPlaceTabDlg.cpp" />
-    <ClCompile Include="EyedeaSearchAreaDlg.cpp" />
     <ClCompile Include="EyedeaVisionConfigTabDlg.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

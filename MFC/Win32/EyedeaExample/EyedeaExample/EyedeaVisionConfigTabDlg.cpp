@@ -1336,6 +1336,8 @@ void CEyedeaVisionConfigTabDlg::OnBnClickedButtonApplyVisionConfigLocal()
 
 void CEyedeaVisionConfigTabDlg::RoadAllFromERVS()
 {
+	m_select_id = ERVS_DB_Get_Select_ID();
+
 	//OnBnClickedButtonVisionConfigGet();
 	//OnBnClickedButtonCheckVisionConfigGlobal();
 	OnBnClickedButtonVisionConfigGet2();
@@ -1345,7 +1347,7 @@ void CEyedeaVisionConfigTabDlg::RoadAllFromERVS()
 
 	//OnBnClickedCheckDependencySearcharea();
 	//check
-	float only_one_option = ERVS_GetVisionConfigOption(SEARCHAREA_VISION_CONFIG_ONLY_ONE_OBJECT);
+	float only_one_option = ERVS_GetVisionConfigOption(VISION_CONFIG_ONLY_ONE_OBJECT);
 	if (only_one_option)
 	{
 		CheckDlgButton(IDC_CHECK_DEPENDENCY_SEARCHAREA2, TRUE);
@@ -1391,6 +1393,49 @@ void CEyedeaVisionConfigTabDlg::RoadAllFromERVS()
 	{
 		CheckDlgButton(IDC_CHECK_ONE_OF_SUBS2, FALSE);
 	}
+
+	//histogram option
+	int option = 0;
+	ERVS_Histogram_Get_Use_Element(m_select_id, &option);
+	//Gray
+	if (option & HISTOGRAM_USE_GRAY)
+	{
+		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_GRAY, TRUE);
+	}
+	else
+	{
+		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_GRAY, FALSE);
+	}
+	//Red
+	if (option & HISTOGRAM_USE_RED)
+	{
+		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_RED2, TRUE);
+	}
+	else
+	{
+		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_RED2, FALSE);
+	}
+	//Green
+	if (option & HISTOGRAM_USE_GREEN)
+	{
+		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_GREEN2, TRUE);
+	}
+	else
+	{
+		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_GREEN2, FALSE);
+	}
+	//Blue
+	if (option & HISTOGRAM_USE_BLUE)
+	{
+		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_BLUE2, TRUE);
+	}
+	else
+	{
+		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_BLUE2, FALSE);
+	}
+
+	OnBnClickedButtonGetPixelCount();
+	OnBnClickedButtonGetHistogram();
 }
 
 
@@ -1513,15 +1558,15 @@ void CEyedeaVisionConfigTabDlg::OnBnClickedCheckDependencySearcharea()
 
 	if (bCheckOptionDependencySearcharea)
 	{
-		ERVS_SetVisionConfigOption(SEARCHAREA_VISION_CONFIG_ONLY_ONE_OBJECT, 1);
+		ERVS_SetVisionConfigOption(VISION_CONFIG_ONLY_ONE_OBJECT, 1);
 	}
 	else
 	{
-		ERVS_SetVisionConfigOption(SEARCHAREA_VISION_CONFIG_ONLY_ONE_OBJECT, 0);
+		ERVS_SetVisionConfigOption(VISION_CONFIG_ONLY_ONE_OBJECT, 0);
 	}
 
 	//check
-	float only_one_option = ERVS_GetVisionConfigOption(SEARCHAREA_VISION_CONFIG_ONLY_ONE_OBJECT);
+	float only_one_option = ERVS_GetVisionConfigOption(VISION_CONFIG_ONLY_ONE_OBJECT);
 
 	if (only_one_option)
 	{
@@ -2689,6 +2734,13 @@ void CEyedeaVisionConfigTabDlg::OnBnClickedButtonGetPixelCount()
 	{
 		m_combo_get_image_option_base.SetCurSel(3);		//Get History Masking Image
 	}
+
+	//Get Base Information
+	float tol_rate = 0.0;
+	ERVS_Histogram_Get_Inspection_Pixel_Count_Tolerance_Rate(m_select_id, &tol_rate);
+
+	str.Format(_T("%.2f"), tol_rate);
+	GetDlgItem(IDC_EDIT_PIXEL_COUNT_TOL)->SetWindowText(str);
 }
 
 

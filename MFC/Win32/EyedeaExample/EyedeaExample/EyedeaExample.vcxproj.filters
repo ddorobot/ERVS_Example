@@ -69,9 +69,6 @@
     <ClInclude Include="EyedeaCheckDefectTabDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="EyedeaPickAndPlaceTabDlg.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="EyedeaCalibrationTabDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -79,12 +76,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="EyedeaCameraConfigTabDlg.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="EyedeaSearchAreaDlg.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="EyedeaDemoDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -119,19 +110,10 @@
     <ClCompile Include="EyedeaCheckDefectTabDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="EyedeaPickAndPlaceTabDlg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="EyedeaCalibrationTabDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="EyedeaCameraConfigTabDlg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="EyedeaSearchAreaDlg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="EyedeaDemoDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

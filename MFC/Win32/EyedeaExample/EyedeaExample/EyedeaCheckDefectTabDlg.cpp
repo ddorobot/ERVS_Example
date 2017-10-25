@@ -158,6 +158,7 @@ BEGIN_MESSAGE_MAP(CEyedeaCheckDefectTabDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_GEOMETRY_DISTANCE_BASE_SET, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonGeometryDistanceBaseSet)
 	ON_BN_CLICKED(IDC_BUTTON_GEOMETRY_ANGLE_BASE_GET, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonGeometryAngleBaseGet)
 	ON_BN_CLICKED(IDC_BUTTON_GEOMETRY_ANGLE_BASE_SET, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonGeometryAngleBaseSet)
+	ON_BN_CLICKED(IDC_BUTTON_GEO_MEET_POINT, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonGeoMeetPoint)
 END_MESSAGE_MAP()
 
 
@@ -2657,4 +2658,34 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonGeometryAngleBaseSet()
 
 	strAngle.Format(_T("%f"), base_angle_tol_rate);
 	GetDlgItem(IDC_EDIT_GEO_INSPECTION_ANGLE_TOL_RATE)->SetWindowText(strAngle);
+}
+
+
+void CEyedeaCheckDefectTabDlg::OnBnClickedButtonGeoMeetPoint()
+{
+	// TODO: Add your control notification handler code here
+	CString strBaseID;
+	GetDlgItem(IDC_EDIT_GEO_ID1)->GetWindowText(strBaseID);
+	int base_id = _ttoi(strBaseID);
+
+	CString strTargetID;
+	GetDlgItem(IDC_EDIT_GEO_ID2)->GetWindowText(strTargetID);
+	int target_id = _ttoi(strTargetID);
+
+	float meet_point_x = 0;
+	float meet_point_y = 0;
+	ERVS_Geometry_MeetPoint(base_id, target_id, &meet_point_x, &meet_point_y);
+
+	CString strMeetValue;
+	strMeetValue.Format(_T("%f"), meet_point_x);
+	GetDlgItem(IDC_EDIT_GEO_MEET_X)->SetWindowText(strMeetValue);
+
+	strMeetValue.Format(_T("%f"), meet_point_y);
+	GetDlgItem(IDC_EDIT_GEO_MEET_Y)->SetWindowText(strMeetValue);
+
+	// Get Result Image
+	//Result image
+	int len = 921600;
+	//ERVS_GetImage(GET_IMAGE_RESULT, -1, (char**)&m_result_image.data, &len);
+	ERVS_GetFindObjectResultImage(-1, -1, (char**)&m_result_image.data, &len);
 }

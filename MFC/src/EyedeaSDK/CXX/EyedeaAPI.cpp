@@ -339,6 +339,11 @@ int ERVS_Geometry_Distance(const int base_id, const int target_id, float *out_va
 	return g_cls_interface.Geometry_Distance(base_id, target_id, out_value, out_pass);
 }
 
+int ERVS_Geometry_MeetPoint(const int base_id, const int target_id, float *out_value_x, float *out_value_y)
+{
+	return g_cls_interface.Geometry_MeetPoint(base_id, target_id, out_value_x, out_value_y);
+}
+
 int ERVS_Geometry_Angle(const int base_id, const int target_id, float *out_value, int *out_pass)
 {
 	return g_cls_interface.Geometry_Angle(base_id, target_id, out_value, out_pass);

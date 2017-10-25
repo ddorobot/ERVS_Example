@@ -3861,6 +3861,80 @@ int CEyedeaInterface::BackgroundLearning(void)
 	return ret;
 }
 
+int CEyedeaInterface::Geometry_MeetPoint(const int base_id, const int target_id, float *out_value_x, float *out_value_y)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_GEOMETRY_GET_MEET_POINT;
+
+	int len = 4 * 2;
+	unsigned char* data = new unsigned char[len];
+
+	unsigned int scale_factor = 10000;
+
+	int index = 0;
+
+	//base_id
+	data[index++] = (base_id & 0xFF000000) >> 24;
+	data[index++] = (base_id & 0x00FF0000) >> 16;
+	data[index++] = (base_id & 0x0000FF00) >> 8;
+	data[index++] = (base_id & 0x000000FF);
+
+	//target_id
+	data[index++] = (target_id & 0xFF000000) >> 24;
+	data[index++] = (target_id & 0x00FF0000) >> 16;
+	data[index++] = (target_id & 0x0000FF00) >> 8;
+	data[index++] = (target_id & 0x000000FF);
+
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+
+		return ret;
+	}
+
+	int i_value_x = 0;
+	int i_value_y = 0;
+
+	if (len >= 8)
+	{
+		//i_value
+		i_value_x = ((int)data[0] << 24) & 0xFF000000;
+		i_value_x |= ((int)data[1] << 16) & 0x00FF0000;
+		i_value_x |= ((int)data[2] << 8) & 0x0000FF00;
+		i_value_x |= ((int)data[3]) & 0x000000FF;
+
+		i_value_y = ((int)data[4] << 24) & 0xFF000000;
+		i_value_y |= ((int)data[5] << 16) & 0x00FF0000;
+		i_value_y |= ((int)data[6] << 8) & 0x0000FF00;
+		i_value_y |= ((int)data[7]) & 0x000000FF;
+	}
+
+	(*out_value_x) = (float)i_value_x / (float)scale_factor;
+	(*out_value_y) = (float)i_value_y / (float)scale_factor;
+
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+
+	return ret;
+}
+
 int CEyedeaInterface::Geometry_Get_Distance(const int base_id, const int target_id, float *out_value)
 {
 	boost::unique_lock<boost::mutex> scoped_lock(mutex);

@@ -102,6 +102,7 @@ int ERVS_Geometry_Set_Inspection_Angle_Tolerance_Rate(const int base_id, const i
 int ERVS_Geometry_Get_Inspection_Angle_Tolerance_Rate(const int base_id, const int target_id, float * out_value);
 int ERVS_Geometry_Distance(const int base_id, const int target_id, float *out_value, int* out_pass);
 int ERVS_Geometry_Angle(const int base_id, const int target_id, float *out_value, int *out_pass);
+int ERVS_Geometry_MeetPoint(const int base_id, const int target_id, float *out_value_x, float *out_value_y);
 int ERVS_Geometry_Clear(void);
 
 //Histogram 

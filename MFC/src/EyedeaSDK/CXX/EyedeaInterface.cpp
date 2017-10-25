@@ -3861,7 +3861,7 @@ int CEyedeaInterface::BackgroundLearning(void)
 	return ret;
 }
 
-int CEyedeaInterface::Geometry_Distance(const int base_id, const int target_id, const float base_info, const float tol, float *out_value)
+int CEyedeaInterface::Geometry_Get_Distance(const int base_id, const int target_id, float *out_value)
 {
 	boost::unique_lock<boost::mutex> scoped_lock(mutex);
 
@@ -3871,9 +3871,9 @@ int CEyedeaInterface::Geometry_Distance(const int base_id, const int target_id, 
 		return EYEDEA_ERROR_INVALID_MEMORY;
 	}
 
-	char command = COMMAND_GEOMETRY_DISTANCE;
+	char command = COMMAND_GEOMETRY_GET_DISTANCE;
 
-	int len = 4 * 4;
+	int len = 4 * 2;
 	unsigned char* data = new unsigned char[len];
 
 	unsigned int scale_factor = 10000;
@@ -3892,20 +3892,7 @@ int CEyedeaInterface::Geometry_Distance(const int base_id, const int target_id, 
 	data[index++] = (target_id & 0x0000FF00) >> 8;
 	data[index++] = (target_id & 0x000000FF);
 
-	//base_info
-	int i_base_info = base_info * scale_factor;
-	data[index++] = (i_base_info & 0xFF000000) >> 24;
-	data[index++] = (i_base_info & 0x00FF0000) >> 16;
-	data[index++] = (i_base_info & 0x0000FF00) >> 8;
-	data[index++] = (i_base_info & 0x000000FF);
 
-	//tol
-	int i_tol = tol * scale_factor;
-	data[index++] = (i_tol & 0xFF000000) >> 24;
-	data[index++] = (i_tol & 0x00FF0000) >> 16;
-	data[index++] = (i_tol & 0x0000FF00) >> 8;
-	data[index++] = (i_tol & 0x000000FF);
-	
 	int ret = 0;
 	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
 
@@ -3941,7 +3928,7 @@ int CEyedeaInterface::Geometry_Distance(const int base_id, const int target_id, 
 	return ret;
 }
 
-int CEyedeaInterface::Geometry_Angle(const int base_id, const int target_id, const float base_info, const float tol, float *out_value)
+int CEyedeaInterface::Geometry_Get_Angle(const int base_id, const int target_id, float *out_value)
 {
 	boost::unique_lock<boost::mutex> scoped_lock(mutex);
 
@@ -3951,9 +3938,9 @@ int CEyedeaInterface::Geometry_Angle(const int base_id, const int target_id, con
 		return EYEDEA_ERROR_INVALID_MEMORY;
 	}
 
-	char command = COMMAND_GEOMETRY_ANGLE;
+	char command = COMMAND_GEOMETRY_GET_ANGLE;
 
-	int len = 4 * 4;
+	int len = 4 * 2;
 	unsigned char* data = new unsigned char[len];
 
 	unsigned int scale_factor = 10000;
@@ -3972,19 +3959,6 @@ int CEyedeaInterface::Geometry_Angle(const int base_id, const int target_id, con
 	data[index++] = (target_id & 0x0000FF00) >> 8;
 	data[index++] = (target_id & 0x000000FF);
 
-	//base_info
-	int i_base_info = base_info * scale_factor;
-	data[index++] = (i_base_info & 0xFF000000) >> 24;
-	data[index++] = (i_base_info & 0x00FF0000) >> 16;
-	data[index++] = (i_base_info & 0x0000FF00) >> 8;
-	data[index++] = (i_base_info & 0x000000FF);
-
-	//tol
-	int i_tol = tol * scale_factor;
-	data[index++] = (i_tol & 0xFF000000) >> 24;
-	data[index++] = (i_tol & 0x00FF0000) >> 16;
-	data[index++] = (i_tol & 0x0000FF00) >> 8;
-	data[index++] = (i_tol & 0x000000FF);
 
 	int ret = 0;
 	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
@@ -4011,6 +3985,627 @@ int CEyedeaInterface::Geometry_Angle(const int base_id, const int target_id, con
 	}
 
 	(*out_value) = (float)i_value / (float)scale_factor;
+
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+
+	return ret;
+}
+
+int CEyedeaInterface::Geometry_Distance(const int base_id, const int target_id, float *out_value, int *out_pass)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_GEOMETRY_DISTANCE;
+
+	int len = 4 * 4;
+	unsigned char* data = new unsigned char[len];
+
+	unsigned int scale_factor = 10000;
+
+	int index = 0;
+
+	//base_id
+	data[index++] = (base_id & 0xFF000000) >> 24;
+	data[index++] = (base_id & 0x00FF0000) >> 16;
+	data[index++] = (base_id & 0x0000FF00) >> 8;
+	data[index++] = (base_id & 0x000000FF);
+
+	//target_id
+	data[index++] = (target_id & 0xFF000000) >> 24;
+	data[index++] = (target_id & 0x00FF0000) >> 16;
+	data[index++] = (target_id & 0x0000FF00) >> 8;
+	data[index++] = (target_id & 0x000000FF);
+	
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+
+		return ret;
+	}
+
+	int i_value = 0;
+	int i_pass = 0;
+
+	if (len >= 8)
+	{
+		//i_value
+		i_value = ((int)data[0] << 24) & 0xFF000000;
+		i_value |= ((int)data[1] << 16) & 0x00FF0000;
+		i_value |= ((int)data[2] << 8) & 0x0000FF00;
+		i_value |= ((int)data[3]) & 0x000000FF;
+
+		//i_pass
+		i_pass = ((int)data[4] << 24) & 0xFF000000;
+		i_pass |= ((int)data[5] << 16) & 0x00FF0000;
+		i_pass |= ((int)data[6] << 8) & 0x0000FF00;
+		i_pass |= ((int)data[7]) & 0x000000FF;
+	}
+
+	(*out_value) = (float)i_value / (float)scale_factor;
+	(*out_pass) = i_pass;
+
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+
+	return ret;
+}
+
+int CEyedeaInterface::Geometry_Set_Inspection_Distance(const int base_id, const int target_id, const float value)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_GEOMETRY_SET_INSPECTION_DISTANCE;
+
+	int len = 4 * 3;
+	unsigned char* data = new unsigned char[len];
+
+	unsigned int scale_factor = 10000;
+
+	int index = 0;
+
+	//base_id
+	data[index++] = (base_id & 0xFF000000) >> 24;
+	data[index++] = (base_id & 0x00FF0000) >> 16;
+	data[index++] = (base_id & 0x0000FF00) >> 8;
+	data[index++] = (base_id & 0x000000FF);
+
+	//target_id
+	data[index++] = (target_id & 0xFF000000) >> 24;
+	data[index++] = (target_id & 0x00FF0000) >> 16;
+	data[index++] = (target_id & 0x0000FF00) >> 8;
+	data[index++] = (target_id & 0x000000FF);
+
+	//value
+	int i_value = value * scale_factor;
+	data[index++] = (i_value & 0xFF000000) >> 24;
+	data[index++] = (i_value & 0x00FF0000) >> 16;
+	data[index++] = (i_value & 0x0000FF00) >> 8;
+	data[index++] = (i_value & 0x000000FF);
+
+
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+
+	return ret;
+}
+
+int CEyedeaInterface::Geometry_Get_Inspection_Distance(const int base_id, const int target_id, float *out_value)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_GEOMETRY_GET_INSPECTION_DISTANCE;
+
+	int len = 4 * 2;
+	unsigned char* data = new unsigned char[len];
+
+	unsigned int scale_factor = 10000;
+
+	int index = 0;
+
+	//base_id
+	data[index++] = (base_id & 0xFF000000) >> 24;
+	data[index++] = (base_id & 0x00FF0000) >> 16;
+	data[index++] = (base_id & 0x0000FF00) >> 8;
+	data[index++] = (base_id & 0x000000FF);
+
+	//target_id
+	data[index++] = (target_id & 0xFF000000) >> 24;
+	data[index++] = (target_id & 0x00FF0000) >> 16;
+	data[index++] = (target_id & 0x0000FF00) >> 8;
+	data[index++] = (target_id & 0x000000FF);
+
+
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+
+		return ret;
+	}
+
+	int i_value = 0;
+	if (len >= 4)
+	{
+		//i_value
+		i_value = ((int)data[0] << 24) & 0xFF000000;
+		i_value |= ((int)data[1] << 16) & 0x00FF0000;
+		i_value |= ((int)data[2] << 8) & 0x0000FF00;
+		i_value |= ((int)data[3]) & 0x000000FF;
+	}
+
+	(*out_value) = (float)i_value / (float)scale_factor;
+
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+
+	return ret;
+}
+
+int CEyedeaInterface::Geometry_Set_Inspection_Distance_Tolerance_Rate(const int base_id, const int target_id, const float value)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_GEOMETRY_SET_INSPECTION_DISTANCE_TOL_RATE;
+
+	int len = 4 * 3;
+	unsigned char* data = new unsigned char[len];
+
+	unsigned int scale_factor = 10000;
+
+	int index = 0;
+
+	//base_id
+	data[index++] = (base_id & 0xFF000000) >> 24;
+	data[index++] = (base_id & 0x00FF0000) >> 16;
+	data[index++] = (base_id & 0x0000FF00) >> 8;
+	data[index++] = (base_id & 0x000000FF);
+
+	//target_id
+	data[index++] = (target_id & 0xFF000000) >> 24;
+	data[index++] = (target_id & 0x00FF0000) >> 16;
+	data[index++] = (target_id & 0x0000FF00) >> 8;
+	data[index++] = (target_id & 0x000000FF);
+
+	//value
+	int i_value = value * scale_factor;
+	data[index++] = (i_value & 0xFF000000) >> 24;
+	data[index++] = (i_value & 0x00FF0000) >> 16;
+	data[index++] = (i_value & 0x0000FF00) >> 8;
+	data[index++] = (i_value & 0x000000FF);
+
+
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+
+	return ret;
+}
+
+int CEyedeaInterface::Geometry_Get_Inspection_Distance_Tolerance_Rate(const int base_id, const int target_id, float *out_value)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_GEOMETRY_GET_INSPECTION_DISTANCE_TOL_RATE;
+
+	int len = 4 * 2;
+	unsigned char* data = new unsigned char[len];
+
+	unsigned int scale_factor = 10000;
+
+	int index = 0;
+
+	//base_id
+	data[index++] = (base_id & 0xFF000000) >> 24;
+	data[index++] = (base_id & 0x00FF0000) >> 16;
+	data[index++] = (base_id & 0x0000FF00) >> 8;
+	data[index++] = (base_id & 0x000000FF);
+
+	//target_id
+	data[index++] = (target_id & 0xFF000000) >> 24;
+	data[index++] = (target_id & 0x00FF0000) >> 16;
+	data[index++] = (target_id & 0x0000FF00) >> 8;
+	data[index++] = (target_id & 0x000000FF);
+
+
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+
+		return ret;
+	}
+
+	int i_value = 0;
+	if (len >= 4)
+	{
+		//i_value
+		i_value = ((int)data[0] << 24) & 0xFF000000;
+		i_value |= ((int)data[1] << 16) & 0x00FF0000;
+		i_value |= ((int)data[2] << 8) & 0x0000FF00;
+		i_value |= ((int)data[3]) & 0x000000FF;
+	}
+
+	(*out_value) = (float)i_value / (float)scale_factor;
+
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+
+	return ret;
+}
+
+int CEyedeaInterface::Geometry_Set_Inspection_Angle(const int base_id, const int target_id, const float value)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_GEOMETRY_SET_INSPECTION_ANGLE;
+
+	int len = 4 * 3;
+	unsigned char* data = new unsigned char[len];
+
+	unsigned int scale_factor = 10000;
+
+	int index = 0;
+
+	//base_id
+	data[index++] = (base_id & 0xFF000000) >> 24;
+	data[index++] = (base_id & 0x00FF0000) >> 16;
+	data[index++] = (base_id & 0x0000FF00) >> 8;
+	data[index++] = (base_id & 0x000000FF);
+
+	//target_id
+	data[index++] = (target_id & 0xFF000000) >> 24;
+	data[index++] = (target_id & 0x00FF0000) >> 16;
+	data[index++] = (target_id & 0x0000FF00) >> 8;
+	data[index++] = (target_id & 0x000000FF);
+
+	//value
+	int i_value = value * scale_factor;
+	data[index++] = (i_value & 0xFF000000) >> 24;
+	data[index++] = (i_value & 0x00FF0000) >> 16;
+	data[index++] = (i_value & 0x0000FF00) >> 8;
+	data[index++] = (i_value & 0x000000FF);
+
+
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+
+	return ret;
+}
+
+int CEyedeaInterface::Geometry_Get_Inspection_Angle(const int base_id, const int target_id, float *out_value)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_GEOMETRY_GET_INSPECTION_ANGLE;
+
+	int len = 4 * 2;
+	unsigned char* data = new unsigned char[len];
+
+	unsigned int scale_factor = 10000;
+
+	int index = 0;
+
+	//base_id
+	data[index++] = (base_id & 0xFF000000) >> 24;
+	data[index++] = (base_id & 0x00FF0000) >> 16;
+	data[index++] = (base_id & 0x0000FF00) >> 8;
+	data[index++] = (base_id & 0x000000FF);
+
+	//target_id
+	data[index++] = (target_id & 0xFF000000) >> 24;
+	data[index++] = (target_id & 0x00FF0000) >> 16;
+	data[index++] = (target_id & 0x0000FF00) >> 8;
+	data[index++] = (target_id & 0x000000FF);
+
+
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+
+		return ret;
+	}
+
+	int i_value = 0;
+	if (len >= 4)
+	{
+		//i_value
+		i_value = ((int)data[0] << 24) & 0xFF000000;
+		i_value |= ((int)data[1] << 16) & 0x00FF0000;
+		i_value |= ((int)data[2] << 8) & 0x0000FF00;
+		i_value |= ((int)data[3]) & 0x000000FF;
+	}
+
+	(*out_value) = (float)i_value / (float)scale_factor;
+
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+
+	return ret;
+}
+
+int CEyedeaInterface::Geometry_Set_Inspection_Angle_Tolerance_Rate(const int base_id, const int target_id, const float value)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_GEOMETRY_SET_INSPECTION_ANGLE_TOL_RATE;
+
+	int len = 4 * 3;
+	unsigned char* data = new unsigned char[len];
+
+	unsigned int scale_factor = 10000;
+
+	int index = 0;
+
+	//base_id
+	data[index++] = (base_id & 0xFF000000) >> 24;
+	data[index++] = (base_id & 0x00FF0000) >> 16;
+	data[index++] = (base_id & 0x0000FF00) >> 8;
+	data[index++] = (base_id & 0x000000FF);
+
+	//target_id
+	data[index++] = (target_id & 0xFF000000) >> 24;
+	data[index++] = (target_id & 0x00FF0000) >> 16;
+	data[index++] = (target_id & 0x0000FF00) >> 8;
+	data[index++] = (target_id & 0x000000FF);
+
+	//value
+	int i_value = value * scale_factor;
+	data[index++] = (i_value & 0xFF000000) >> 24;
+	data[index++] = (i_value & 0x00FF0000) >> 16;
+	data[index++] = (i_value & 0x0000FF00) >> 8;
+	data[index++] = (i_value & 0x000000FF);
+
+
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+
+	return ret;
+}
+
+int CEyedeaInterface::Geometry_Get_Inspection_Angle_Tolerance_Rate(const int base_id, const int target_id, float *out_value)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_GEOMETRY_GET_INSPECTION_ANGLE_TOL_RATE;
+
+	int len = 4 * 2;
+	unsigned char* data = new unsigned char[len];
+
+	unsigned int scale_factor = 10000;
+
+	int index = 0;
+
+	//base_id
+	data[index++] = (base_id & 0xFF000000) >> 24;
+	data[index++] = (base_id & 0x00FF0000) >> 16;
+	data[index++] = (base_id & 0x0000FF00) >> 8;
+	data[index++] = (base_id & 0x000000FF);
+
+	//target_id
+	data[index++] = (target_id & 0xFF000000) >> 24;
+	data[index++] = (target_id & 0x00FF0000) >> 16;
+	data[index++] = (target_id & 0x0000FF00) >> 8;
+	data[index++] = (target_id & 0x000000FF);
+
+
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+
+		return ret;
+	}
+
+	int i_value = 0;
+	if (len >= 4)
+	{
+		//i_value
+		i_value = ((int)data[0] << 24) & 0xFF000000;
+		i_value |= ((int)data[1] << 16) & 0x00FF0000;
+		i_value |= ((int)data[2] << 8) & 0x0000FF00;
+		i_value |= ((int)data[3]) & 0x000000FF;
+	}
+
+	(*out_value) = (float)i_value / (float)scale_factor;
+
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+
+	return ret;
+}
+
+int CEyedeaInterface::Geometry_Angle(const int base_id, const int target_id, float *out_value, int *out_pass)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_GEOMETRY_ANGLE;
+
+	int len = 4 * 2;
+	unsigned char* data = new unsigned char[len];
+
+	unsigned int scale_factor = 10000;
+
+	int index = 0;
+
+	//base_id
+	data[index++] = (base_id & 0xFF000000) >> 24;
+	data[index++] = (base_id & 0x00FF0000) >> 16;
+	data[index++] = (base_id & 0x0000FF00) >> 8;
+	data[index++] = (base_id & 0x000000FF);
+
+	//target_id
+	data[index++] = (target_id & 0xFF000000) >> 24;
+	data[index++] = (target_id & 0x00FF0000) >> 16;
+	data[index++] = (target_id & 0x0000FF00) >> 8;
+	data[index++] = (target_id & 0x000000FF);
+
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+
+		return ret;
+	}
+
+	int i_value = 0;
+	int i_pass = 0;
+
+	if (len >= 8)
+	{
+		//i_value
+		i_value = ((int)data[0] << 24) & 0xFF000000;
+		i_value |= ((int)data[1] << 16) & 0x00FF0000;
+		i_value |= ((int)data[2] << 8) & 0x0000FF00;
+		i_value |= ((int)data[3]) & 0x000000FF;
+
+		i_pass = ((int)data[4] << 24) & 0xFF000000;
+		i_pass |= ((int)data[5] << 16) & 0x00FF0000;
+		i_pass |= ((int)data[6] << 8) & 0x0000FF00;
+		i_pass |= ((int)data[7]) & 0x000000FF;
+	}
+
+	(*out_value) = (float)i_value / (float)scale_factor;
+	(*out_pass) = i_pass;
 
 	if (data != NULL)
 	{

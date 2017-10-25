@@ -25,6 +25,10 @@ int ERVS_DB_Del_ID(int id);
 char* ERVS_DB_Get_Mode(int id);
 int ERVS_SetObject(int id = -1);
 
+//DB Save/Load
+int ERVS_FileSaveObjectDBList(std::string path);
+int ERVS_FileLoadObjectDBList(std::string path);
+
 //Option
 int ERVS_OptionFixAreaOn(void);
 int ERVS_OptionFixAreaOff(void);
@@ -86,8 +90,18 @@ int ERVS_SetCameraConfig_Load();
 int ERVS_BackgroundLearning(void);
 
 //Geometry
-int ERVS_Geometry_Distance(const int base_id, const int target_id, const float base_info, const float tol, float *out_value);
-int ERVS_Geometry_Angle(const int base_id, const int target_id, const float base_info, const float tol, float *out_value);
+int ERVS_Geometry_Get_Distance(const int base_id, const int target_id, float *out_value);
+int ERVS_Geometry_Set_Inspection_Distance(const int base_id, const int target_id, const float value);
+int ERVS_Geometry_Get_Inspection_Distance(const int base_id, const int target_id, float * out_value);
+int ERVS_Geometry_Set_Inspection_Distance_Tolerance_Rate(const int base_id, const int target_id, const float value);
+int ERVS_Geometry_Get_Inspection_Distance_Tolerance_Rate(const int base_id, const int target_id, float * out_value);
+int ERVS_Geometry_Get_Angle(const int base_id, const int target_id, float *out_value);
+int ERVS_Geometry_Set_Inspection_Angle(const int base_id, const int target_id, const float value);
+int ERVS_Geometry_Get_Inspection_Angle(const int base_id, const int target_id, float * out_value);
+int ERVS_Geometry_Set_Inspection_Angle_Tolerance_Rate(const int base_id, const int target_id, const float value);
+int ERVS_Geometry_Get_Inspection_Angle_Tolerance_Rate(const int base_id, const int target_id, float * out_value);
+int ERVS_Geometry_Distance(const int base_id, const int target_id, float *out_value, int* out_pass);
+int ERVS_Geometry_Angle(const int base_id, const int target_id, float *out_value, int *out_pass);
 int ERVS_Geometry_Clear(void);
 
 //Histogram 
@@ -102,10 +116,6 @@ int ERVS_Histogram_Set_Inspection_Pixel_Count(const int id, const int count);
 int ERVS_Histogram_Get_Inspection_Pixel_Count(const int id, int *out_count);
 int ERVS_Histogram_Set_Inspection_Pixel_Count_Tolerance_Rate(const int id, const float rate);
 int ERVS_Histogram_Get_Inspection_Pixel_Count_Tolerance_Rate(const int id, float *out_rate);
-
-//DB Save/Load
-int ERVS_FileSaveObjectDBList(std::string path);
-int ERVS_FileLoadObjectDBList(std::string path);
 
 
 #endif

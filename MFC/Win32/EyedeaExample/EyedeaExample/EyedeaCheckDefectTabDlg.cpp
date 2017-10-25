@@ -154,6 +154,10 @@ BEGIN_MESSAGE_MAP(CEyedeaCheckDefectTabDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_HISTO_SET3, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonHistoSet3)
 	ON_BN_CLICKED(IDC_BUTTON_HISTO_SET4, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonHistoSet4)
 	ON_BN_CLICKED(IDC_BUTTON_BASE_PIXEL_COUNT_GET, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonBasePixelCountGet)
+	ON_BN_CLICKED(IDC_BUTTON_GEOMETRY_DISTANCE_BASE_GET, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonGeometryDistanceBaseGet)
+	ON_BN_CLICKED(IDC_BUTTON_GEOMETRY_DISTANCE_BASE_SET, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonGeometryDistanceBaseSet)
+	ON_BN_CLICKED(IDC_BUTTON_GEOMETRY_ANGLE_BASE_GET, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonGeometryAngleBaseGet)
+	ON_BN_CLICKED(IDC_BUTTON_GEOMETRY_ANGLE_BASE_SET, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonGeometryAngleBaseSet)
 END_MESSAGE_MAP()
 
 
@@ -2048,7 +2052,8 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButton2()
 	float tol_value = _ttof(strTol);
 
 	float distance_value = 0;
-	ERVS_Geometry_Distance(base_id, target_id, tol_base_value, tol_value, &distance_value);
+	int pass = 0;
+	ERVS_Geometry_Distance(base_id, target_id, &distance_value, &pass);
 
 	CString strDistance;
 	strDistance.Format(_T("%f"), distance_value);
@@ -2059,6 +2064,35 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButton2()
 	int len = 921600;
 	//ERVS_GetImage(GET_IMAGE_RESULT, -1, (char**)&m_result_image.data, &len);
 	ERVS_GetFindObjectResultImage(-1, -1, (char**)&m_result_image.data, &len);
+
+	//Get Base Information
+	float base_distance_value = 0;
+	ERVS_Geometry_Get_Inspection_Distance(base_id, target_id, &base_distance_value);
+
+	float base_distance_tol_rate = 0;
+	ERVS_Geometry_Get_Inspection_Distance_Tolerance_Rate(base_id, target_id, &base_distance_tol_rate);
+
+	strDistance.Format(_T("%f"), base_distance_value);
+	GetDlgItem(IDC_EDIT_GEO_INSPECTION_DISTANCE_TOL_BASE)->SetWindowText(strDistance);
+
+	strDistance.Format(_T("%f"), base_distance_tol_rate);
+	GetDlgItem(IDC_EDIT_GEO_INSPECTION_DISTANCE_TOL_RATE)->SetWindowText(strDistance);
+
+	//
+	CString strResult;
+	if (pass == 0)
+	{
+		strResult.Format(_T("No Inspection"));
+	}
+	else if (pass == 1)
+	{
+		strResult.Format(_T("Pass"));
+	}
+	else if (pass == 2)
+	{
+		strResult.Format(_T("Fail"));
+	}
+	GetDlgItem(IDC_EDIT_GEO_INSPECTION_DISTANCE_RESULT)->SetWindowText(strResult);
 }
 
 
@@ -2074,16 +2108,9 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonGeoAngle()
 	GetDlgItem(IDC_EDIT_GEO_ID2)->GetWindowText(strTargetID);
 	int target_id = _ttoi(strTargetID);
 
-	CString strTolBase;
-	GetDlgItem(IDC_EDIT_GEO_ANGLE_TOL_BASE)->GetWindowText(strTolBase);
-	float tol_base_value = _ttof(strTolBase);
-
-	CString strTol;
-	GetDlgItem(IDC_EDIT_GEO_ANGLE_TOL)->GetWindowText(strTol);
-	float tol_value = _ttof(strTol);
-
 	float angle_value = 0;
-	ERVS_Geometry_Angle(base_id, target_id, tol_base_value, tol_value, &angle_value);
+	int pass = 0;
+	ERVS_Geometry_Angle(base_id, target_id, &angle_value, &pass);
 
 	CString strAngle;
 	strAngle.Format(_T("%f"), angle_value);
@@ -2094,6 +2121,35 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonGeoAngle()
 	int len = 921600;
 	//ERVS_GetImage(GET_IMAGE_RESULT, -1, (char**)&m_result_image.data, &len);
 	ERVS_GetFindObjectResultImage(-1, -1, (char**)&m_result_image.data, &len);
+
+	//Get Base Information
+	float base_angle_value = 0;
+	ERVS_Geometry_Get_Inspection_Angle(base_id, target_id, &base_angle_value);
+
+	float base_angle_tol_rate = 0;
+	ERVS_Geometry_Get_Inspection_Angle_Tolerance_Rate(base_id, target_id, &base_angle_tol_rate);
+
+	strAngle.Format(_T("%f"), base_angle_value);
+	GetDlgItem(IDC_EDIT_GEO_INSPECTION_ANGLE_TOL_BASE)->SetWindowText(strAngle);
+
+	strAngle.Format(_T("%f"), base_angle_tol_rate);
+	GetDlgItem(IDC_EDIT_GEO_INSPECTION_ANGLE_TOL_RATE)->SetWindowText(strAngle);
+
+	CString strResult;
+	if (pass == 0)
+	{
+		strResult.Format(_T("No Inspection"));
+	}
+	else if (pass == 1)
+	{
+		strResult.Format(_T("Pass"));
+	}
+	else if (pass == 2)
+	{
+		strResult.Format(_T("Fail"));
+	}
+	//IDC_EDIT_GEO_INSPECTION_ANGLE_RESULT
+	GetDlgItem(IDC_EDIT_GEO_INSPECTION_ANGLE_RESULT)->SetWindowText(strResult);
 }
 
 
@@ -2485,4 +2541,120 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonBasePixelCountGet()
 
 	str.Format(_T("%.2f"), tol_rate);
 	GetDlgItem(IDC_EDIT_PIXEL_COUNT_TOL)->SetWindowText(str);
+}
+
+void CEyedeaCheckDefectTabDlg::OnBnClickedButtonGeometryDistanceBaseGet()
+{
+	// TODO: Add your control notification handler code here
+	CString strBaseID;
+	GetDlgItem(IDC_EDIT_GEO_ID1)->GetWindowText(strBaseID);
+	int base_id = _ttoi(strBaseID);
+
+	CString strTargetID;
+	GetDlgItem(IDC_EDIT_GEO_ID2)->GetWindowText(strTargetID);
+	int target_id = _ttoi(strTargetID);
+
+	float distance_value = 0;
+	ERVS_Geometry_Get_Distance(base_id, target_id, &distance_value);
+
+	CString strDistance;
+	strDistance.Format(_T("%f"), distance_value);
+	GetDlgItem(IDC_EDIT_GEO_DISTANCE_TOL_BASE)->SetWindowText(strDistance);
+}
+
+
+void CEyedeaCheckDefectTabDlg::OnBnClickedButtonGeometryDistanceBaseSet()
+{
+	// TODO: Add your control notification handler code here
+
+	CString strBaseID;
+	GetDlgItem(IDC_EDIT_GEO_ID1)->GetWindowText(strBaseID);
+	int base_id = _ttoi(strBaseID);
+
+	CString strTargetID;
+	GetDlgItem(IDC_EDIT_GEO_ID2)->GetWindowText(strTargetID);
+	int target_id = _ttoi(strTargetID);
+
+	CString strTolBase;
+	GetDlgItem(IDC_EDIT_GEO_DISTANCE_TOL_BASE)->GetWindowText(strTolBase);
+	float tol_base_value = _ttof(strTolBase);
+
+	CString strTol;
+	GetDlgItem(IDC_EDIT_GEO_DISTANCE_TOL)->GetWindowText(strTol);
+	float tol_value = _ttof(strTol);
+
+	//Set
+	ERVS_Geometry_Set_Inspection_Distance(base_id, target_id, tol_base_value);
+	ERVS_Geometry_Set_Inspection_Distance_Tolerance_Rate(base_id, target_id, tol_value);
+
+	float base_distance_value = 0;
+	ERVS_Geometry_Get_Inspection_Distance(base_id, target_id, &base_distance_value);
+
+	float base_distance_tol_rate = 0;
+	ERVS_Geometry_Get_Inspection_Distance_Tolerance_Rate(base_id, target_id, &base_distance_tol_rate);
+
+	CString strDistance;
+	strDistance.Format(_T("%f"), base_distance_value);
+	GetDlgItem(IDC_EDIT_GEO_INSPECTION_DISTANCE_TOL_BASE)->SetWindowText(strDistance);
+
+	strDistance.Format(_T("%f"), base_distance_tol_rate);
+	GetDlgItem(IDC_EDIT_GEO_INSPECTION_DISTANCE_TOL_RATE)->SetWindowText(strDistance);
+}
+
+
+void CEyedeaCheckDefectTabDlg::OnBnClickedButtonGeometryAngleBaseGet()
+{
+	// TODO: Add your control notification handler code here
+	CString strBaseID;
+	GetDlgItem(IDC_EDIT_GEO_ID1)->GetWindowText(strBaseID);
+	int base_id = _ttoi(strBaseID);
+
+	CString strTargetID;
+	GetDlgItem(IDC_EDIT_GEO_ID2)->GetWindowText(strTargetID);
+	int target_id = _ttoi(strTargetID);
+
+	float angle_value = 0;
+	ERVS_Geometry_Get_Angle(base_id, target_id, &angle_value);
+
+	CString strAngle;
+	strAngle.Format(_T("%f"), angle_value);
+	GetDlgItem(IDC_EDIT_GEO_ANGLE_TOL_BASE)->SetWindowText(strAngle);
+}
+
+
+void CEyedeaCheckDefectTabDlg::OnBnClickedButtonGeometryAngleBaseSet()
+{
+	// TODO: Add your control notification handler code here
+	CString strBaseID;
+	GetDlgItem(IDC_EDIT_GEO_ID1)->GetWindowText(strBaseID);
+	int base_id = _ttoi(strBaseID);
+
+	CString strTargetID;
+	GetDlgItem(IDC_EDIT_GEO_ID2)->GetWindowText(strTargetID);
+	int target_id = _ttoi(strTargetID);
+
+	CString strTolBase;
+	GetDlgItem(IDC_EDIT_GEO_ANGLE_TOL_BASE)->GetWindowText(strTolBase);
+	float tol_base_value = _ttof(strTolBase);
+
+	CString strTol;
+	GetDlgItem(IDC_EDIT_GEO_ANGLE_TOL)->GetWindowText(strTol);
+	float tol_value = _ttof(strTol);
+
+	//Set
+	ERVS_Geometry_Set_Inspection_Angle(base_id, target_id, tol_base_value);
+	ERVS_Geometry_Set_Inspection_Angle_Tolerance_Rate(base_id, target_id, tol_value);
+
+	float base_angle_value = 0;
+	ERVS_Geometry_Get_Inspection_Angle(base_id, target_id, &base_angle_value);
+
+	float base_angle_tol_rate = 0;
+	ERVS_Geometry_Get_Inspection_Angle_Tolerance_Rate(base_id, target_id, &base_angle_tol_rate);
+
+	CString strAngle;
+	strAngle.Format(_T("%f"), base_angle_value);
+	GetDlgItem(IDC_EDIT_GEO_INSPECTION_ANGLE_TOL_BASE)->SetWindowText(strAngle);
+
+	strAngle.Format(_T("%f"), base_angle_tol_rate);
+	GetDlgItem(IDC_EDIT_GEO_INSPECTION_ANGLE_TOL_RATE)->SetWindowText(strAngle);
 }

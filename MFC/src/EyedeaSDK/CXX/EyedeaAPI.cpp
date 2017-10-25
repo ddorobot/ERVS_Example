@@ -284,14 +284,64 @@ int ERVS_BackgroundLearning(void)
 }
 
 //Geometry
-int ERVS_Geometry_Distance(const int base_id, const int target_id, const float base_info, const float tol, float *out_value)
+int ERVS_Geometry_Get_Distance(const int base_id, const int target_id, float *out_value)
 {
-	return g_cls_interface.Geometry_Distance(base_id, target_id, base_info, tol, out_value);
+	return g_cls_interface.Geometry_Get_Distance(base_id, target_id, out_value);
 }
 
-int ERVS_Geometry_Angle(const int base_id, const int target_id, const float base_info, const float tol, float *out_value)
+int ERVS_Geometry_Set_Inspection_Distance(const int base_id, const int target_id, const float value)
 {
-	return g_cls_interface.Geometry_Angle(base_id, target_id, base_info, tol, out_value);
+	return g_cls_interface.Geometry_Set_Inspection_Distance(base_id, target_id, value);
+}
+
+int ERVS_Geometry_Get_Inspection_Distance(const int base_id, const int target_id, float * out_value)
+{
+	return g_cls_interface.Geometry_Get_Inspection_Distance(base_id, target_id, out_value);
+}
+
+int ERVS_Geometry_Set_Inspection_Distance_Tolerance_Rate(const int base_id, const int target_id, const float value)
+{
+	return g_cls_interface.Geometry_Set_Inspection_Distance_Tolerance_Rate(base_id, target_id, value);
+}
+
+int ERVS_Geometry_Get_Inspection_Distance_Tolerance_Rate(const int base_id, const int target_id, float * out_value)
+{
+	return g_cls_interface.Geometry_Get_Inspection_Distance_Tolerance_Rate(base_id, target_id, out_value);
+}
+
+int ERVS_Geometry_Get_Angle(const int base_id, const int target_id, float *out_value)
+{
+	return g_cls_interface.Geometry_Get_Angle(base_id, target_id, out_value);
+}
+
+int ERVS_Geometry_Set_Inspection_Angle(const int base_id, const int target_id, const float value)
+{
+	return g_cls_interface.Geometry_Set_Inspection_Angle(base_id, target_id, value);
+}
+
+int ERVS_Geometry_Get_Inspection_Angle(const int base_id, const int target_id, float * out_value)
+{
+	return g_cls_interface.Geometry_Get_Inspection_Angle(base_id, target_id, out_value);
+}
+
+int ERVS_Geometry_Set_Inspection_Angle_Tolerance_Rate(const int base_id, const int target_id, const float value)
+{
+	return g_cls_interface.Geometry_Set_Inspection_Angle_Tolerance_Rate(base_id, target_id, value);
+}
+
+int ERVS_Geometry_Get_Inspection_Angle_Tolerance_Rate(const int base_id, const int target_id, float * out_value)
+{
+	return g_cls_interface.Geometry_Get_Inspection_Angle_Tolerance_Rate(base_id, target_id, out_value);
+}
+
+int ERVS_Geometry_Distance(const int base_id, const int target_id, float *out_value, int* out_pass)
+{
+	return g_cls_interface.Geometry_Distance(base_id, target_id, out_value, out_pass);
+}
+
+int ERVS_Geometry_Angle(const int base_id, const int target_id, float *out_value, int *out_pass)
+{
+	return g_cls_interface.Geometry_Angle(base_id, target_id, out_value, out_pass);
 }
 
 int ERVS_Geometry_Clear(void)

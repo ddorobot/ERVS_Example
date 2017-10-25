@@ -156,4 +156,8 @@ public:
 	afx_msg void OnBnClickedButtonHistoSet4();
 	afx_msg void OnBnClickedButtonBasePixelCountGet();
 	afx_msg void OnBnClickedButtonHistogramInspectionRun();
+	afx_msg void OnBnClickedButtonGeometryDistanceBaseGet();
+	afx_msg void OnBnClickedButtonGeometryDistanceBaseSet();
+	afx_msg void OnBnClickedButtonGeometryAngleBaseGet();
+	afx_msg void OnBnClickedButtonGeometryAngleBaseSet();
 };

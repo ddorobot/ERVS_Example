@@ -86,8 +86,18 @@ public:
 	int BackgroundLearning(void);
 
 	//Geometry
-	int Geometry_Distance(const int base_id, const int target_id, const float base_info, const float tol, float *out_value);
-	int Geometry_Angle(const int base_id, const int target_id, const float base_info, const float tol, float *out_value);
+	int Geometry_Get_Distance(const int base_id, const int target_id, float *out_value);
+	int Geometry_Distance(const int base_id, const int target_id, float *out_value, int *out_pass);
+	int Geometry_Set_Inspection_Distance(const int base_id, const int target_id, const float value);
+	int Geometry_Get_Inspection_Distance(const int base_id, const int target_id, float *out_value);
+	int Geometry_Set_Inspection_Distance_Tolerance_Rate(const int base_id, const int target_id, const float value);
+	int Geometry_Get_Inspection_Distance_Tolerance_Rate(const int base_id, const int target_id, float *out_value);
+	int Geometry_Angle(const int base_id, const int target_id, float *out_value, int* out_pass);
+	int Geometry_Get_Angle(const int base_id, const int target_id, float *out_value);
+	int Geometry_Set_Inspection_Angle(const int base_id, const int target_id, const float value);
+	int Geometry_Get_Inspection_Angle(const int base_id, const int target_id, float *out_value);
+	int Geometry_Set_Inspection_Angle_Tolerance_Rate(const int base_id, const int target_id, const float value);
+	int Geometry_Get_Inspection_Angle_Tolerance_Rate(const int base_id, const int target_id, float *out_value);
 	int Geometry_Clear(void);
 
 	int Histogram_Set_Range(const int id, const int option, const int min_value, const int max_value);

@@ -1436,6 +1436,13 @@ void CEyedeaVisionConfigTabDlg::RoadAllFromERVS()
 
 	OnBnClickedButtonGetPixelCount();
 	OnBnClickedButtonGetHistogram();
+
+	int dep_id = (m_select_id / 1000) * 1000;
+
+	CString strText;
+	strText.Format(_T("%d"), dep_id);
+	GetDlgItem(IDC_EDIT_DEP_ID)->SetWindowText(strText);
+	
 }
 
 

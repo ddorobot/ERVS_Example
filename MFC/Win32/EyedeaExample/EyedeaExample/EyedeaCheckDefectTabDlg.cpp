@@ -267,341 +267,6 @@ BOOL CEyedeaCheckDefectTabDlg::OnInitDialog()
 				  // EXCEPTION: OCX Property Pages should return FALSE
 }
 
-#if 0
-void CEyedeaCheckDefectTabDlg::OnBnClickedCheckOptionFixSearchArea()
-{
-	// TODO: Add your control notification handler code here
-	BOOL bCheck = IsDlgButtonChecked(IDC_CHECK_OPTION_FIX_SEARCH_AREA);
-
-	if (bCheck)
-	{
-		ERVS_OptionFixSearchAreaOn();
-	}
-	else
-	{
-		ERVS_OptionFixSearchAreaOff();
-	}
-
-	int ret = ERVS_GetOptionFixSearchArea();
-
-	if (ret > 0)
-	{
-		CheckDlgButton(IDC_CHECK_OPTION_FIX_SEARCH_AREA, TRUE);
-	}
-	else
-	{
-		CheckDlgButton(IDC_CHECK_OPTION_FIX_SEARCH_AREA, FALSE);
-	}
-}
-#endif
-
-
-#if 0
-void CEyedeaCheckDefectTabDlg::OnBnClickedButtonSelectSearchArea()
-{
-	// TODO: Add your control notification handler code here
-	((CEyedeaExampleDlg *)GetParent())->m_combo_get_image_option.SetCurSel(1);		//Set Base Image
-
-	((CEyedeaExampleDlg *)GetParent())->m_command = USER_COMMAND_SELECT_SEARCH_AREA; 
-}
-#endif
-
-#if 0
-void CEyedeaCheckDefectTabDlg::OnBnClickedButtonVisionConfigFindSearchAreaGet()
-{
-	// TODO: Add your control notification handler code here
-	float search_search_width = ERVS_GetVisionConfigOption(VISION_CONFIG_FIND_SEARCH_SEARCH_WIDTH);	
-	float search_search_max_matches = ERVS_GetVisionConfigOption(VISION_CONFIG_FIND_SEARCH_SEARCH_MAX_MATCHES);
-	float search_search_candidate_scale = ERVS_GetVisionConfigOption(VISION_CONFIG_FIND_SEARCH_CANDIDATE_SCALE);
-
-	CString str;
-	str.Format(_T("%.2f"), search_search_width);
-	GetDlgItem(IDC_EDIT_FIND_OPTION_SEARCH_SEARCH_WIDTH)->SetWindowText(str);
-
-	str.Format(_T("%.2f"), search_search_max_matches);
-	GetDlgItem(IDC_EDIT_FIND_OPTION_SEARCH_MAX_MATCHES)->SetWindowText(str);
-
-	str.Format(_T("%.2f"), search_search_candidate_scale);
-	GetDlgItem(IDC_EDIT_FIND_OPTION_SEARCH_CANDIDATE_SCALE)->SetWindowText(str);
-
-	int ret = ERVS_GetOptionFixSearchArea();
-
-	if (ret)
-	{
-		CheckDlgButton(IDC_CHECK_OPTION_FIX_SEARCH_AREA, TRUE);
-	}
-	else
-	{
-		CheckDlgButton(IDC_CHECK_OPTION_FIX_SEARCH_AREA, FALSE);
-	}
-}
-#endif
-
-#if 0
-void CEyedeaCheckDefectTabDlg::OnBnClickedButtonVisionConfigFindSearchAreaSet()
-{
-	// TODO: Add your control notification handler code here
-	CString str;
-	GetDlgItem(IDC_EDIT_FIND_OPTION_SEARCH_SEARCH_WIDTH)->GetWindowText(str);
-	float search_search_width = _ttof(str);
-
-	//set
-	ERVS_SetVisionConfigOption(VISION_CONFIG_FIND_SEARCH_SEARCH_WIDTH, search_search_width);
-
-	search_search_width = ERVS_GetVisionConfigOption(VISION_CONFIG_FIND_SEARCH_SEARCH_WIDTH);
-
-	str.Format(_T("%.2f"), search_search_width);
-	GetDlgItem(IDC_EDIT_FIND_OPTION_SEARCH_SEARCH_WIDTH)->SetWindowText(str);
-
-	//
-
-	GetDlgItem(IDC_EDIT_FIND_OPTION_SEARCH_MAX_MATCHES)->GetWindowText(str);
-	float search_search_max_matches = _ttof(str);
-
-	//set
-	ERVS_SetVisionConfigOption(VISION_CONFIG_FIND_SEARCH_SEARCH_MAX_MATCHES, search_search_max_matches);
-
-	search_search_max_matches = ERVS_GetVisionConfigOption(VISION_CONFIG_FIND_SEARCH_SEARCH_MAX_MATCHES);
-
-	str.Format(_T("%.2f"), search_search_max_matches);
-	GetDlgItem(IDC_EDIT_FIND_OPTION_SEARCH_MAX_MATCHES)->SetWindowText(str);
-}
-#endif
-
-#if 0
-void CEyedeaCheckDefectTabDlg::OnBnClickedButtonSelectMasterArea()
-{
-	// TODO: Add your control notification handler code here
-	((CEyedeaExampleDlg *)GetParent())->m_combo_get_image_option.SetCurSel(3);		//Set Search Image
-
-	((CEyedeaExampleDlg *)GetParent())->m_command = USER_COMMAND_SELECT_MASTER_AREA;
-
-}
-#endif
-
-#if 0
-void CEyedeaCheckDefectTabDlg::OnBnClickedButtonVisionConfigFindIterationGet()
-{
-	// TODO: Add your control notification handler code here
-	float master_search_width = ERVS_GetVisionConfigOption(VISION_CONFIG_FIND_MASTER_SEARCH_WIDTH);
-	float master_search_max_matches = ERVS_GetVisionConfigOption(VISION_CONFIG_FIND_MASTER_SEARCH_MAX_MATCHES);
-	float master_search_candidate_scale = ERVS_GetVisionConfigOption(VISION_CONFIG_FIND_MASTER_CANDIDATE_SCALE);
-	float master_search_candidate_padding = ERVS_GetVisionConfigOption(VISION_CONFIG_FIND_MASTER_CANDIDATE_PADDING);
-
-	CString str;
-
-	str.Format(_T("%.2f"), master_search_candidate_scale);
-	GetDlgItem(IDC_EDIT_FIND_OPTION_MASTER_CANDIDATE_SCALE)->SetWindowText(str);
-
-	str.Format(_T("%.2f"), master_search_candidate_padding);
-	GetDlgItem(IDC_EDIT_FIND_OPTION_MASTER_CANDIDATE_PADDING)->SetWindowText(str);
-}
-#endif
-
-#if 0
-void CEyedeaCheckDefectTabDlg::OnBnClickedButtonVisionConfigFindIterationSet()
-{
-	// TODO: Add your control notification handler code here
-	CString str;
-	GetDlgItem(IDC_EDIT_FIND_OPTION_MASTER_CANDIDATE_PADDING)->GetWindowText(str);
-	float master_search_candidate_padding = _ttof(str);
-
-	//set
-	ERVS_SetVisionConfigOption(VISION_CONFIG_FIND_MASTER_CANDIDATE_PADDING, master_search_candidate_padding);
-
-	master_search_candidate_padding = ERVS_GetVisionConfigOption(VISION_CONFIG_FIND_MASTER_CANDIDATE_PADDING);
-
-	str.Format(_T("%.2f"), master_search_candidate_padding);
-	GetDlgItem(IDC_EDIT_FIND_OPTION_MASTER_CANDIDATE_PADDING)->SetWindowText(str);
-}
-#endif
-
-#if 0
-void CEyedeaCheckDefectTabDlg::OnBnClickedButtonAddObject()
-{
-	// TODO: Add your control notification handler code here
-	((CEyedeaExampleDlg *)GetParent())->m_combo_get_image_option.SetCurSel(4);		//Set Master Image
-
-	((CEyedeaExampleDlg *)GetParent())->m_command = USER_COMMAND_SELECT_OBJECT;
-}
-#endif
-
-#if 0
-void CEyedeaCheckDefectTabDlg::OnBnClickedButtonVisionConfigFindCenterGet()
-{
-	// TODO: Add your control notification handler code here
-	float center_search_width = ERVS_GetVisionConfigOption(VISION_CONFIG_FIND_CENTER_SEARCH_WIDTH);
-
-	CString str;
-
-	float center_search_max_matches = ERVS_GetVisionConfigOption(VISION_CONFIG_FIND_CENTER_SEARCH_MAX_MATCHES);
-
-}
-#endif
-
-#if 0
-void CEyedeaCheckDefectTabDlg::OnBnClickedButtonVisionConfigFindCenterSet()
-{
-	// TODO: Add your control notification handler code here
-	CString str;
-
-	//set
-	ERVS_SetVisionConfigOption(VISION_CONFIG_FIND_CENTER_SEARCH_WIDTH, center_search_width);
-
-	center_search_width = ERVS_GetVisionConfigOption(VISION_CONFIG_FIND_CENTER_SEARCH_WIDTH);
-	//
-
-
-	//set
-	ERVS_SetVisionConfigOption(VISION_CONFIG_FIND_CENTER_SEARCH_MAX_MATCHES, center_search_max_matches);
-
-	center_search_max_matches = ERVS_GetVisionConfigOption(VISION_CONFIG_FIND_CENTER_SEARCH_MAX_MATCHES);
-}
-#endif
-
-#if 0
-void CEyedeaCheckDefectTabDlg::OnBnClickedButtonFind()
-{
-	// TODO: Add your control notification handler code here
-	ERVS_FindObject();
-
-	((CEyedeaExampleDlg *)GetParent())->m_combo_get_image_option.SetCurSel(5);		//set result
-
-
-	int isCalibOK = ERVS_Calibration_isOK();
-
-	CString unit; // = "pixel";
-	unit.Format(_T("pixel"));
-	if( isCalibOK )	unit.Format(_T("mm"));
-
-	//camera base			
-	//Result Info
-	float search_x1 = 0.0, search_y1 = 0.0, search_x2 = 0.0, search_y2 = 0.0, search_x3 = 0.0, search_y3 = 0.0, search_x4 = 0.0, search_y4 = 0.0, search_angle = 0.0;
-	ERVS_GetResultFindSearchAreaCameraBase(&search_x1, &search_y1, &search_x2, &search_y2, &search_x3, &search_y3, &search_x4, &search_y4, &search_angle);
-
-	float master_x1 = 0.0, master_y1 = 0.0, master_x2 = 0.0, master_y2 = 0.0, master_x3 = 0.0, master_y3 = 0.0, master_x4 = 0.0, master_y4 = 0.0, master_angle = 0.0;
-	ERVS_GetResultFindMasterAreaCameraBase(&master_x1, &master_y1, &master_x2, &master_y2, &master_x3, &master_y3, &master_x4, &master_y4, &master_angle);
-
-	float scale = ERVS_GetResultFindScale();
-	float score = ERVS_GetResultFindScore();
-
-	//robot base
-	float robot_search_x1 = 0.0, robot_search_y1 = 0.0, robot_search_x2 = 0.0, robot_search_y2 = 0.0, robot_search_x3 = 0.0, robot_search_y3 = 0.0, robot_search_x4 = 0.0, robot_search_y4 = 0.0, robot_search_angle = 0.0;
-	ERVS_GetResultFindSearchAreaRobotBase(&robot_search_x1, &robot_search_y1, &robot_search_x2, &robot_search_y2, &robot_search_x3, &robot_search_y3, &robot_search_x4, &robot_search_y4, &robot_search_angle);
-
-	float robot_master_x1 = 0.0, robot_master_y1 = 0.0, robot_master_x2 = 0.0, robot_master_y2 = 0.0, robot_master_x3 = 0.0, robot_master_y3 = 0.0, robot_master_x4 = 0.0, robot_master_y4 = 0.0, robot_master_angle = 0.0;
-	ERVS_GetResultFindMasterAreaRobotBase(&robot_master_x1, &robot_master_y1, &robot_master_x2, &robot_master_y2, &robot_master_x3, &robot_master_y3, &robot_master_x4, &robot_master_y4, &robot_master_angle);
-
-	//image base
-	float image_search_x1 = 0.0, image_search_y1 = 0.0, image_search_x2 = 0.0, image_search_y2 = 0.0, image_search_x3 = 0.0, image_search_y3 = 0.0, image_search_x4 = 0.0, image_search_y4 = 0.0, image_search_angle = 0.0;
-	ERVS_GetResultFindSearchAreaImageBase(&image_search_x1, &image_search_y1, &image_search_x2, &image_search_y2, &image_search_x3, &image_search_y3, &image_search_x4, &image_search_y4, &image_search_angle);
-
-	float image_master_x1 = 0.0, image_master_y1 = 0.0, image_master_x2 = 0.0, image_master_y2 = 0.0, image_master_x3 = 0.0, image_master_y3 = 0.0, image_master_x4 = 0.0, image_master_y4 = 0.0, image_master_angle = 0.0;
-	ERVS_GetResultFindMasterAreaImageBase(&image_master_x1, &image_master_y1, &image_master_x2, &image_master_y2, &image_master_x3, &image_master_y3, &image_master_x4, &image_master_y4, &image_master_angle);
-
-	//to UI
-	CString strText;
-	strText.Format(_T("%.2f , %.2f (%s)"), master_x1, master_y1, unit);
-	GetDlgItem(IDC_EDIT_FIND_RESULT_MASTER_1)->SetWindowText(strText);
-	strText.Format(_T("%.2f , %.2f (%s)"), master_x2, master_y2, unit);
-	GetDlgItem(IDC_EDIT_FIND_RESULT_MASTER_2)->SetWindowText(strText);
-	strText.Format(_T("%.2f , %.2f (%s)"), master_x3, master_y3, unit);
-	GetDlgItem(IDC_EDIT_FIND_RESULT_MASTER_3)->SetWindowText(strText);
-	strText.Format(_T("%.2f , %.2f (%s)"), master_x4, master_y4, unit);
-	GetDlgItem(IDC_EDIT_FIND_RESULT_MASTER_4)->SetWindowText(strText);
-
-	//center
-	double center_camera_base_x = (master_x1 + master_x2 + master_x3 + master_x4) / 4.0;
-	double center_camera_base_y = (master_y1 + master_y2 + master_y3 + master_y4) / 4.0;
-	strText.Format(_T("%.2f , %.2f (%s)"), center_camera_base_x, center_camera_base_y, unit);
-	GetDlgItem(IDC_EDIT_FIND_RESULT_MASTER_CENTER_CAMERA_BASE)->SetWindowText(strText);
-
-	strText.Format(_T("%.2f , %.2f (%s)"), robot_master_x1, robot_master_y1, unit);
-	GetDlgItem(IDC_EDIT_FIND_RESULT_MASTER_5)->SetWindowText(strText);
-	strText.Format(_T("%.2f , %.2f (%s)"), robot_master_x2, robot_master_y2, unit);
-	GetDlgItem(IDC_EDIT_FIND_RESULT_MASTER_6)->SetWindowText(strText);
-	strText.Format(_T("%.2f , %.2f (%s)"), robot_master_x3, robot_master_y3, unit);
-	GetDlgItem(IDC_EDIT_FIND_RESULT_MASTER_7)->SetWindowText(strText);
-	strText.Format(_T("%.2f , %.2f (%s)"), robot_master_x4, robot_master_y4, unit);
-	GetDlgItem(IDC_EDIT_FIND_RESULT_MASTER_8)->SetWindowText(strText);
-
-	//center
-	double center_robot_base_x = (robot_master_x1 + robot_master_x2 + robot_master_x3 + robot_master_x4) / 4.0;
-	double center_robot_base_y = (robot_master_y1 + robot_master_y2 + robot_master_y3 + robot_master_y4) / 4.0;
-	strText.Format(_T("%.2f , %.2f (%s)"), center_robot_base_x, center_robot_base_y, unit);
-	GetDlgItem(IDC_EDIT_FIND_RESULT_MASTER_CENTER_ROBOT_BASE)->SetWindowText(strText);
-
-	strText.Format(_T("%.2f , %.2f (pixel)"), image_master_x1, image_master_y1);
-	GetDlgItem(IDC_EDIT_FIND_RESULT_MASTER_9)->SetWindowText(strText);
-	strText.Format(_T("%.2f , %.2f (pixel)"), image_master_x2, image_master_y2);
-	GetDlgItem(IDC_EDIT_FIND_RESULT_MASTER_10)->SetWindowText(strText);
-	strText.Format(_T("%.2f , %.2f (pixel)"), image_master_x3, image_master_y3);
-	GetDlgItem(IDC_EDIT_FIND_RESULT_MASTER_11)->SetWindowText(strText);
-	strText.Format(_T("%.2f , %.2f (pixel)"), image_master_x4, image_master_y4);
-	GetDlgItem(IDC_EDIT_FIND_RESULT_MASTER_12)->SetWindowText(strText);
-
-	//center
-	double center_image_base_x = (image_master_x1 + image_master_x2 + image_master_x3 + image_master_x4) / 4.0;
-	double center_image_base_y = (image_master_y1 + image_master_y2 + image_master_y3 + image_master_y4) / 4.0;
-	strText.Format(_T("%.2f , %.2f (%s)"), center_image_base_x, center_image_base_y, unit);
-	GetDlgItem(IDC_EDIT_FIND_RESULT_MASTER_CENTER_IMAGE_BASE)->SetWindowText(strText);
-
-	strText.Format(_T("%.2f"), scale);
-	GetDlgItem(IDC_EDIT_FIND_RESULT_SCALE)->SetWindowText(strText);
-
-	strText.Format(_T("%.2f"), score);
-	GetDlgItem(IDC_EDIT_FIND_RESULT_SCORE)->SetWindowText(strText);
-
-	//object
-	float camera_circle_x = 0.0, camera_circle_y = 0.0, camera_circle_r = 0.0;
-	ERVS_GetResultCircleInfoCameraBase(&camera_circle_x, &camera_circle_y, &camera_circle_r);
-	float robot_circle_x = 0.0, robot_circle_y = 0.0, robot_circle_r = 0.0;
-	ERVS_GetResultCircleInfoRobotBase(&robot_circle_x, &robot_circle_y, &robot_circle_r);
-	float image_circle_x = 0.0, image_circle_y = 0.0, image_circle_r = 0.0;
-	ERVS_GetResultCircleInfoImageBase(&image_circle_x, &image_circle_y, &image_circle_r);
-
-	//camera
-	strText.Format(_T("%.2f , %.2f (%s)"), camera_circle_x, camera_circle_y, unit);
-	GetDlgItem(IDC_EDIT_FIND_RESULT_OBJECT_CIRCLE_CENTER)->SetWindowText(strText);
-	strText.Format(_T("%.2f (%s)"), camera_circle_r, unit);
-	GetDlgItem(IDC_EDIT_FIND_RESULT_OBJECT_CIRCLE_RADIUS)->SetWindowText(strText);
-
-	//robot
-	strText.Format(_T("%.2f , %.2f (%s)"), robot_circle_x, robot_circle_y, unit);
-	GetDlgItem(IDC_EDIT_FIND_RESULT_OBJECT_CIRCLE_CENTER2)->SetWindowText(strText);
-	strText.Format(_T("%.2f (%s)"), robot_circle_r, unit);
-	GetDlgItem(IDC_EDIT_FIND_RESULT_OBJECT_CIRCLE_RADIUS2)->SetWindowText(strText);
-
-	//image
-	strText.Format(_T("%.2f , %.2f (pixel)"), image_circle_x, image_circle_y);
-	GetDlgItem(IDC_EDIT_FIND_RESULT_OBJECT_CIRCLE_CENTER3)->SetWindowText(strText);
-	strText.Format(_T("%.2f (pixel)"), image_circle_r);
-	GetDlgItem(IDC_EDIT_FIND_RESULT_OBJECT_CIRCLE_RADIUS3)->SetWindowText(strText);
-
-
-
-	BOOL bCheckOptionDefect = IsDlgButtonChecked(IDC_CHECK_USE_FIND_WITH_CHECKDEFECT);
-
-	if (bCheckOptionDefect)
-	{
-		CString str;
-		GetDlgItem(IDC_EDIT_FIND_WITH_CHECK_DEFECT_THRE)->GetWindowText(str);
-		float threshold = _ttof(str);
-
-		int ret = ERVS_CheckDefect(threshold);
-		m_i_checkdefect_ret = ret;
-
-		str.Format(_T("%d"), ret);
-		GetDlgItem(IDC_EDIT_RESULT_CHECK_DEFECT_RET)->SetWindowText(str);
-
-	}
-
-	//Get Result(Master) Image
-	int len = 921600;		//640*480*3;
-	ERVS_GetImage(GET_IMAGE_RESULT_FOUND_MASTER, 0, (char**)&m_found_image_object.data, &len);
-}
-#endif
-
 void CEyedeaCheckDefectTabDlg::ThreadFunctionDraw()
 {
 	CRect rect_result_display;													//display rect
@@ -1344,7 +1009,6 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindGetInfo2()
 
 			//Result image
 			int len = 921600;
-			//ERVS_GetImage(GET_IMAGE_RESULT, -1, (char**)&m_result_image.data, &len);
 			ERVS_GetFindObjectResultImage(-1, -1, (char**)&m_result_image.data, &len);
 
 			Sleep(1);
@@ -1621,20 +1285,6 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedCheckHistogram()
 		CheckDlgButton(IDC_CHECK_HISTOGRAM, FALSE);
 	}
 }
-
-#if 0
-void CEyedeaCheckDefectTabDlg::OnLbnDblclkListResult()
-{
-	// TODO: Add your control notification handler code here
-	int nList = m_list_result_index.GetCurSel();       //인자 얻기
-
-	//Get Result Information from ERVS
-	//Result image
-	int len = 921600;
-	ERVS_GetImage(GET_IMAGE_RESULT, nList, (char**)&m_result_image.data, &len);
-
-}
-#endif
 
 void CEyedeaCheckDefectTabDlg::OnNMDblclkTreeResult(NMHDR *pNMHDR, LRESULT *pResult)
 {
@@ -2063,7 +1713,6 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButton2()
 	//Get Result Image
 	//Result image
 	int len = 921600;
-	//ERVS_GetImage(GET_IMAGE_RESULT, -1, (char**)&m_result_image.data, &len);
 	ERVS_GetFindObjectResultImage(-1, -1, (char**)&m_result_image.data, &len);
 
 	//Get Base Information
@@ -2120,7 +1769,6 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonGeoAngle()
 	//Get Result Image
 	//Result image
 	int len = 921600;
-	//ERVS_GetImage(GET_IMAGE_RESULT, -1, (char**)&m_result_image.data, &len);
 	ERVS_GetFindObjectResultImage(-1, -1, (char**)&m_result_image.data, &len);
 
 	//Get Base Information
@@ -2162,7 +1810,6 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonGeoResultClear()
 	//Get Result Image
 	//Result image
 	int len = 921600;
-	//ERVS_GetImage(GET_IMAGE_RESULT, -1, (char**)&m_result_image.data, &len);
 	ERVS_GetFindObjectResultImage(-1, -1, (char**)&m_result_image.data, &len);
 }
 
@@ -2686,6 +2333,5 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonGeoMeetPoint()
 	// Get Result Image
 	//Result image
 	int len = 921600;
-	//ERVS_GetImage(GET_IMAGE_RESULT, -1, (char**)&m_result_image.data, &len);
 	ERVS_GetFindObjectResultImage(-1, -1, (char**)&m_result_image.data, &len);
 }

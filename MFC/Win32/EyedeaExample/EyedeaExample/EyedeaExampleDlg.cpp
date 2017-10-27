@@ -203,19 +203,6 @@ BOOL CEyedeaExampleDlg::OnInitDialog()
 	str.Format(_T("%d"), 4000);
 	GetDlgItem(IDC_EDIT_CONNECT_PORT)->SetWindowText(str);
 
-#if 0
-	m_combo_get_image_option.AddString(_T("GET_IMAGE_INPUT"));
-	m_combo_get_image_option.AddString(_T("GET_IMAGE_WITH_INFO"));
-	m_combo_get_image_option.AddString(_T("GET_IMAGE_BASE"));
-	m_combo_get_image_option.AddString(_T("GET_IMAGE_ZOOM_SEARCH_AREA"));
-	m_combo_get_image_option.AddString(_T("GET_IMAGE_ZOOM_MASTER_AREA"));
-	m_combo_get_image_option.AddString(_T("GET_IMAGE_RESULT"));
-	m_combo_get_image_option.AddString(_T("GET_IMAGE_RESULT_PAP"));
-	m_combo_get_image_option.AddString(_T("CHECK:GET_IMAGE_MASTER_ROI"));
-	m_combo_get_image_option.AddString(_T("CHECK:GET_IMAGE_BASE_OBJECT_ROI"));
-	m_combo_get_image_option.AddString(_T("GET_IMAGE_SEARCH_AREA_INFO"));
-	m_combo_get_image_option.SetCurSel(0);
-#endif
 
 	TCHAR szPath[512] = { 0 };
 	SHGetSpecialFolderPath(NULL, szPath, CSIDL_COMMON_DESKTOPDIRECTORY, FALSE);
@@ -407,84 +394,6 @@ void CEyedeaExampleDlg::ThreadFunctionDraw()
 		int len = 921600;		//640*480*3;
 		ERVS_GetImage(GET_IMAGE_INPUT, 0, (char**)&m_display.data, &len);
 
-#if 0
-		/*
-		m_combo_get_image_option.AddString(_T("GET_IMAGE_INPUT"));
-		m_combo_get_image_option.AddString(_T("GET_IMAGE_WITH_INFO"));
-		m_combo_get_image_option.AddString(_T("GET_IMAGE_BASE"));
-		m_combo_get_image_option.AddString(_T("GET_IMAGE_ZOOM_SEARCH_AREA"));
-		m_combo_get_image_option.AddString(_T("GET_IMAGE_ZOOM_MASTER_AREA"));
-		m_combo_get_image_option.AddString(_T("GET_IMAGE_RESULT"));
-		m_combo_get_image_option.AddString(_T("GET_IMAGE_RESULT_PAP"));
-		m_combo_get_image_option.AddString(_T("CHECK:GET_IMAGE_MASTER_ROI"));
-		m_combo_get_image_option.AddString(_T("CHECK:GET_IMAGE_BASE_OBJECT_ROI"));
-		*/
-		int get_image_option = m_combo_get_image_option.GetCurSel();
-
-		
-		if (get_image_option == 0)
-		{
-			int len = 921600;		//640*480*3;
-			ERVS_GetImage(GET_IMAGE_INPUT, 0, (char**)&m_display.data, &len);
-		}
-		else if (get_image_option == 1)
-		{
-			int len = 921600;		//640*480*3;
-			unsigned int option = 0;
-
-			if (m_command == USER_COMMAND_SELECT_SEARCH_AREA)
-			{
-				option |= WITH_DRAW_SEARCH_AREA_RANGE;
-			}
-
-			ERVS_GetImage(GET_IMAGE_WITH_INFO, option, (char**)&m_display.data, &len);
-		}
-		else if (get_image_option == 2)
-		{
-			int len = 921600;		//640*480*3;
-			ERVS_GetImage(GET_IMAGE_BASE, 0, (char**)&m_display.data, &len);
-		}
-		else if (get_image_option == 3)
-		{
-			int len = 921600;		//640*480*3;
-			ERVS_GetImage(GET_IMAGE_ZOOM_SEARCH_AREA, 0, (char**)&m_display.data, &len);
-		}
-		else if (get_image_option == 4)
-		{
-			int len = 921600;		//640*480*3;
-			ERVS_GetImage(GET_IMAGE_ZOOM_MASTER_AREA, 0, (char**)&m_display.data, &len);
-		}
-		else if (get_image_option == 5)		//GET_IMAGE_RESULT
-		{
-			int len = 921600;		//640*480*3;
-			//ERVS_GetImage(GET_IMAGE_RESULT, RESULT_DRAW_OPTION_ALL, (char**)&m_display.data, &len);
-			ERVS_GetImage(GET_IMAGE_RESULT, RESULT_DRAW_OPTION_SEARCH_BOX+RESULT_DRAW_OPTION_MASTER_BOX+ RESULT_DRAW_OPTION_OBJECT, (char**)&m_display.data, &len);
-		}
-		else if (get_image_option == 6)
-		{
-			int len = 921600;		//640*480*3;
-			ERVS_GetImage(GET_IMAGE_RESULT_PAP, RESULT_DRAW_OPTION_SEARCH_BOX + RESULT_DRAW_OPTION_MASTER_BOX + RESULT_DRAW_OPTION_OBJECT, (char**)&m_display.data, &len);
-		}
-		else if (get_image_option == 7)
-		{
-			//CHECK:GET_IMAGE_MASTER_ROI
-			int len = 921600;		//640*480*3;
-			ERVS_GetImage(GET_IMAGE_ZOOM_MASTER_AREA, 0, (char**)&m_display.data, &len);
-		}
-		else if (get_image_option == 8)
-		{
-			//CHECK:GET_IMAGE_BASE_OBJECT_ROI
-			int len = 921600;		//640*480*3;
-			//ERVS_GetImage(GET_IMAGE_ZOOM_MASTER_AREA, 0, (char**)&m_display.data, &len);
-			ERVS_GetImage(GET_IMAGE_BASE_ROI, WITH_DRAW_OPTION_FEATURE, (char**)&m_display.data, &len);
-		}
-		else if (get_image_option == 9)
-		{
-			//GET_IMAGE_SEARCH_AREA_INFO
-			int len = 921600;		//640*480*3;
-			ERVS_GetImage(GET_IMAGE_SEARCH_AREA_INFO, 0, (char**)&m_display.data, &len);
-		}
-#endif
 		//Get Image
 		//---------------------------------------------------------------------------------
 

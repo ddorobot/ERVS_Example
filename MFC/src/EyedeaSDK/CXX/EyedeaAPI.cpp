@@ -23,14 +23,6 @@ int ERVS_GetFindObjectResultImage(int option, int option2, char** data, int* len
 	return g_cls_interface.GetResultImage(option, option2, data, len);
 }
 
-
-#if 0
-void ERVS_Connect(char* ip, char* port)
-{
-	g_cls_interface.Connect(ip, port);
-}
-#endif
-
 int ERVS_SetSelectBaseObject(float x, float y, float w, float h)
 {
 	//printf("ERVS_SetSelectBaseObject\n");

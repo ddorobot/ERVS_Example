@@ -1058,32 +1058,14 @@ void CEyedeaVisionConfigTabDlg::OnBnClickedButtonVisionConfigGet2()
 	// TODO: Add your control notification handler code here
 	float image_morph_size = ERVS_GetVisionConfigOption(VISION_CONFIG_IMAGE_MORPH_SIZE);
 
-	float blur = ERVS_GetVisionConfigOption(VISION_CONFIG_BLUR2);
-	float denoising = ERVS_GetVisionConfigOption(VISION_CONFIG_DENOISING2);
-	float edge_low_thre = ERVS_GetVisionConfigOption(VISION_CONFIG_EDGE_LOW_THRESHOLD2);
-	float edge_max_thre = ERVS_GetVisionConfigOption(VISION_CONFIG_EDGE_MAX_LOW_THRESHOLD2);
-	//float edge_ratio = ERVS_GetVisionConfigOption(VISION_CONFIG_EDGE_RATIO2);
-	float edge_kernel_size = ERVS_GetVisionConfigOption(VISION_CONFIG_EDGE_KERNEL_SIZE2);
-	//float morph_size = ERVS_GetVisionConfigOption(VISION_CONFIG_MORPH_SIZE2);
-	//float size_filter = ERVS_GetVisionConfigOption(VISION_CONFIG_SIZE_FILTER2);
-	//float padding = ERVS_GetVisionConfigOption(VISION_CONFIG_BASE_RECT_PADDING2);
-	//float dilation_size = ERVS_GetVisionConfigOption(VISION_CONFIG_DILATION_SIZE2);
-	float matching_thre = ERVS_GetVisionConfigOption(VISION_CONFIG_MATCHING_THRESHOLD2);
-	float search_value_center = ERVS_GetVisionConfigOption(VISION_CONFIG_SEARCH_VALUE_CENTER2);
-	float search_value_roi = ERVS_GetVisionConfigOption(VISION_CONFIG_SEARCH_VALUE_USER_ROI2);
-	float search_value_search = ERVS_GetVisionConfigOption(VISION_CONFIG_SEARCH_VALIE_AREA2);
-	float search_value_master = ERVS_GetVisionConfigOption(VISION_CONFIG_SEARCH_VALUE_OBJECT2);
-	float circle_detect_inlier_rate = ERVS_GetVisionConfigOption(VISION_CONFIG_CIRCLE_DETECTION_INLIER_RATE2);
-	float circle_detect_max_iteration = ERVS_GetVisionConfigOption(VISION_CONFIG_CIRCLE_DETECTION_MAX_ITERATION2);
-	//float min_angle = ERVS_GetVisionConfigOption(VISION_CONFIG_L_MIN_ANGLE2);
-	//float max_angle = ERVS_GetVisionConfigOption(VISION_CONFIG_L_MAX_ANGLE2);
-	float scene_thre = ERVS_GetVisionConfigOption(VISION_CONFIG_SCENE_THRESHOLD2);
-	float use_candidate_roi = ERVS_GetVisionConfigOption(VISION_CONFIG_USE_CANDIDATE_TM_UROI2);
-	float candidate_roi_thre = ERVS_GetVisionConfigOption(VISION_CONFIG_USE_CANDIDATE_TM_UROI_THRESHOLD2);
-	float use_candidate_search = ERVS_GetVisionConfigOption(VISION_CONFIG_USE_CANDIDATE_TM_AREA2);
-	float candidate_search_thre = ERVS_GetVisionConfigOption(VISION_CONFIG_USE_CANDIDATE_TM_AREA_THRESHOLD2);
-	float use_candidate_master = ERVS_GetVisionConfigOption(VISION_CONFIG_USE_CANDIDATE_TM_OBJECT2);
-	float candidate_search_master = ERVS_GetVisionConfigOption(VISION_CONFIG_USE_CANDIDATE_TM_OBJECT_THRESHOLD2);
+	float blur = ERVS_GetVisionConfigOption(VISION_CONFIG_BLUR);
+	float denoising = ERVS_GetVisionConfigOption(VISION_CONFIG_DENOISING);
+	float edge_low_thre = ERVS_GetVisionConfigOption(VISION_CONFIG_EDGE_LOW_THRESHOLD);
+	float edge_max_thre = ERVS_GetVisionConfigOption(VISION_CONFIG_EDGE_MAX_LOW_THRESHOLD);
+	float edge_kernel_size = ERVS_GetVisionConfigOption(VISION_CONFIG_EDGE_KERNEL_SIZE);
+	float matching_thre = ERVS_GetVisionConfigOption(VISION_CONFIG_MATCHING_THRESHOLD);
+	float circle_detect_inlier_rate = ERVS_GetVisionConfigOption(VISION_CONFIG_CIRCLE_DETECTION_INLIER_RATE);
+	float circle_detect_max_iteration = ERVS_GetVisionConfigOption(VISION_CONFIG_CIRCLE_DETECTION_MAX_ITERATION);
 	float edge_margin = ERVS_GetVisionConfigOption(VISION_CONFIG_EDGE_MATCHING_MARGIN);
 	float masking_option = ERVS_GetVisionConfigOption(VISION_CONFIG_FIND_OBJECT_MASKING_OPTION);
 	float masking_option_find_object_threshold = ERVS_GetVisionConfigOption(VISION_CONFIG_FIND_OBJECT_MASKING_OPTION_THRESHOLD);
@@ -1119,8 +1101,8 @@ void CEyedeaVisionConfigTabDlg::OnBnClickedButtonVisionConfigGet2()
 
 	//
 	int level = ERVS_GetVisionConfigOption(VISION_CONFIG_FIND_OBJECT_LEVEL);
-	float min_angle = ERVS_GetVisionConfigOption(VISION_CONFIG_L_MIN_ANGLE2);
-	float max_angle = ERVS_GetVisionConfigOption(VISION_CONFIG_L_MAX_ANGLE2);
+	float min_angle = ERVS_GetVisionConfigOption(VISION_CONFIG_L_MIN_ANGLE);
+	float max_angle = ERVS_GetVisionConfigOption(VISION_CONFIG_L_MAX_ANGLE);
 	float positive_rate = ERVS_GetVisionConfigOption(VISION_CONFIG_POSITIVE_RATE);
 
 	str.Format(_T("%d"), level);
@@ -1156,28 +1138,10 @@ void CEyedeaVisionConfigTabDlg::OnBnClickedButtonVisionConfigSet2()
 	float denoising = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_DENOISING);
 	float edge_low_thre = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_EDGE_LOW_THRESHOLD);
 	float edge_max_thre = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_EDGE_MAX_LOW_THRESHOLD);
-	//float edge_ratio = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_EDGE_RATIO);
 	float edge_kernel_size = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_EDGE_KERNEL_SIZE);
-	//float morph_size = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_MORPH_SIZE);
-	//float size_filter = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_SIZE_FILTER);
-	//float padding = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_BASE_RECT_PADDING);
-	//float dilation_size = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_DILATION_SIZE);
 	float matching_thre = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_MATCHING_THRESHOLD);
-	float search_value_center = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_SEARCH_VALUE_CENTER);
-	float search_value_roi = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_SEARCH_VALUE_USER_ROI);
-	float search_value_search = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_SEARCH_VALIE_AREA);
-	float search_value_master = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_SEARCH_VALUE_OBJECT);
 	float circle_detect_inlier_rate = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_CIRCLE_DETECTION_INLIER_RATE);
 	float circle_detect_max_iteration = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_CIRCLE_DETECTION_MAX_ITERATION);
-	//float min_angle = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_L_MIN_ANGLE);
-	//float max_angle = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_L_MAX_ANGLE);
-	float scene_thre = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_SCENE_THRESHOLD);
-	float use_candidate_roi = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_USE_CANDIDATE_TM_UROI);
-	float candidate_roi_thre = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_USE_CANDIDATE_TM_UROI_THRESHOLD);
-	float use_candidate_search = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_USE_CANDIDATE_TM_AREA);
-	float candidate_search_thre = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_USE_CANDIDATE_TM_AREA_THRESHOLD);
-	float use_candidate_master = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_USE_CANDIDATE_TM_OBJECT);
-	float candidate_search_master = 0.0; //ERVS_GetVisionConfigOption(VISION_CONFIG_USE_CANDIDATE_TM_OBJECT_THRESHOLD);
 	float edge_margin = 0.0; 
 	float masking_option = 0.0;
 	float masking_option_find_threshold = 0.0;
@@ -1212,32 +1176,14 @@ void CEyedeaVisionConfigTabDlg::OnBnClickedButtonVisionConfigSet2()
 
 	//set
 	ERVS_SetVisionConfigOption(VISION_CONFIG_IMAGE_MORPH_SIZE, image_morph_size);
-	ERVS_SetVisionConfigOption(VISION_CONFIG_BLUR2, blur);
-	ERVS_SetVisionConfigOption(VISION_CONFIG_DENOISING2, denoising);
-	ERVS_SetVisionConfigOption(VISION_CONFIG_EDGE_LOW_THRESHOLD2, edge_low_thre);
-	ERVS_SetVisionConfigOption(VISION_CONFIG_EDGE_MAX_LOW_THRESHOLD2, edge_max_thre);
-	//ERVS_SetVisionConfigOption(VISION_CONFIG_EDGE_RATIO2, edge_ratio);
-	ERVS_SetVisionConfigOption(VISION_CONFIG_EDGE_KERNEL_SIZE2, edge_kernel_size);
-	//ERVS_SetVisionConfigOption(VISION_CONFIG_MORPH_SIZE2, morph_size);
-	//ERVS_SetVisionConfigOption(VISION_CONFIG_SIZE_FILTER2, size_filter);
-	//ERVS_SetVisionConfigOption(VISION_CONFIG_BASE_RECT_PADDING2, padding);
-	//ERVS_SetVisionConfigOption(VISION_CONFIG_DILATION_SIZE2, dilation_size);
-	ERVS_SetVisionConfigOption(VISION_CONFIG_MATCHING_THRESHOLD2, matching_thre);
-	ERVS_SetVisionConfigOption(VISION_CONFIG_SEARCH_VALUE_CENTER2, search_value_center);
-	ERVS_SetVisionConfigOption(VISION_CONFIG_SEARCH_VALUE_USER_ROI2, search_value_roi);
-	ERVS_SetVisionConfigOption(VISION_CONFIG_SEARCH_VALIE_AREA2, search_value_search);
-	ERVS_SetVisionConfigOption(VISION_CONFIG_SEARCH_VALUE_OBJECT2, search_value_master);
-	ERVS_SetVisionConfigOption(VISION_CONFIG_CIRCLE_DETECTION_INLIER_RATE2, circle_detect_inlier_rate);
-	ERVS_SetVisionConfigOption(VISION_CONFIG_CIRCLE_DETECTION_MAX_ITERATION2, circle_detect_max_iteration);
-	//ERVS_SetVisionConfigOption(VISION_CONFIG_L_MIN_ANGLE2, min_angle);
-	//ERVS_SetVisionConfigOption(VISION_CONFIG_L_MAX_ANGLE2, max_angle);
-	ERVS_SetVisionConfigOption(VISION_CONFIG_SCENE_THRESHOLD2, scene_thre);
-	ERVS_SetVisionConfigOption(VISION_CONFIG_USE_CANDIDATE_TM_UROI2, use_candidate_roi);
-	ERVS_SetVisionConfigOption(VISION_CONFIG_USE_CANDIDATE_TM_UROI_THRESHOLD2, candidate_roi_thre);
-	ERVS_SetVisionConfigOption(VISION_CONFIG_USE_CANDIDATE_TM_AREA2, use_candidate_search);
-	ERVS_SetVisionConfigOption(VISION_CONFIG_USE_CANDIDATE_TM_AREA_THRESHOLD2, candidate_search_thre);
-	ERVS_SetVisionConfigOption(VISION_CONFIG_USE_CANDIDATE_TM_OBJECT2, use_candidate_master);
-	ERVS_SetVisionConfigOption(VISION_CONFIG_USE_CANDIDATE_TM_OBJECT_THRESHOLD2, candidate_search_master);
+	ERVS_SetVisionConfigOption(VISION_CONFIG_BLUR, blur);
+	ERVS_SetVisionConfigOption(VISION_CONFIG_DENOISING, denoising);
+	ERVS_SetVisionConfigOption(VISION_CONFIG_EDGE_LOW_THRESHOLD, edge_low_thre);
+	ERVS_SetVisionConfigOption(VISION_CONFIG_EDGE_MAX_LOW_THRESHOLD, edge_max_thre);
+	ERVS_SetVisionConfigOption(VISION_CONFIG_EDGE_KERNEL_SIZE, edge_kernel_size);
+	ERVS_SetVisionConfigOption(VISION_CONFIG_MATCHING_THRESHOLD, matching_thre);
+	ERVS_SetVisionConfigOption(VISION_CONFIG_CIRCLE_DETECTION_INLIER_RATE, circle_detect_inlier_rate);
+	ERVS_SetVisionConfigOption(VISION_CONFIG_CIRCLE_DETECTION_MAX_ITERATION, circle_detect_max_iteration);
 	ERVS_SetVisionConfigOption(VISION_CONFIG_EDGE_MATCHING_MARGIN, edge_margin);
 	ERVS_SetVisionConfigOption(VISION_CONFIG_FIND_OBJECT_MASKING_OPTION, masking_option);
 	ERVS_SetVisionConfigOption(VISION_CONFIG_FIND_OBJECT_MASKING_OPTION_THRESHOLD, masking_option_find_threshold);
@@ -1259,8 +1205,8 @@ void CEyedeaVisionConfigTabDlg::OnBnClickedButtonVisionConfigSet2()
 	GetDlgItem(IDC_EDIT_POSITIVE_RATE)->GetWindowText(str);
 	positive_rate = _ttof(str);
 
-	ERVS_SetVisionConfigOption(VISION_CONFIG_L_MIN_ANGLE2, min_angle);
-	ERVS_SetVisionConfigOption(VISION_CONFIG_L_MAX_ANGLE2, max_angle);
+	ERVS_SetVisionConfigOption(VISION_CONFIG_L_MIN_ANGLE, min_angle);
+	ERVS_SetVisionConfigOption(VISION_CONFIG_L_MAX_ANGLE, max_angle);
 	ERVS_SetVisionConfigOption(VISION_CONFIG_POSITIVE_RATE, positive_rate);
 
 	//

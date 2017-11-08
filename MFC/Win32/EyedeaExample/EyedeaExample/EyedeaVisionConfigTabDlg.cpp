@@ -1057,7 +1057,6 @@ void CEyedeaVisionConfigTabDlg::OnBnClickedButtonVisionConfigGet2()
 {
 	// TODO: Add your control notification handler code here
 	float image_morph_size = ERVS_GetVisionConfigOption(VISION_CONFIG_IMAGE_MORPH_SIZE);
-
 	float blur = ERVS_GetVisionConfigOption(VISION_CONFIG_BLUR);
 	float denoising = ERVS_GetVisionConfigOption(VISION_CONFIG_DENOISING);
 	float edge_low_thre = ERVS_GetVisionConfigOption(VISION_CONFIG_EDGE_LOW_THRESHOLD);

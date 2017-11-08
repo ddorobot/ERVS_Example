@@ -111,12 +111,12 @@ int ERVS_Histogram_Get_Range(const int id, const int option, int *out_min_value,
 int ERVS_Histogram_Get_Graph(const int id, float** out_histogram, float** out_histogram_b, float** out_histogram_g, float** out_histogram_r, float* out_histogram_size);
 int ERVS_Histogram_Set_Use_Element(const int id, const int option);
 int ERVS_Histogram_Get_Use_Element(const int id, int *out_option);
-int ERVS_Histogram_Get_Pixel_Count(const int index1, const int index2, int *out_count);
-int ERVS_Histogram_Get_Pixel_Count(const int id, int *out_count);
 int ERVS_Histogram_Set_Inspection_Pixel_Count(const int id, const int count);
 int ERVS_Histogram_Get_Inspection_Pixel_Count(const int id, int *out_count);
 int ERVS_Histogram_Set_Inspection_Pixel_Count_Tolerance_Rate(const int id, const float rate);
 int ERVS_Histogram_Get_Inspection_Pixel_Count_Tolerance_Rate(const int id, float *out_rate);
+int ERVS_Histogram_Get_Pixel_Count(const int id, int *out_count);
+int ERVS_Histogram_Get_Pixel_Count(const int index1, const int index2, int *out_count);
 
 
 #endif

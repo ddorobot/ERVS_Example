@@ -3329,6 +3329,490 @@ char* CEyedeaInterface::DB_Get_Mode(int id)
 	return mode;
 }
 
+int CEyedeaInterface::SetJobName(const int id, const std::string name)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	int ret = 0;
+
+	char command = COMMAND_SET_JOB_NAME;
+
+	int name_size = name.length();
+
+	int len = 4 + name_size;
+	unsigned char* data = new unsigned char[len];
+
+	//index
+	data[0] = (id & 0xFF000000) >> 24;
+	data[1] = (id & 0x00FF0000) >> 16;
+	data[2] = (id & 0x0000FF00) >> 8;
+	data[3] = (id & 0x000000FF);
+
+	memcpy((data+4), name.c_str(), name_size);
+
+	unsigned int scale_factor = 1;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+
+	return ret;
+}
+
+std::string CEyedeaInterface::GetJobName(const int id)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return "NoCon";
+	}
+
+	char command = COMMAND_GET_JOB_NAME;
+
+	int len = 4 ;
+	unsigned char* data = new unsigned char[len];
+
+	//index
+	data[0] = (id & 0xFF000000) >> 24;
+	data[1] = (id & 0x00FF0000) >> 16;
+	data[2] = (id & 0x0000FF00) >> 8;
+	data[3] = (id & 0x000000FF);
+
+	unsigned int scale_factor = 1;
+
+	m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+
+	char* name = NULL;
+
+	if (len > 0)
+	{
+		name = new char[len];
+		memcpy(name, data, len);
+	}
+
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+
+	std::string str_name = name;
+
+	if (name != NULL)
+	{
+		delete name;
+		name = NULL;
+	}
+
+	return str_name;
+}
+
+int CEyedeaInterface::SetToolName(const int id, const std::string name)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	int ret = 0;
+
+	char command = COMMAND_SET_TOOL_NAME;
+
+	int name_size = name.length();
+
+	int len = 4 + name_size;
+	unsigned char* data = new unsigned char[len];
+
+	//index
+	data[0] = (id & 0xFF000000) >> 24;
+	data[1] = (id & 0x00FF0000) >> 16;
+	data[2] = (id & 0x0000FF00) >> 8;
+	data[3] = (id & 0x000000FF);
+
+	memcpy((data + 4), name.c_str(), name_size);
+
+	unsigned int scale_factor = 1;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+
+	return ret;
+}
+
+std::string CEyedeaInterface::GetToolName(const int id)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return "NoCon";
+	}
+
+	char command = COMMAND_GET_TOOL_NAME;
+
+	int len = 4;
+	unsigned char* data = new unsigned char[len];
+
+	//index
+	data[0] = (id & 0xFF000000) >> 24;
+	data[1] = (id & 0x00FF0000) >> 16;
+	data[2] = (id & 0x0000FF00) >> 8;
+	data[3] = (id & 0x000000FF);
+
+	unsigned int scale_factor = 1;
+
+	m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+
+	char* name = NULL;
+
+	if (len > 0)
+	{
+		name = new char[len];
+		memcpy(name, data, len);
+	}
+
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+
+	std::string str_name = name;
+
+	if (name != NULL)
+	{
+		delete name;
+		name = NULL;
+	}
+
+	return str_name;
+}
+
+int CEyedeaInterface::SetToolType(const int id, const int type)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_SET_TOOL_TYPE;
+
+	int len = 4 * 2;
+	unsigned char* data = new unsigned char[len];
+
+	unsigned int scale_factor = 1;
+	int index = 0;
+
+	//id
+	data[index++] = (id & 0xFF000000) >> 24;
+	data[index++] = (id & 0x00FF0000) >> 16;
+	data[index++] = (id & 0x0000FF00) >> 8;
+	data[index++] = (id & 0x000000FF);
+
+	data[index++] = (type & 0xFF000000) >> 24;
+	data[index++] = (type & 0x00FF0000) >> 16;
+	data[index++] = (type & 0x0000FF00) >> 8;
+	data[index++] = (type & 0x000000FF);
+
+
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+
+	return ret;
+}
+
+int CEyedeaInterface::GetToolType(const int id)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_GET_TOOL_TYPE;
+
+	int len = 4;
+	unsigned char* data = new unsigned char[len];
+
+	unsigned int scale_factor = 1;
+
+	int index = 0;
+
+	//id
+	data[index++] = (id & 0xFF000000) >> 24;
+	data[index++] = (id & 0x00FF0000) >> 16;
+	data[index++] = (id & 0x0000FF00) >> 8;
+	data[index++] = (id & 0x000000FF);
+
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+
+		return ret;
+	}
+
+	index = 0;
+	int i_type = 0;
+	if (len >= 4)
+	{
+		//i_value
+		i_type = ((int)data[index++] << 24) & 0xFF000000;
+		i_type |= ((int)data[index++] << 16) & 0x00FF0000;
+		i_type |= ((int)data[index++] << 8) & 0x0000FF00;
+		i_type |= ((int)data[index++]) & 0x000000FF;
+	}
+
+	return i_type;
+}
+
+int CEyedeaInterface::SetToolState(const int id, const int state)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_SET_TOOL_STATE;
+
+	int len = 4 * 2;
+	unsigned char* data = new unsigned char[len];
+
+	unsigned int scale_factor = 1;
+	int index = 0;
+
+	//id
+	data[index++] = (id & 0xFF000000) >> 24;
+	data[index++] = (id & 0x00FF0000) >> 16;
+	data[index++] = (id & 0x0000FF00) >> 8;
+	data[index++] = (id & 0x000000FF);
+
+	data[index++] = (state & 0xFF000000) >> 24;
+	data[index++] = (state & 0x00FF0000) >> 16;
+	data[index++] = (state & 0x0000FF00) >> 8;
+	data[index++] = (state & 0x000000FF);
+
+
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+
+	return ret;
+}
+
+int CEyedeaInterface::GetToolState(const int id)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_GET_TOOL_STATE;
+
+	int len = 4;
+	unsigned char* data = new unsigned char[len];
+
+	unsigned int scale_factor = 1;
+
+	int index = 0;
+
+	//id
+	data[index++] = (id & 0xFF000000) >> 24;
+	data[index++] = (id & 0x00FF0000) >> 16;
+	data[index++] = (id & 0x0000FF00) >> 8;
+	data[index++] = (id & 0x000000FF);
+
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+
+		return ret;
+	}
+
+	index = 0;
+	int i_state = 0;
+	if (len >= 4)
+	{
+		//i_value
+		i_state = ((int)data[index++] << 24) & 0xFF000000;
+		i_state |= ((int)data[index++] << 16) & 0x00FF0000;
+		i_state |= ((int)data[index++] << 8) & 0x0000FF00;
+		i_state |= ((int)data[index++]) & 0x000000FF;
+	}
+
+	return i_state;
+}
+
+int CEyedeaInterface::SetRobotPose(const int id, double* posj, int posj_size)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_SET_ROBOT_POSE;
+
+	int len = 4 + (posj_size * 4);
+	unsigned char* data = new unsigned char[len];
+
+	unsigned int scale_factor = 1000;
+	int index = 0;
+
+	//id
+	data[index++] = (id & 0xFF000000) >> 24;
+	data[index++] = (id & 0x00FF0000) >> 16;
+	data[index++] = (id & 0x0000FF00) >> 8;
+	data[index++] = (id & 0x000000FF);
+
+	for (int i = 0; i < posj_size; i++)
+	{
+		int i_posj = posj[i] * scale_factor;
+		data[index++] = (i_posj & 0xFF000000) >> 24;
+		data[index++] = (i_posj & 0x00FF0000) >> 16;
+		data[index++] = (i_posj & 0x0000FF00) >> 8;
+		data[index++] = (i_posj & 0x000000FF);
+	}
+
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+
+	return ret;
+}
+
+double*  CEyedeaInterface::GetRobotPose(const int id, int* posj_size)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return NULL;
+	}
+
+	char command = COMMAND_GET_ROBOT_POSE;
+
+	int len = 4;
+	unsigned char* data = new unsigned char[len];
+
+	unsigned int scale_factor = 1;
+
+	int index = 0;
+
+	//id
+	data[index++] = (id & 0xFF000000) >> 24;
+	data[index++] = (id & 0x00FF0000) >> 16;
+	data[index++] = (id & 0x0000FF00) >> 8;
+	data[index++] = (id & 0x000000FF);
+
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+
+		return NULL;
+	}
+
+	index = 0;
+
+	int data_size = len / 4;
+	(*posj_size) = data_size;
+
+	double* out_data = NULL;
+
+	if (data_size > 0)
+	{
+		if (out_data == NULL)
+		{
+			out_data = new double[data_size];
+
+			for (int i = 0; i < data_size; i++)
+			{
+				int i_data = 0;
+				//i_value
+				i_data = ((int)data[index++] << 24) & 0xFF000000;
+				i_data |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_data |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_data |= ((int)data[index++]) & 0x000000FF;
+
+				double d_data = (double)i_data / (double)scale_factor;
+
+				out_data[i] = d_data;
+			}
+		}
+	}
+
+	return out_data;
+}
+
 char* CEyedeaInterface::GetVersion(void)
 {
 	boost::unique_lock<boost::mutex> scoped_lock(mutex);

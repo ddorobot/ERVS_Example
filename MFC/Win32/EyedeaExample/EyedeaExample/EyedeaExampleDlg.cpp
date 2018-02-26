@@ -216,7 +216,7 @@ BOOL CEyedeaExampleDlg::OnInitDialog()
 	m_list_information.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | LVS_EX_CHECKBOXES);
 	// 타이틀 삽입
 	m_list_information.InsertColumn(0, _T("Select"), LVCFMT_CENTER, 50, -1);
-	m_list_information.InsertColumn(1, _T("ID"), LVCFMT_CENTER, 100, -1);
+	m_list_information.InsertColumn(1, _T("ID"), LVCFMT_CENTER, 50, -1);
 	m_list_information.InsertColumn(2, _T("Mode"), LVCFMT_CENTER, 150, -1);
 
 	return TRUE;  // return TRUE  unless you set the focus to a control

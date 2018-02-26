@@ -24,9 +24,21 @@
 *.lai
 *.la
 *.a
-*.lib
+#*.lib
 
 # Executables
-*.exe
+#*.exe
 *.out
 *.app
+
+#MFC DB file
+*.VC.db
+*.opendb
+.suo
+*.iobj
+*.ipdb
+*.pdb
+*.log
+*.pch
+*.res
+*.tlog

@@ -149,6 +149,56 @@ int ERVS_SetObject(int id)
 	return g_cls_interface.SetObject(id);
 }
 
+int ERVS_SetJobName(const int id, const std::string name)
+{
+	return g_cls_interface.SetJobName(id, name);
+}
+
+std::string ERVS_GetJobName(const int id)
+{
+	return g_cls_interface.GetJobName(id);
+}
+
+int ERVS_SetToolName(const int id, const std::string name)
+{
+	return g_cls_interface.SetToolName(id, name);
+}
+
+std::string ERVS_GetToolName(const int id)
+{
+	return g_cls_interface.GetToolName(id);
+}
+
+int ERVS_SetToolType(const int id, const int type)
+{
+	return g_cls_interface.SetToolType(id, type);
+}
+
+int ERVS_GetToolType(const int id)
+{
+	return g_cls_interface.GetToolType(id);
+}
+
+int ERVS_SetToolState(const int id, const int state)
+{
+	return g_cls_interface.SetToolState(id, state);
+}
+
+int ERVS_GetToolState(const int id)
+{
+	return g_cls_interface.GetToolState(id);
+}
+
+int ERVS_SetRobotPose(const int id, double* posj, int posj_size)
+{
+	return g_cls_interface.SetRobotPose(id, posj, posj_size);
+}
+
+double* ERVS_GetRobotPose(const int id, int* posj_size)
+{
+	return g_cls_interface.GetRobotPose(id, posj_size);
+}
+
 int ERVS_Calibration_Add(float robot_x, float robot_y)
 {
 	return g_cls_interface.Calibration_Add(robot_x, robot_y);

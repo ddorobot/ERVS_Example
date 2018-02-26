@@ -157,4 +157,11 @@ public:
 	afx_msg void OnBnClickedCheckHistoInspecBlue2();
 	afx_msg void OnBnClickedButtonGetPixelCount();
 	afx_msg void OnBnClickedButtonSetInspectionPixelCount();
+	afx_msg void OnBnClickedButtonJobnameChange();
+	afx_msg void OnBnClickedButtonToolnameChange();
+	CComboBox m_combo_tool_type;
+	CComboBox m_combo_tool_state;
+	afx_msg void OnCbnSelchangeComboToolType();
+	afx_msg void OnCbnSelchangeComboToolState();
+	afx_msg void OnBnClickedButtonRobotPoseSet();
 };

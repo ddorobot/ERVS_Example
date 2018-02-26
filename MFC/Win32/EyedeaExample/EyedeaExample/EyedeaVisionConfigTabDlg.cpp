@@ -74,6 +74,8 @@ void CEyedeaVisionConfigTabDlg::DoDataExchange(CDataExchange* pDX)
 	CDialogEx::DoDataExchange(pDX);
 	//DDX_Control(pDX, IDC_COMBO_ENV_OBJECT_TYPE, m_combo_object_type_for_env);
 	DDX_Control(pDX, IDC_COMBO_GET_IMAGE_OPTION_BASE, m_combo_get_image_option_base);
+	DDX_Control(pDX, IDC_COMBO_TOOL_TYPE, m_combo_tool_type);
+	DDX_Control(pDX, IDC_COMBO_TOOL_STATE, m_combo_tool_state);
 }
 
 
@@ -140,6 +142,11 @@ BEGIN_MESSAGE_MAP(CEyedeaVisionConfigTabDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_CHECK_HISTO_INSPEC_BLUE2, &CEyedeaVisionConfigTabDlg::OnBnClickedCheckHistoInspecBlue2)
 	ON_BN_CLICKED(IDC_BUTTON_GET_PIXEL_COUNT, &CEyedeaVisionConfigTabDlg::OnBnClickedButtonGetPixelCount)
 	ON_BN_CLICKED(IDC_BUTTON_SET_INSPECTION_PIXEL_COUNT, &CEyedeaVisionConfigTabDlg::OnBnClickedButtonSetInspectionPixelCount)
+	ON_BN_CLICKED(IDC_BUTTON_JOBNAME_CHANGE, &CEyedeaVisionConfigTabDlg::OnBnClickedButtonJobnameChange)
+	ON_BN_CLICKED(IDC_BUTTON_TOOLNAME_CHANGE, &CEyedeaVisionConfigTabDlg::OnBnClickedButtonToolnameChange)
+	ON_CBN_SELCHANGE(IDC_COMBO_TOOL_TYPE, &CEyedeaVisionConfigTabDlg::OnCbnSelchangeComboToolType)
+	ON_CBN_SELCHANGE(IDC_COMBO_TOOL_STATE, &CEyedeaVisionConfigTabDlg::OnCbnSelchangeComboToolState)
+	ON_BN_CLICKED(IDC_BUTTON_ROBOT_POSE_SET, &CEyedeaVisionConfigTabDlg::OnBnClickedButtonRobotPoseSet)
 END_MESSAGE_MAP()
 
 
@@ -367,6 +374,19 @@ BOOL CEyedeaVisionConfigTabDlg::OnInitDialog()
 	m_combo_get_image_option_base.AddString(_T("GET_IMAGE_HISTOGRAM_MASK"));
 	m_combo_get_image_option_base.SetCurSel(0);
 
+	m_combo_tool_type.AddString(_T("Tool Type"));
+	m_combo_tool_type.AddString(_T("100(Position)"));
+	m_combo_tool_type.AddString(_T("200(Presence)"));
+	m_combo_tool_type.AddString(_T("300(Distance)"));
+	m_combo_tool_type.AddString(_T("400(Angle)"));
+	m_combo_tool_type.AddString(_T("500(Diameter)"));
+	m_combo_tool_type.SetCurSel(0);
+
+	m_combo_tool_state.AddString(_T("Tool State"));
+	m_combo_tool_state.AddString(_T("1(Teaching Complete)"));
+	m_combo_tool_state.AddString(_T("2(Not Teaching)"));
+	m_combo_tool_state.SetCurSel(0);
+
 	//start Thread
 	//eyedea - start of thread
 	m_run_thread = true;
@@ -529,10 +549,78 @@ void CEyedeaVisionConfigTabDlg::ThreadFunctionDraw()
 		//vImage.CopyOf(&IplImage(m_check_image2), 1);							//mat to vimage
 		//vImage.DrawToHDC(dc_display_local.m_hDC, &rect_display_local);				//draw on display_rect
 
+		//ID
 		int select_id = ERVS_DB_Get_Select_ID();
 		CString strText;
 		strText.Format(_T("%d"), select_id);
 		GetDlgItem(IDC_EDIT_SETTING_ID)->SetWindowText(strText);
+
+		//Job Name
+		std::string job_name = ERVS_GetJobName(select_id);
+		std::wstring job_name_w;
+		job_name_w.assign(job_name.begin(), job_name.end());
+
+		//std::cout << ptr;
+		CString strJobName;
+		strJobName.Format(_T("%s"), job_name_w.c_str());
+		GetDlgItem(IDC_EDIT_SETTING_JOB_NAME_DIS)->SetWindowText(strJobName);
+
+		//Tool Name
+		std::string tool_name = ERVS_GetToolName(select_id);
+		std::wstring tool_name_w;
+		tool_name_w.assign(tool_name.begin(), tool_name.end());
+
+		//std::cout << ptr;
+		CString strtoolName;
+		strtoolName.Format(_T("%s"), tool_name_w.c_str());
+		GetDlgItem(IDC_EDIT_SETTING_TOOL_NAME_DIS)->SetWindowText(strtoolName);
+
+		//Tool Type
+		int tool_type = ERVS_GetToolType(select_id);
+		if( tool_type == 100 ) GetDlgItem(IDC_EDIT_SETTING_TOOL_TYPE_DIS)->SetWindowText(_T("Position"));
+		else if (tool_type == 200) GetDlgItem(IDC_EDIT_SETTING_TOOL_TYPE_DIS)->SetWindowText(_T("Presence"));
+		else if (tool_type == 300) GetDlgItem(IDC_EDIT_SETTING_TOOL_TYPE_DIS)->SetWindowText(_T("Distance"));
+		else if (tool_type == 400) GetDlgItem(IDC_EDIT_SETTING_TOOL_TYPE_DIS)->SetWindowText(_T("Angle"));
+		else if (tool_type == 500) GetDlgItem(IDC_EDIT_SETTING_TOOL_TYPE_DIS)->SetWindowText(_T("Diameter"));
+		else						GetDlgItem(IDC_EDIT_SETTING_TOOL_TYPE_DIS)->SetWindowText(_T("-"));
+
+		//Tool State
+		int tool_state = ERVS_GetToolState(select_id);
+		if(tool_state == 1) GetDlgItem(IDC_EDIT_SETTING_TOOL_STATE_DIS)->SetWindowText(_T("Teaching Complete"));
+		else if (tool_state == 2) GetDlgItem(IDC_EDIT_SETTING_TOOL_STATE_DIS)->SetWindowText(_T("Not Teaching"));
+		else						GetDlgItem(IDC_EDIT_SETTING_TOOL_STATE_DIS)->SetWindowText(_T("-"));
+
+		//Robot Pose
+		int robot_pose_size = 0;
+		double *robot_pos = ERVS_GetRobotPose(select_id, &robot_pose_size);
+
+		if (robot_pos != NULL)
+		{
+			if (robot_pose_size == 6)
+			{
+				CString str;
+				str.Format(_T("%.3f"), robot_pos[0]);
+				GetDlgItem(IDC_EDIT_ROBOT_POSE_1)->SetWindowText(str);
+
+				str.Format(_T("%.3f"), robot_pos[1]);
+				GetDlgItem(IDC_EDIT_ROBOT_POSE_2)->SetWindowText(str);
+
+				str.Format(_T("%.3f"), robot_pos[2]);
+				GetDlgItem(IDC_EDIT_ROBOT_POSE_3)->SetWindowText(str);
+
+				str.Format(_T("%.3f"), robot_pos[3]);
+				GetDlgItem(IDC_EDIT_ROBOT_POSE_4)->SetWindowText(str);
+
+				str.Format(_T("%.3f"), robot_pos[4]);
+				GetDlgItem(IDC_EDIT_ROBOT_POSE_5)->SetWindowText(str);
+
+				str.Format(_T("%.3f"), robot_pos[5]);
+				GetDlgItem(IDC_EDIT_ROBOT_POSE_6)->SetWindowText(str);
+			}
+
+			delete[] robot_pos;
+			robot_pos = NULL;
+		}
 
 		OnBnClickedButtonCheckCameraCalibok();
 
@@ -2724,4 +2812,102 @@ void CEyedeaVisionConfigTabDlg::OnBnClickedButtonSetInspectionPixelCount()
 
 	str.Format(_T("%.2f"), tol_rate);
 	GetDlgItem(IDC_EDIT_PIXEL_COUNT_TOL)->SetWindowText(str);
+}
+
+
+void CEyedeaVisionConfigTabDlg::OnBnClickedButtonJobnameChange()
+{
+	// TODO: Add your control notification handler code here
+	CString strNewJobName;
+	GetDlgItem(IDC_EDIT_SETTING_JOB_NAME)->GetWindowText(strNewJobName);
+
+	CT2CA pszConvertedAnsiString(strNewJobName);
+	std::string job_name(pszConvertedAnsiString);
+
+	//ID
+	int select_id = ERVS_DB_Get_Select_ID();
+	ERVS_SetJobName(select_id, job_name);
+}
+
+
+void CEyedeaVisionConfigTabDlg::OnBnClickedButtonToolnameChange()
+{
+	// TODO: Add your control notification handler code here
+	CString strNewToolName;
+	GetDlgItem(IDC_EDIT_SETTING_TOOL_NAME)->GetWindowText(strNewToolName);
+
+	CT2CA pszConvertedAnsiString(strNewToolName);
+	std::string tool_name(pszConvertedAnsiString);
+
+	//ID
+	int select_id = ERVS_DB_Get_Select_ID();
+	ERVS_SetToolName(select_id, tool_name);
+}
+
+
+void CEyedeaVisionConfigTabDlg::OnCbnSelchangeComboToolType()
+{
+	// TODO: Add your control notification handler code here
+	int nSel = m_combo_tool_type.GetCurSel();
+
+	int type = 0;
+
+	if (nSel == 1) type = 100;
+	else if (nSel == 2) type = 200;
+	else if (nSel == 3) type = 300;
+	else if (nSel == 4) type = 400;
+	else if (nSel == 5) type = 500;
+
+	if (type > 0)
+	{
+		int select_id = ERVS_DB_Get_Select_ID();
+		ERVS_SetToolType(select_id, type);
+	}
+}
+
+
+void CEyedeaVisionConfigTabDlg::OnCbnSelchangeComboToolState()
+{
+	// TODO: Add your control notification handler code here
+	int nSel = m_combo_tool_state.GetCurSel();
+
+	int state = 0;
+
+	if (nSel == 1) state = 1;
+	else if (nSel == 2) state = 2;
+
+	if (state > 0)
+	{
+		int select_id = ERVS_DB_Get_Select_ID();
+		ERVS_SetToolState(select_id, state);
+	}
+}
+
+
+void CEyedeaVisionConfigTabDlg::OnBnClickedButtonRobotPoseSet()
+{
+	// TODO: Add your control notification handler code here
+	double robot_pose[6];
+
+	CString str;
+	GetDlgItem(IDC_EDIT_ROBOT_POSE_SET_1)->GetWindowText(str);
+	robot_pose[0] = _wtof(str);
+
+	GetDlgItem(IDC_EDIT_ROBOT_POSE_SET_2)->GetWindowText(str);
+	robot_pose[1] = _wtof(str);
+
+	GetDlgItem(IDC_EDIT_ROBOT_POSE_SET_3)->GetWindowText(str);
+	robot_pose[2] = _wtof(str);
+
+	GetDlgItem(IDC_EDIT_ROBOT_POSE_SET_4)->GetWindowText(str);
+	robot_pose[3] = _wtof(str);
+
+	GetDlgItem(IDC_EDIT_ROBOT_POSE_SET_5)->GetWindowText(str);
+	robot_pose[4] = _wtof(str);
+
+	GetDlgItem(IDC_EDIT_ROBOT_POSE_SET_6)->GetWindowText(str);
+	robot_pose[5] = _wtof(str);
+
+	int select_id = ERVS_DB_Get_Select_ID();
+	ERVS_SetRobotPose(select_id, robot_pose, 6);
 }

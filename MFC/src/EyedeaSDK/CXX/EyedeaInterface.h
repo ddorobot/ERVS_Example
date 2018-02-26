@@ -56,6 +56,17 @@ public:
 	int DB_Del_ID(int id = -1);
 	char* DB_Get_Mode(int id);
 
+	int SetJobName(const int id, const std::string name);
+	std::string GetJobName(const int id);
+	int SetToolName(const int id, const std::string name);
+	std::string GetToolName(const int id);
+	int SetToolType(const int id, const int type);
+	int GetToolType(const int id);
+	int SetToolState(const int id, const int state);
+	int GetToolState(const int id);
+	int SetRobotPose(const int id, double* posj, int posj_size);
+	double*  GetRobotPose(const int id, int* posj_size);
+
 	
 	int GetFindObjectInfo(int index, int max_objects_count, int option, float** out_id, float** out_cx, float** out_cy, float** out_rx, float** out_ry, float** out_bound_cx, float** out_bound_cy, float** out_bound_rx, float** out_bound_ry, float** out_mass_cx, float** out_mass_cy, float** out_mass_rx, float** out_mass_ry, float** out_circle_rx, float** out_circle_ry, float** out_line1_x, float** out_line1_y, float** out_line2_x, float** out_line2_y, float** out_angle, float** out_type, float** out_score, float** out_pass);
 	int GetFindObjectResultInfo(int base_index, int sub_index, float* out_id, float* out_cx, float* out_cy, float* out_rx, float* out_ry, float* out_angle, float* out_type, float* out_score, float** out_histogram, float** out_histogram_b, float** out_histogram_g, float** out_histogram_r, float* out_histogram_size);

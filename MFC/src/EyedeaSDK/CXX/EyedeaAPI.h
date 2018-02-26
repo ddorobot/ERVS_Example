@@ -25,6 +25,17 @@ int ERVS_DB_Del_ID(int id);
 char* ERVS_DB_Get_Mode(int id);
 int ERVS_SetObject(int id = -1);
 
+int ERVS_SetJobName(const int id, const std::string name);
+std::string ERVS_GetJobName(const int id);
+int ERVS_SetToolName(const int id, const std::string name);
+std::string ERVS_GetToolName(const int id);
+int ERVS_SetToolType(const int id, const int type);
+int ERVS_GetToolType(const int id);
+int ERVS_SetToolState(const int id, const int state);
+int ERVS_GetToolState(const int id);
+int ERVS_SetRobotPose(const int id, double* posj, int posj_size);
+double* ERVS_GetRobotPose(const int id, int* posj_size);
+
 //DB Save/Load
 int ERVS_FileSaveObjectDBList(std::string path);
 int ERVS_FileLoadObjectDBList(std::string path);

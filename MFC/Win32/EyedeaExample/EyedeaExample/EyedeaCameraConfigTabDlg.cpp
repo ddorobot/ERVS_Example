@@ -206,6 +206,12 @@ void CEyedeaCameraConfigTabDlg::SetCameraConfigUI()
 	int exposure = -2;
 	int gain = -2;
 	int ledbright = -2;
+
+	int gain_max = -2;
+	int exposure_max = -2;
+	int gain_min = -2;
+	int exposure_min = -2;
+
 	ledbright = ERVS_GetCameraConfig(GET_CAMERA_LED_BRIGHTNESS);
 	isManualExposure = ERVS_GetCameraConfig(GET_CAMERA_MANUAL_EXPOSURE);
 	aex_goout = ERVS_GetCameraConfig(GET_CAMERA_AUTO_EXPOSURE_RANGE_GO_OUT);
@@ -213,12 +219,23 @@ void CEyedeaCameraConfigTabDlg::SetCameraConfigUI()
 	exposure = ERVS_GetCameraConfig(GET_CAMERA_MANUAL_EXPOSURE_EXPOSURE);
 	gain = ERVS_GetCameraConfig(GET_CAMERA_MANUAL_EXPOSURE_GAIN);
 
+	gain_max = ERVS_GetCameraConfig(GET_CAMERA_MANUAL_EXPOSURE_GAIN_MAX);
+	exposure_max = ERVS_GetCameraConfig(GET_CAMERA_MANUAL_EXPOSURE_EXPOSURE_MAX);
+
+	gain_min = ERVS_GetCameraConfig(GET_CAMERA_MANUAL_EXPOSURE_GAIN_MIN);
+	exposure_min = ERVS_GetCameraConfig(GET_CAMERA_MANUAL_EXPOSURE_EXPOSURE_MIN);
+
+
 	printf(" isManualExposure = 0x%x \n", isManualExposure);
 	printf(" aex_goout = 0x%x \n", aex_goout);
 	printf(" aex_enter = 0x%x \n", aex_enter);
 	printf(" exposure = 0x%x \n", exposure);
 	printf(" gain = 0x%x \n", gain);
 	printf(" ledbright = 0x%x \n", ledbright);
+	printf(" gain max = 0x%x \n", gain_max);
+	printf(" exposure max = 0x%x \n", exposure_max);
+	printf(" gain min = 0x%x \n", gain_min);
+	printf(" exposure min = 0x%x \n", exposure_min);
 
 
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
@@ -236,7 +253,6 @@ void CEyedeaCameraConfigTabDlg::SetCameraConfigUI()
 		m_Slider_Camera_AE_Range_High.SetPos(aex_goout);
 		str.Format(_T("%d"), aex_goout);
 		GetDlgItem(IDC_EDIT_CAMERA_VAL_RANGE_HIGH_LIMIT)->SetWindowText(str);
-
 	}
 	else
 	{
@@ -252,6 +268,11 @@ void CEyedeaCameraConfigTabDlg::SetCameraConfigUI()
 
 		str.Format(_T("%d"), gain);
 		GetDlgItem(IDC_EDIT_CAMERA_VAL_GAIN)->SetWindowText(str);
+
+		m_Slider_Camera_Exposure.SetRange(exposure_min, exposure_max, TRUE);
+
+		m_Slider_Camera_GAIN.SetRange(gain_min, gain_max, TRUE);
+
 	}
 	m_Slider_Camera_LED_Brightness.SetPos(ledbright);
 	CString str;

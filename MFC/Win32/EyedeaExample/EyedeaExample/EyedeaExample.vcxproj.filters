@@ -78,6 +78,12 @@
     <ClInclude Include="EyedeaCameraConfigTabDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="InspectionSetHistogramDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InspectionSetDistanceDlb.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EyedeaExample.cpp">
@@ -114,6 +120,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="EyedeaCameraConfigTabDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InspectionSetHistogramDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InspectionSetDistanceDlb.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -171,6 +183,42 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="icons\icon_0004.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="icons\bitmap6.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="icons\angle.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="icons\circle.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="icons\distance.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="icons\line.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="icons\region.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="icons\line_add.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="icons\line_del.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="icons\line_reset.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="icons\2line_add.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="icons\2line_del.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="icons\2line_reset.bmp">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

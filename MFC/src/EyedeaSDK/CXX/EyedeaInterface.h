@@ -34,6 +34,18 @@ public:
 	int SetObjectCircle(float x, float y, float r1, float r2);
 	int GetObjectCircle(float *out_x, float *out_y, float *out_r1, float *out_r2);
 	int SetObjectLine(float x, float y, float w, float h);
+	int DeleteObjectLine(void);
+	int ClearObjectLine(void);
+	int SetObjectTwoLine(const int id, float x1, float y1, float w1, float h1, float x2, float y2, float w2, float h2);
+	int SetObjectTwoLineBaseDistance(const int id, const int dist);
+	int GetObjectTwoLineBaseDistance(const int id);
+	float GetObjectTwoLineCalcDistance(const int id);
+	int SetObjectTwoLineDistanceTolerance(const int id, const int min_value, const int max_value);
+	int GetObjectTwoLineDistanceTolerance(const int id, int *out_min_value, int *out_max_value);
+	int SetObjectTwoLineDistanceType(const int id, const int type);
+	int GetObjectTwoLineDistanceType(const int id);
+	int SetObjectTwoLineDistanceInspection(const int id, const bool use);
+	int GetObjectTwoLineDistanceInspection(const int id);
 
 	int SetBase(int dep_id);
 	int SetNextImage(void);

@@ -1,6 +1,9 @@
 #ifndef _EYEDEA_DEF_H_
 #define _EYEDEA_DEF_H_
 
+#define DISTANCE_A_B	1
+#define DISTANCE_B_A	2
+
 enum VisionConfigOption
 {
 	VISION_CONFIG_CALIBRATION_CHESS_NUM_COLS = 101,

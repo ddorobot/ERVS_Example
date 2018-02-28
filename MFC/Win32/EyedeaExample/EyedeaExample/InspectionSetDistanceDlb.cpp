@@ -52,6 +52,7 @@ BOOL CInspectionSetDistanceDlb::OnInitDialog()
 	// TODO:  Add extra initialization here
 	m_select_id = ERVS_DB_Get_Select_ID();
 
+	OnBnClickedButtonDistanceCalc();
 	OnBnClickedButtonBaseDistanceGet();
 	OnBnClickedButtonDistanceTolGet();
 	OnBnClickedButtonDistanceTypeGet();
@@ -163,8 +164,8 @@ void CInspectionSetDistanceDlb::OnBnClickedButtonDistanceCalc()
 	float dist = ERVS_GetObjectTwoLineCalcDistance(m_select_id);
 
 	CString str;
-	str.Format(_T("%d"), dist);
-	GetDlgItem(IDC_EDIT_BASE_DISTANCE)->SetWindowText(str);
+	str.Format(_T("%.3f"), dist);
+	GetDlgItem(IDC_EDIT_CALC_DISTANCE)->SetWindowText(str);
 }
 
 

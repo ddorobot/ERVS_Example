@@ -74,6 +74,66 @@ int ERVS_SetObjectLine(float x, float y, float w, float h)
 	return g_cls_interface.SetObjectLine(x, y, w, h);
 }
 
+int ERVS_DelObjectLine(void)
+{
+	return g_cls_interface.DeleteObjectLine();
+}
+
+int ERVS_ClrObjectLine(void)
+{
+	return g_cls_interface.ClearObjectLine();
+}
+
+int ERVS_SetObjectTwoLine(const int id, float x1, float y1, float w1, float h1, float x2, float y2, float w2, float h2)
+{
+	return g_cls_interface.SetObjectTwoLine(id, x1, y1, w1, h1, x2, y2, w2, h2);
+}
+
+int ERVS_SetObjectTwoLineBaseDistance(const int id, const int dist)
+{
+	return g_cls_interface.SetObjectTwoLineBaseDistance(id, dist);
+}
+
+int ERVS_GetObjectTwoLineBaseDistance(const int id)
+{
+	return g_cls_interface.GetObjectTwoLineBaseDistance(id);
+}
+
+float ERVS_GetObjectTwoLineCalcDistance(const int id)
+{
+	return g_cls_interface.GetObjectTwoLineCalcDistance(id);
+}
+
+int ERVS_SetObjectTwoLineDistanceTolerance(const int id, const int min_value, const int max_value)
+{
+	return g_cls_interface.SetObjectTwoLineDistanceTolerance(id, min_value, max_value);
+}
+
+int ERVS_GetObjectTwoLineDistanceTolerance(const int id, int *out_min_value, int *out_max_value)
+{
+	return g_cls_interface.GetObjectTwoLineDistanceTolerance(id, out_min_value, out_max_value);
+}
+
+int ERVS_SetObjectTwoLineDistanceType(const int id, const int type)
+{
+	return g_cls_interface.SetObjectTwoLineDistanceType(id, type);
+}
+
+int ERVS_GetObjectTwoLineDistanceType(const int id)
+{
+	return g_cls_interface.GetObjectTwoLineDistanceType(id);
+}
+
+int ERVS_SetObjectTwoLineDistanceInspection(const int id, const bool use)
+{
+	return g_cls_interface.SetObjectTwoLineDistanceInspection(id, use);
+}
+
+int ERVS_GetObjectTwoLineDistanceInspection(const int id)
+{
+	return g_cls_interface.GetObjectTwoLineDistanceInspection(id);
+}
+
 int ERVS_OptionFixAreaOn(void)
 {
 	return g_cls_interface.OptionFixSearchAreaOn();

@@ -65,6 +65,19 @@ int ERVS_SetObjectCircle(float x, float y, float r1, float r2);
 int ERVS_GetObjectCircle(float *out_x, float *out_y, float *out_r1, float *out_r2);
 //Line Object
 int ERVS_SetObjectLine(float x, float y, float w, float h);
+int ERVS_DelObjectLine(void);
+int ERVS_ClrObjectLine(void);
+int ERVS_SetObjectTwoLine(const int id, float x1, float y1, float w1, float h1, float x2, float y2, float w2, float h2);
+int ERVS_SetObjectTwoLineBaseDistance(const int id, const int dist);
+int ERVS_GetObjectTwoLineBaseDistance(const int id);
+float ERVS_GetObjectTwoLineCalcDistance(const int id);
+int ERVS_SetObjectTwoLineDistanceTolerance(const int id, const int min_value, const int max_value);
+int ERVS_GetObjectTwoLineDistanceTolerance(const int id, int *out_min_value, int *out_max_value);
+int ERVS_SetObjectTwoLineDistanceType(const int id, const int type);
+int ERVS_GetObjectTwoLineDistanceType(const int id);
+int ERVS_SetObjectTwoLineDistanceInspection(const int id, const bool use);
+int ERVS_GetObjectTwoLineDistanceInspection(const int id);
+
 //Region Object
 int ERVS_SetSelectBaseObject(float x, float y, float w, float h);
 
@@ -101,6 +114,7 @@ int ERVS_SetCameraConfig_Load();
 int ERVS_BackgroundLearning(void);
 
 //Geometry
+int ERVS_Geometry_Set_Object_Lines_Distance(const int id, const int type);
 int ERVS_Geometry_Get_Distance(const int base_id, const int target_id, float *out_value);
 int ERVS_Geometry_Set_Inspection_Distance(const int base_id, const int target_id, const float value);
 int ERVS_Geometry_Get_Inspection_Distance(const int base_id, const int target_id, float * out_value);

@@ -203,6 +203,8 @@
     <ClInclude Include="EyedeaExample.h" />
     <ClInclude Include="EyedeaExampleDlg.h" />
     <ClInclude Include="EyedeaVisionConfigTabDlg.h" />
+    <ClInclude Include="InspectionSetAngleDlg.h" />
+    <ClInclude Include="InspectionSetDiameterDlg.h" />
     <ClInclude Include="InspectionSetDistanceDlb.h" />
     <ClInclude Include="InspectionSetHistogramDlg.h" />
     <ClInclude Include="Resource.h" />
@@ -222,6 +224,8 @@
     <ClCompile Include="EyedeaExample.cpp" />
     <ClCompile Include="EyedeaExampleDlg.cpp" />
     <ClCompile Include="EyedeaVisionConfigTabDlg.cpp" />
+    <ClCompile Include="InspectionSetAngleDlg.cpp" />
+    <ClCompile Include="InspectionSetDiameterDlg.cpp" />
     <ClCompile Include="InspectionSetDistanceDlb.cpp" />
     <ClCompile Include="InspectionSetHistogramDlg.cpp" />
     <ClCompile Include="stdafx.cpp">

@@ -32,6 +32,14 @@ public:
 	int UndoMaskArea(void);
 	int DelMaskArea(void);
 	int SetObjectCircle(float x, float y, float r1, float r2);
+	int SetObjectCircle(const float x, const float y, const float r1, const float r2, const float min_r1, const float min_r2, const float max_r1, const float max_r2);
+	int SetObjectCircleBaseDiameter(const int id, const int diameter);
+	int GetObjectCircleBaseDiameter(const int id);
+	int SetObjectCircleDiameterTolerance(const int id, const int min_value, const int max_value);
+	int GetObjectCircleDiameterTolerance(const int id, int *out_min_value, int *out_max_value);
+	int SetObjectCircleDiameterInspection(const int id, const bool use);
+	int GetObjectCircleDiameterInspection(const int id);
+	float GetObjectCircleCalcDiameter(const int id);
 	int GetObjectCircle(float *out_x, float *out_y, float *out_r1, float *out_r2);
 	int SetObjectLine(float x, float y, float w, float h);
 	int DeleteObjectLine(void);
@@ -39,13 +47,21 @@ public:
 	int SetObjectTwoLine(const int id, float x1, float y1, float w1, float h1, float x2, float y2, float w2, float h2);
 	int SetObjectTwoLineBaseDistance(const int id, const int dist);
 	int GetObjectTwoLineBaseDistance(const int id);
+	
 	float GetObjectTwoLineCalcDistance(const int id);
+	float GetObjectTwoLineCalcAngle(const int id);
 	int SetObjectTwoLineDistanceTolerance(const int id, const int min_value, const int max_value);
 	int GetObjectTwoLineDistanceTolerance(const int id, int *out_min_value, int *out_max_value);
+	int SetObjectTwoLineAngleTolerance(const int id, const int min_value, const int max_value);
+	int GetObjectTwoLineAngleTolerance(const int id, int *out_min_value, int *out_max_value);
 	int SetObjectTwoLineDistanceType(const int id, const int type);
 	int GetObjectTwoLineDistanceType(const int id);
 	int SetObjectTwoLineDistanceInspection(const int id, const bool use);
 	int GetObjectTwoLineDistanceInspection(const int id);
+	int SetObjectTwoLineAngleInspection(const int id, const bool use);
+	int GetObjectTwoLineAngleInspection(const int id);
+	int SetObjectTwoLineBaseAngle(const int id, const int angle);
+	int GetObjectTwoLineBaseAngle(const int id);
 
 	int SetBase(int dep_id);
 	int SetNextImage(void);

@@ -69,6 +69,11 @@ int ERVS_SetObjectCircle(float x, float y, float r1, float r2)
 	return g_cls_interface.SetObjectCircle(x, y, r1, r2);
 }
 
+int ERVS_SetObjectCircle(const float x, const float y, const float r1, const float r2, const float min_r1, const float min_r2, const float max_r1, const float max_r2)
+{
+	return g_cls_interface.SetObjectCircle(x, y, r1, r2, min_r1, min_r2, max_r1, max_r2);
+}
+
 int ERVS_SetObjectLine(float x, float y, float w, float h)
 {
 	return g_cls_interface.SetObjectLine(x, y, w, h);
@@ -99,9 +104,39 @@ int ERVS_GetObjectTwoLineBaseDistance(const int id)
 	return g_cls_interface.GetObjectTwoLineBaseDistance(id);
 }
 
+int ERVS_GetObjectCircleBaseDiameter(const int id)
+{
+	return g_cls_interface.GetObjectCircleBaseDiameter(id);
+}
+
+int ERVS_SetObjectTwoLineBaseAngle(const int id, const int angle)
+{
+	return g_cls_interface.SetObjectTwoLineBaseAngle(id, angle);
+}
+
+int ERVS_SetObjectCircleBaseDiameter(const int id, const int diameter)
+{
+	return g_cls_interface.SetObjectCircleBaseDiameter(id, diameter);
+}
+
+int ERVS_GetObjectTwoLineBaseAngle(const int id)
+{
+	return g_cls_interface.GetObjectTwoLineBaseAngle(id);
+}
+
 float ERVS_GetObjectTwoLineCalcDistance(const int id)
 {
 	return g_cls_interface.GetObjectTwoLineCalcDistance(id);
+}
+
+float ERVS_GetObjectTwoLineCalcAngle(const int id)
+{
+	return g_cls_interface.GetObjectTwoLineCalcAngle(id);
+}
+
+float ERVS_GetObjectCircleCalcDiameter(const int id)
+{
+	return g_cls_interface.GetObjectCircleCalcDiameter(id);
 }
 
 int ERVS_SetObjectTwoLineDistanceTolerance(const int id, const int min_value, const int max_value)
@@ -112,6 +147,26 @@ int ERVS_SetObjectTwoLineDistanceTolerance(const int id, const int min_value, co
 int ERVS_GetObjectTwoLineDistanceTolerance(const int id, int *out_min_value, int *out_max_value)
 {
 	return g_cls_interface.GetObjectTwoLineDistanceTolerance(id, out_min_value, out_max_value);
+}
+
+int ERVS_SetObjectTwoLineAngleTolerance(const int id, const int min_value, const int max_value)
+{
+	return g_cls_interface.SetObjectTwoLineAngleTolerance(id, min_value, max_value);
+}
+
+int ERVS_GetObjectTwoLineAngleTolerance(const int id, int *out_min_value, int *out_max_value)
+{
+	return g_cls_interface.GetObjectTwoLineAngleTolerance(id, out_min_value, out_max_value);
+}
+
+int ERVS_SetObjectCircleDiameterTolerance(const int id, const int min_value, const int max_value)
+{
+	return g_cls_interface.SetObjectCircleDiameterTolerance(id, min_value, max_value);
+}
+
+int ERVS_GetObjectCircleDiameterTolerance(const int id, int *out_min_value, int *out_max_value)
+{
+	return g_cls_interface.GetObjectCircleDiameterTolerance(id, out_min_value, out_max_value);
 }
 
 int ERVS_SetObjectTwoLineDistanceType(const int id, const int type)
@@ -132,6 +187,26 @@ int ERVS_SetObjectTwoLineDistanceInspection(const int id, const bool use)
 int ERVS_GetObjectTwoLineDistanceInspection(const int id)
 {
 	return g_cls_interface.GetObjectTwoLineDistanceInspection(id);
+}
+
+int ERVS_SetObjectTwoLineAngleInspection(const int id, const bool use)
+{
+	return g_cls_interface.SetObjectTwoLineAngleInspection(id, use);
+}
+
+int ERVS_GetObjectTwoLineAngleInspection(const int id)
+{
+	return g_cls_interface.GetObjectTwoLineAngleInspection(id);
+}
+
+int ERVS_SetObjectCircleDiameterInspection(const int id, const bool use)
+{
+	return g_cls_interface.SetObjectCircleDiameterInspection(id, use);
+}
+
+int ERVS_GetObjectCircleDiameterInspection(const int id)
+{
+	return g_cls_interface.GetObjectCircleDiameterInspection(id);
 }
 
 int ERVS_OptionFixAreaOn(void)

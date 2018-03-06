@@ -7,6 +7,8 @@
 
 #include "InspectionSetHistogramDlg.h"
 #include "InspectionSetDistanceDlb.h"
+#include "InspectionSetAngleDlg.h"
+#include "InspectionSetDiameterDlg.h"
 
 #include "afxwin.h"
 
@@ -121,4 +123,6 @@ public:
 	afx_msg void OnBnClickedCheckInspectionDistance();
 	afx_msg void OnBnClickedButtonSelectLine3();
 	afx_msg void OnBnClickedButtonSelectLine2();
+	afx_msg void OnBnClickedCheckInspectionAngle();
+	afx_msg void OnBnClickedCheckInspectionDiameter();
 };

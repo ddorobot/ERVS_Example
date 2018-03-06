@@ -1284,6 +1284,121 @@ int CEyedeaInterface::SetObjectCircle(float x, float y, float r1, float r2)
     return ret;
 }
 
+int CEyedeaInterface::SetObjectCircle(const float x, const float y, const float r1, const float r2, const float min_r1, const float min_r2, const float max_r1, const float max_r2)
+{
+	//printf("test = %f, %f, %f, %f\n", x, y, r1, r2);
+
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	unsigned int scale_factor = 10000;
+	int len = 4*8;
+
+	char command = COMMAND_SET_OBJECT_CIRCLE_WITH_BOUND;
+	unsigned char* data = new unsigned char[len];
+	
+	int _x = x * scale_factor;
+	int _y = y * scale_factor;
+	int _r1 = r1 * scale_factor;
+	int _r2 = r2 * scale_factor;
+
+	int _min_r1 = min_r1 * scale_factor;
+	int _min_r2 = min_r2 * scale_factor;
+	int _max_r1 = max_r1 * scale_factor;
+	int _max_r2 = max_r2 * scale_factor;
+
+	int index = 0;
+	//x
+	data[index++] = (_x & 0xFF000000) >> 24;
+	data[index++] = (_x & 0x00FF0000) >> 16;
+	data[index++] = (_x & 0x0000FF00) >> 8;
+	data[index++] = (_x & 0x000000FF);
+
+	//y
+	data[index++] = (_y & 0xFF000000) >> 24;
+	data[index++] = (_y & 0x00FF0000) >> 16;
+	data[index++] = (_y & 0x0000FF00) >> 8;
+	data[index++] = (_y & 0x000000FF);
+
+	//r1
+	data[index++] = (_r1 & 0xFF000000) >> 24;
+	data[index++] = (_r1 & 0x00FF0000) >> 16;
+	data[index++] = (_r1 & 0x0000FF00) >> 8;
+	data[index++] = (_r1 & 0x000000FF);
+
+	//r2
+	data[index++] = (_r2 & 0xFF000000) >> 24;
+	data[index++] = (_r2 & 0x00FF0000) >> 16;
+	data[index++] = (_r2 & 0x0000FF00) >> 8;
+	data[index++] = (_r2 & 0x000000FF);
+
+	//_min_r1
+	data[index++] = (_min_r1 & 0xFF000000) >> 24;
+	data[index++] = (_min_r1 & 0x00FF0000) >> 16;
+	data[index++] = (_min_r1 & 0x0000FF00) >> 8;
+	data[index++] = (_min_r1 & 0x000000FF);
+
+	//min_r2
+	data[index++] = (_min_r2 & 0xFF000000) >> 24;
+	data[index++] = (_min_r2 & 0x00FF0000) >> 16;
+	data[index++] = (_min_r2 & 0x0000FF00) >> 8;
+	data[index++] = (_min_r2 & 0x000000FF);
+
+	//max r1
+	data[index++] = (_max_r1 & 0xFF000000) >> 24;
+	data[index++] = (_max_r1 & 0x00FF0000) >> 16;
+	data[index++] = (_max_r1 & 0x0000FF00) >> 8;
+	data[index++] = (_max_r1 & 0x000000FF);
+
+	//max r2
+	data[index++] = (_max_r2 & 0xFF000000) >> 24;
+	data[index++] = (_max_r2 & 0x00FF0000) >> 16;
+	data[index++] = (_max_r2 & 0x0000FF00) >> 8;
+	data[index++] = (_max_r2 & 0x000000FF);
+
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+	if (ret == EYEDEA_ERROR_INVALID_MEMORY)
+	{
+		int sec = 0;
+		while (1)
+		{
+			ret = m_cls_eth_client->Open(m_ip, m_port);
+			if (ret == 0) {
+				ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+				break;
+			}
+			else
+			{
+				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
+				sec++;
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
+					return ret;
+				}
+				continue;
+			}
+		}
+	}
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+
+	return ret;
+}
+
 int CEyedeaInterface::SetObjectLine(float x, float y, float w, float h)
 {
 	//printf("test = %f, %f, %f, %f\n", x, y, r1, r2);
@@ -1740,6 +1855,290 @@ int CEyedeaInterface::GetObjectTwoLineBaseDistance(const int id)
 	return ret;
 }
 
+int CEyedeaInterface::GetObjectCircleBaseDiameter(const int id)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_GET_OBJECT_CIRCLE_BASE_DIAMETER;
+
+	int len = 4;
+	unsigned char* data = new unsigned char[len];
+
+	unsigned int scale_factor = 1;
+
+	int index = 0;
+
+	//id
+	data[index++] = (id & 0xFF000000) >> 24;
+	data[index++] = (id & 0x00FF0000) >> 16;
+	data[index++] = (id & 0x0000FF00) >> 8;
+	data[index++] = (id & 0x000000FF);
+
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+	if (ret == EYEDEA_ERROR_INVALID_MEMORY)
+	{
+		int sec = 0;
+		while (1)
+		{
+			ret = m_cls_eth_client->Open(m_ip, m_port);
+			if (ret == 0) {
+				ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+				break;
+			}
+			else
+			{
+				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
+				sec++;
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete[] data;
+						data = NULL;
+					}
+					return ret;
+				}
+				continue;
+			}
+		}
+	}
+
+	if (len >= 4)
+	{
+		//dist
+		ret = ((int)data[0] << 24) & 0xFF000000;
+		ret |= ((int)data[1] << 16) & 0x00FF0000;
+		ret |= ((int)data[2] << 8) & 0x0000FF00;
+		ret |= ((int)data[3]) & 0x000000FF;
+	}
+
+	if (data != NULL)
+	{
+		delete[] data;
+		data = NULL;
+	}
+
+	return ret;
+}
+
+int CEyedeaInterface::SetObjectCircleBaseDiameter(const int id, const int diameter)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_SET_OBJECT_CIRCLE_BASE_DIAMETER;
+
+	int len = 4 + 4;
+	unsigned char* data = new unsigned char[len];
+
+	unsigned int scale_factor = 1;
+
+	int index = 0;
+
+	//id
+	data[index++] = (id & 0xFF000000) >> 24;
+	data[index++] = (id & 0x00FF0000) >> 16;
+	data[index++] = (id & 0x0000FF00) >> 8;
+	data[index++] = (id & 0x000000FF);
+
+	//dist
+	data[index++] = (diameter & 0xFF000000) >> 24;
+	data[index++] = (diameter & 0x00FF0000) >> 16;
+	data[index++] = (diameter & 0x0000FF00) >> 8;
+	data[index++] = (diameter & 0x000000FF);
+
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+	if (ret == EYEDEA_ERROR_INVALID_MEMORY)
+	{
+		int sec = 0;
+		while (1)
+		{
+			ret = m_cls_eth_client->Open(m_ip, m_port);
+			if (ret == 0) {
+				ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+				break;
+			}
+			else
+			{
+				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
+				sec++;
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete[] data;
+						data = NULL;
+					}
+					return ret;
+				}
+				continue;
+			}
+		}
+	}
+	if (data != NULL)
+	{
+		delete[] data;
+		data = NULL;
+	}
+
+	return ret;
+}
+
+int CEyedeaInterface::SetObjectTwoLineBaseAngle(const int id, const int angle)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_SET_OBJECT_TWO_LINE_BASE_ANGLE;
+
+	int len = 4 + 4;
+	unsigned char* data = new unsigned char[len];
+
+	unsigned int scale_factor = 1;
+
+	int index = 0;
+
+	//id
+	data[index++] = (id & 0xFF000000) >> 24;
+	data[index++] = (id & 0x00FF0000) >> 16;
+	data[index++] = (id & 0x0000FF00) >> 8;
+	data[index++] = (id & 0x000000FF);
+
+	//dist
+	data[index++] = (angle & 0xFF000000) >> 24;
+	data[index++] = (angle & 0x00FF0000) >> 16;
+	data[index++] = (angle & 0x0000FF00) >> 8;
+	data[index++] = (angle & 0x000000FF);
+
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+	if (ret == EYEDEA_ERROR_INVALID_MEMORY)
+	{
+		int sec = 0;
+		while (1)
+		{
+			ret = m_cls_eth_client->Open(m_ip, m_port);
+			if (ret == 0) {
+				ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+				break;
+			}
+			else
+			{
+				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
+				sec++;
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete[] data;
+						data = NULL;
+					}
+					return ret;
+				}
+				continue;
+			}
+		}
+	}
+	if (data != NULL)
+	{
+		delete[] data;
+		data = NULL;
+	}
+
+	return ret;
+}
+
+int CEyedeaInterface::GetObjectTwoLineBaseAngle(const int id)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_GET_OBJECT_TWO_LINE_BASE_ANGLE;
+
+	int len = 4;
+	unsigned char* data = new unsigned char[len];
+
+	unsigned int scale_factor = 1;
+
+	int index = 0;
+
+	//id
+	data[index++] = (id & 0xFF000000) >> 24;
+	data[index++] = (id & 0x00FF0000) >> 16;
+	data[index++] = (id & 0x0000FF00) >> 8;
+	data[index++] = (id & 0x000000FF);
+
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+	if (ret == EYEDEA_ERROR_INVALID_MEMORY)
+	{
+		int sec = 0;
+		while (1)
+		{
+			ret = m_cls_eth_client->Open(m_ip, m_port);
+			if (ret == 0) {
+				ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+				break;
+			}
+			else
+			{
+				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
+				sec++;
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete[] data;
+						data = NULL;
+					}
+					return ret;
+				}
+				continue;
+			}
+		}
+	}
+
+	if (len >= 4)
+	{
+		//dist
+		ret = ((int)data[0] << 24) & 0xFF000000;
+		ret |= ((int)data[1] << 16) & 0x00FF0000;
+		ret |= ((int)data[2] << 8) & 0x0000FF00;
+		ret |= ((int)data[3]) & 0x000000FF;
+	}
+
+	if (data != NULL)
+	{
+		delete[] data;
+		data = NULL;
+	}
+
+	return ret;
+}
+
 float CEyedeaInterface::GetObjectTwoLineCalcDistance(const int id)
 {
 	boost::unique_lock<boost::mutex> scoped_lock(mutex);
@@ -1816,6 +2215,162 @@ float CEyedeaInterface::GetObjectTwoLineCalcDistance(const int id)
 	}
 
 	return dist;
+}
+
+float CEyedeaInterface::GetObjectTwoLineCalcAngle(const int id)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_GET_OBJECT_TWO_LINE_CALC_ANGLE;
+
+	int len = 4;
+	unsigned char* data = new unsigned char[len];
+
+	unsigned int scale_factor = 1;
+
+	int index = 0;
+
+	//id
+	data[index++] = (id & 0xFF000000) >> 24;
+	data[index++] = (id & 0x00FF0000) >> 16;
+	data[index++] = (id & 0x0000FF00) >> 8;
+	data[index++] = (id & 0x000000FF);
+
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+	if (ret == EYEDEA_ERROR_INVALID_MEMORY)
+	{
+		int sec = 0;
+		while (1)
+		{
+			ret = m_cls_eth_client->Open(m_ip, m_port);
+			if (ret == 0) {
+				ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+				break;
+			}
+			else
+			{
+				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
+				sec++;
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete[] data;
+						data = NULL;
+					}
+					return ret;
+				}
+				continue;
+			}
+		}
+	}
+
+	float angle = 0;;
+
+	if (len >= 4)
+	{
+		//dist
+		int iangle = 0;
+		iangle = ((int)data[0] << 24) & 0xFF000000;
+		iangle |= ((int)data[1] << 16) & 0x00FF0000;
+		iangle |= ((int)data[2] << 8) & 0x0000FF00;
+		iangle |= ((int)data[3]) & 0x000000FF;
+
+		angle = (float)iangle / (float)scale_factor;
+	}
+
+	if (data != NULL)
+	{
+		delete[] data;
+		data = NULL;
+	}
+
+	return angle;
+}
+
+float CEyedeaInterface::GetObjectCircleCalcDiameter(const int id)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_GET_OBJECT_CIRCLE_CALC_DIAMETER;
+
+	int len = 4;
+	unsigned char* data = new unsigned char[len];
+
+	unsigned int scale_factor = 1;
+
+	int index = 0;
+
+	//id
+	data[index++] = (id & 0xFF000000) >> 24;
+	data[index++] = (id & 0x00FF0000) >> 16;
+	data[index++] = (id & 0x0000FF00) >> 8;
+	data[index++] = (id & 0x000000FF);
+
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+	if (ret == EYEDEA_ERROR_INVALID_MEMORY)
+	{
+		int sec = 0;
+		while (1)
+		{
+			ret = m_cls_eth_client->Open(m_ip, m_port);
+			if (ret == 0) {
+				ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+				break;
+			}
+			else
+			{
+				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
+				sec++;
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete[] data;
+						data = NULL;
+					}
+					return ret;
+				}
+				continue;
+			}
+		}
+	}
+
+	float diameter = 0;;
+
+	if (len >= 4)
+	{
+		//dist
+		int idiameter = 0;
+		idiameter = ((int)data[0] << 24) & 0xFF000000;
+		idiameter |= ((int)data[1] << 16) & 0x00FF0000;
+		idiameter |= ((int)data[2] << 8) & 0x0000FF00;
+		idiameter |= ((int)data[3]) & 0x000000FF;
+
+		diameter = (float)idiameter / (float)scale_factor;
+	}
+
+	if (data != NULL)
+	{
+		delete[] data;
+		data = NULL;
+	}
+
+	return diameter;
 }
 
 int CEyedeaInterface::SetObjectTwoLineDistanceTolerance(const int id, const int min_value, const int max_value)
@@ -1904,6 +2459,326 @@ int CEyedeaInterface::GetObjectTwoLineDistanceTolerance(const int id, int *out_m
 	}
 
 	char command = COMMAND_GET_OBJECT_TWO_LINE_DISTANCE_TOL;
+
+	int len = 4;
+	unsigned char* data = new unsigned char[len];
+
+	unsigned int scale_factor = 1;
+
+	int index = 0;
+
+	//id
+	data[index++] = (id & 0xFF000000) >> 24;
+	data[index++] = (id & 0x00FF0000) >> 16;
+	data[index++] = (id & 0x0000FF00) >> 8;
+	data[index++] = (id & 0x000000FF);
+
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+	if (ret == EYEDEA_ERROR_INVALID_MEMORY)
+	{
+		int sec = 0;
+		while (1)
+		{
+			ret = m_cls_eth_client->Open(m_ip, m_port);
+			if (ret == 0) {
+				ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+				break;
+			}
+			else
+			{
+				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
+				sec++;
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete[] data;
+						data = NULL;
+					}
+					return ret;
+				}
+				continue;
+			}
+		}
+	}
+
+	int min_value = 0;
+	int max_value = 0;
+
+	if (len >= 8)
+	{
+		int index = 0;
+
+		min_value = ((int)data[index++] << 24) & 0xFF000000;
+		min_value |= ((int)data[index++] << 16) & 0x00FF0000;
+		min_value |= ((int)data[index++] << 8) & 0x0000FF00;
+		min_value |= ((int)data[index++]) & 0x000000FF;
+
+		max_value = ((int)data[index++] << 24) & 0xFF000000;
+		max_value |= ((int)data[index++] << 16) & 0x00FF0000;
+		max_value |= ((int)data[index++] << 8) & 0x0000FF00;
+		max_value |= ((int)data[index++]) & 0x000000FF;
+	}
+
+	if (data != NULL)
+	{
+		delete[] data;
+		data = NULL;
+	}
+
+	if (out_min_value != NULL) (*out_min_value) = min_value;
+	if (out_max_value != NULL) (*out_max_value) = max_value;
+
+	return ret;
+}
+
+int CEyedeaInterface::SetObjectTwoLineAngleTolerance(const int id, const int min_value, const int max_value)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_SET_OBJECT_TWO_LINE_ANGLE_TOL;
+
+	int len = 4 + 4 + 4;
+	unsigned char* data = new unsigned char[len];
+
+	unsigned int scale_factor = 1;
+
+	int index = 0;
+
+	//id
+	data[index++] = (id & 0xFF000000) >> 24;
+	data[index++] = (id & 0x00FF0000) >> 16;
+	data[index++] = (id & 0x0000FF00) >> 8;
+	data[index++] = (id & 0x000000FF);
+
+	//min
+	data[index++] = (min_value & 0xFF000000) >> 24;
+	data[index++] = (min_value & 0x00FF0000) >> 16;
+	data[index++] = (min_value & 0x0000FF00) >> 8;
+	data[index++] = (min_value & 0x000000FF);
+
+	//max_valuie
+	data[index++] = (max_value & 0xFF000000) >> 24;
+	data[index++] = (max_value & 0x00FF0000) >> 16;
+	data[index++] = (max_value & 0x0000FF00) >> 8;
+	data[index++] = (max_value & 0x000000FF);
+
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+	if (ret == EYEDEA_ERROR_INVALID_MEMORY)
+	{
+		int sec = 0;
+		while (1)
+		{
+			ret = m_cls_eth_client->Open(m_ip, m_port);
+			if (ret == 0) {
+				ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+				break;
+			}
+			else
+			{
+				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
+				sec++;
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete[] data;
+						data = NULL;
+					}
+					return ret;
+				}
+				continue;
+			}
+		}
+	}
+	if (data != NULL)
+	{
+		delete[] data;
+		data = NULL;
+	}
+
+	return ret;
+}
+
+int CEyedeaInterface::GetObjectTwoLineAngleTolerance(const int id, int *out_min_value, int *out_max_value)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_GET_OBJECT_TWO_LINE_ANGLE_TOL;
+
+	int len = 4;
+	unsigned char* data = new unsigned char[len];
+
+	unsigned int scale_factor = 1;
+
+	int index = 0;
+
+	//id
+	data[index++] = (id & 0xFF000000) >> 24;
+	data[index++] = (id & 0x00FF0000) >> 16;
+	data[index++] = (id & 0x0000FF00) >> 8;
+	data[index++] = (id & 0x000000FF);
+
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+	if (ret == EYEDEA_ERROR_INVALID_MEMORY)
+	{
+		int sec = 0;
+		while (1)
+		{
+			ret = m_cls_eth_client->Open(m_ip, m_port);
+			if (ret == 0) {
+				ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+				break;
+			}
+			else
+			{
+				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
+				sec++;
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete[] data;
+						data = NULL;
+					}
+					return ret;
+				}
+				continue;
+			}
+		}
+	}
+
+	int min_value = 0;
+	int max_value = 0;
+
+	if (len >= 8)
+	{
+		int index = 0;
+
+		min_value = ((int)data[index++] << 24) & 0xFF000000;
+		min_value |= ((int)data[index++] << 16) & 0x00FF0000;
+		min_value |= ((int)data[index++] << 8) & 0x0000FF00;
+		min_value |= ((int)data[index++]) & 0x000000FF;
+
+		max_value = ((int)data[index++] << 24) & 0xFF000000;
+		max_value |= ((int)data[index++] << 16) & 0x00FF0000;
+		max_value |= ((int)data[index++] << 8) & 0x0000FF00;
+		max_value |= ((int)data[index++]) & 0x000000FF;
+	}
+
+	if (data != NULL)
+	{
+		delete[] data;
+		data = NULL;
+	}
+
+	if (out_min_value != NULL) (*out_min_value) = min_value;
+	if (out_max_value != NULL) (*out_max_value) = max_value;
+
+	return ret;
+}
+
+int CEyedeaInterface::SetObjectCircleDiameterTolerance(const int id, const int min_value, const int max_value)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_SET_OBJECT_CIRCLE_DIAMETER_TOL;
+
+	int len = 4 + 4 + 4;
+	unsigned char* data = new unsigned char[len];
+
+	unsigned int scale_factor = 1;
+
+	int index = 0;
+
+	//id
+	data[index++] = (id & 0xFF000000) >> 24;
+	data[index++] = (id & 0x00FF0000) >> 16;
+	data[index++] = (id & 0x0000FF00) >> 8;
+	data[index++] = (id & 0x000000FF);
+
+	//min
+	data[index++] = (min_value & 0xFF000000) >> 24;
+	data[index++] = (min_value & 0x00FF0000) >> 16;
+	data[index++] = (min_value & 0x0000FF00) >> 8;
+	data[index++] = (min_value & 0x000000FF);
+
+	//max_valuie
+	data[index++] = (max_value & 0xFF000000) >> 24;
+	data[index++] = (max_value & 0x00FF0000) >> 16;
+	data[index++] = (max_value & 0x0000FF00) >> 8;
+	data[index++] = (max_value & 0x000000FF);
+
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+	if (ret == EYEDEA_ERROR_INVALID_MEMORY)
+	{
+		int sec = 0;
+		while (1)
+		{
+			ret = m_cls_eth_client->Open(m_ip, m_port);
+			if (ret == 0) {
+				ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+				break;
+			}
+			else
+			{
+				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
+				sec++;
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete[] data;
+						data = NULL;
+					}
+					return ret;
+				}
+				continue;
+			}
+		}
+	}
+	if (data != NULL)
+	{
+		delete[] data;
+		data = NULL;
+	}
+
+	return ret;
+}
+
+int CEyedeaInterface::GetObjectCircleDiameterTolerance(const int id, int *out_min_value, int *out_max_value)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_GET_OBJECT_CIRCLE_DIAMETER_TOL;
 
 	int len = 4;
 	unsigned char* data = new unsigned char[len];
@@ -2204,6 +3079,299 @@ int CEyedeaInterface::GetObjectTwoLineDistanceInspection(const int id)
 	}
 
 	char command = COMMAND_GET_OBJECT_TWO_LINE_DISTANCE_INSPECTION_USE;
+
+	int len = 4;
+	unsigned char* data = new unsigned char[len];
+
+	unsigned int scale_factor = 1;
+
+	int index = 0;
+
+	//id
+	data[index++] = (id & 0xFF000000) >> 24;
+	data[index++] = (id & 0x00FF0000) >> 16;
+	data[index++] = (id & 0x0000FF00) >> 8;
+	data[index++] = (id & 0x000000FF);
+
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+	if (ret == EYEDEA_ERROR_INVALID_MEMORY)
+	{
+		int sec = 0;
+		while (1)
+		{
+			ret = m_cls_eth_client->Open(m_ip, m_port);
+			if (ret == 0) {
+				ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+				break;
+			}
+			else
+			{
+				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
+				sec++;
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete[] data;
+						data = NULL;
+					}
+					return ret;
+				}
+				continue;
+			}
+		}
+	}
+
+	int use = 0;
+
+	if (len >= 4)
+	{
+		int index = 0;
+
+		use = ((int)data[index++] << 24) & 0xFF000000;
+		use |= ((int)data[index++] << 16) & 0x00FF0000;
+		use |= ((int)data[index++] << 8) & 0x0000FF00;
+		use |= ((int)data[index++]) & 0x000000FF;
+
+	}
+
+	if (data != NULL)
+	{
+		delete[] data;
+		data = NULL;
+	}
+
+	return use;
+}
+
+int CEyedeaInterface::SetObjectTwoLineAngleInspection(const int id, const bool use)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_SET_OBJECT_TWO_LINE_ANGLE_INSPECTION_USE;
+
+	int len = 4 + 4;
+	unsigned char* data = new unsigned char[len];
+
+	unsigned int scale_factor = 1;
+
+	int index = 0;
+
+	//id
+	data[index++] = (id & 0xFF000000) >> 24;
+	data[index++] = (id & 0x00FF0000) >> 16;
+	data[index++] = (id & 0x0000FF00) >> 8;
+	data[index++] = (id & 0x000000FF);
+
+	//use
+	data[index++] = (use & 0xFF000000) >> 24;
+	data[index++] = (use & 0x00FF0000) >> 16;
+	data[index++] = (use & 0x0000FF00) >> 8;
+	data[index++] = (use & 0x000000FF);
+
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+	if (ret == EYEDEA_ERROR_INVALID_MEMORY)
+	{
+		int sec = 0;
+		while (1)
+		{
+			ret = m_cls_eth_client->Open(m_ip, m_port);
+			if (ret == 0) {
+				ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+				break;
+			}
+			else
+			{
+				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
+				sec++;
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete[] data;
+						data = NULL;
+					}
+					return ret;
+				}
+				continue;
+			}
+		}
+	}
+	if (data != NULL)
+	{
+		delete[] data;
+		data = NULL;
+	}
+
+	return ret;
+}
+
+int CEyedeaInterface::GetObjectTwoLineAngleInspection(const int id)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_GET_OBJECT_TWO_LINE_ANGLE_INSPECTION_USE;
+
+	int len = 4;
+	unsigned char* data = new unsigned char[len];
+
+	unsigned int scale_factor = 1;
+
+	int index = 0;
+
+	//id
+	data[index++] = (id & 0xFF000000) >> 24;
+	data[index++] = (id & 0x00FF0000) >> 16;
+	data[index++] = (id & 0x0000FF00) >> 8;
+	data[index++] = (id & 0x000000FF);
+
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+	if (ret == EYEDEA_ERROR_INVALID_MEMORY)
+	{
+		int sec = 0;
+		while (1)
+		{
+			ret = m_cls_eth_client->Open(m_ip, m_port);
+			if (ret == 0) {
+				ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+				break;
+			}
+			else
+			{
+				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
+				sec++;
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete[] data;
+						data = NULL;
+					}
+					return ret;
+				}
+				continue;
+			}
+		}
+	}
+
+	int use = 0;
+
+	if (len >= 4)
+	{
+		int index = 0;
+
+		use = ((int)data[index++] << 24) & 0xFF000000;
+		use |= ((int)data[index++] << 16) & 0x00FF0000;
+		use |= ((int)data[index++] << 8) & 0x0000FF00;
+		use |= ((int)data[index++]) & 0x000000FF;
+
+	}
+
+	if (data != NULL)
+	{
+		delete[] data;
+		data = NULL;
+	}
+
+	return use;
+}
+
+
+int CEyedeaInterface::SetObjectCircleDiameterInspection(const int id, const bool use)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_SET_OBJECT_CIRCLE_DIAMETER_INSPECTION_USE;
+
+	int len = 4 + 4;
+	unsigned char* data = new unsigned char[len];
+
+	unsigned int scale_factor = 1;
+
+	int index = 0;
+
+	//id
+	data[index++] = (id & 0xFF000000) >> 24;
+	data[index++] = (id & 0x00FF0000) >> 16;
+	data[index++] = (id & 0x0000FF00) >> 8;
+	data[index++] = (id & 0x000000FF);
+
+	//use
+	data[index++] = (use & 0xFF000000) >> 24;
+	data[index++] = (use & 0x00FF0000) >> 16;
+	data[index++] = (use & 0x0000FF00) >> 8;
+	data[index++] = (use & 0x000000FF);
+
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+	if (ret == EYEDEA_ERROR_INVALID_MEMORY)
+	{
+		int sec = 0;
+		while (1)
+		{
+			ret = m_cls_eth_client->Open(m_ip, m_port);
+			if (ret == 0) {
+				ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+				break;
+			}
+			else
+			{
+				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
+				sec++;
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete[] data;
+						data = NULL;
+					}
+					return ret;
+				}
+				continue;
+			}
+		}
+	}
+	if (data != NULL)
+	{
+		delete[] data;
+		data = NULL;
+	}
+
+	return ret;
+}
+
+int CEyedeaInterface::GetObjectCircleDiameterInspection(const int id)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_GET_OBJECT_CIRCLE_DIAMETER_INSPECTION_USE;
 
 	int len = 4;
 	unsigned char* data = new unsigned char[len];

@@ -95,6 +95,8 @@ BEGIN_MESSAGE_MAP(CEyedeaVisionConfigTabDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_CHECK_INSPECTION_DISTANCE, &CEyedeaVisionConfigTabDlg::OnBnClickedCheckInspectionDistance)
 	ON_BN_CLICKED(IDC_BUTTON_SELECT_LINE3, &CEyedeaVisionConfigTabDlg::OnBnClickedButtonSelectLine3)
 	ON_BN_CLICKED(IDC_BUTTON_SELECT_LINE2, &CEyedeaVisionConfigTabDlg::OnBnClickedButtonSelectLine2)
+	ON_BN_CLICKED(IDC_CHECK_INSPECTION_ANGLE, &CEyedeaVisionConfigTabDlg::OnBnClickedCheckInspectionAngle)
+	ON_BN_CLICKED(IDC_CHECK_INSPECTION_DIAMETER, &CEyedeaVisionConfigTabDlg::OnBnClickedCheckInspectionDiameter)
 END_MESSAGE_MAP()
 
 
@@ -2034,4 +2036,64 @@ void CEyedeaVisionConfigTabDlg::OnBnClickedButtonSelectLine2()
 {
 	// TODO: Add your control notification handler code here
 	ERVS_ClrObjectLine();
+}
+
+
+void CEyedeaVisionConfigTabDlg::OnBnClickedCheckInspectionAngle()
+{
+	// TODO: Add your control notification handler code here
+	int select_id = ERVS_DB_Get_Select_ID();
+
+	BOOL bCheck = IsDlgButtonChecked(IDC_CHECK_INSPECTION_ANGLE);
+
+	if (bCheck == TRUE)
+	{
+		CInspectionSetAngleDlg dlg_inspection_set_angle;
+
+		if (dlg_inspection_set_angle.DoModal() == IDOK)
+		{
+			ERVS_SetObjectTwoLineAngleInspection(select_id, true);
+		}
+	}
+	else
+	{
+		ERVS_SetObjectTwoLineAngleInspection(select_id, false);
+	}
+
+	bool bInspection = ERVS_GetObjectTwoLineAngleInspection(select_id);
+
+	if (bInspection)
+		CheckDlgButton(IDC_CHECK_INSPECTION_ANGLE, TRUE);
+	else
+		CheckDlgButton(IDC_CHECK_INSPECTION_ANGLE, FALSE);
+}
+
+
+void CEyedeaVisionConfigTabDlg::OnBnClickedCheckInspectionDiameter()
+{
+	// TODO: Add your control notification handler code here
+	int select_id = ERVS_DB_Get_Select_ID();
+
+	BOOL bCheck = IsDlgButtonChecked(IDC_CHECK_INSPECTION_DIAMETER);
+
+	if (bCheck == TRUE)
+	{
+		CInspectionSetDiameterDlg dlg_inspection_set_diameter;
+
+		if (dlg_inspection_set_diameter.DoModal() == IDOK)
+		{
+			ERVS_SetObjectCircleDiameterInspection(select_id, true);
+		}
+	}
+	else
+	{
+		ERVS_SetObjectCircleDiameterInspection(select_id, false);
+	}
+
+	bool bInspection = ERVS_GetObjectCircleDiameterInspection(select_id);
+
+	if (bInspection)
+		CheckDlgButton(IDC_CHECK_INSPECTION_DIAMETER, TRUE);
+	else
+		CheckDlgButton(IDC_CHECK_INSPECTION_DIAMETER, FALSE);
 }

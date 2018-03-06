@@ -84,6 +84,12 @@
     <ClInclude Include="InspectionSetDistanceDlb.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="InspectionSetAngleDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InspectionSetDiameterDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EyedeaExample.cpp">
@@ -126,6 +132,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="InspectionSetDistanceDlb.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InspectionSetAngleDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InspectionSetDiameterDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

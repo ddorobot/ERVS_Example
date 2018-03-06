@@ -1977,6 +1977,8 @@ void CEyedeaVisionConfigTabDlg::OnBnClickedButtonRobotPoseSet()
 void CEyedeaVisionConfigTabDlg::OnBnClickedCheckInspectionHistogram()
 {
 	// TODO: Add your control notification handler code here
+	int select_id = ERVS_DB_Get_Select_ID();
+
 	BOOL bCheck = IsDlgButtonChecked(IDC_CHECK_INSPECTION_HISTOGRAM);
 
 	if (bCheck == TRUE)
@@ -1985,12 +1987,24 @@ void CEyedeaVisionConfigTabDlg::OnBnClickedCheckInspectionHistogram()
 
 		if (dlg_inspection_set_histogram.DoModal() == IDOK)
 		{
-			CheckDlgButton(IDC_CHECK_INSPECTION_HISTOGRAM, TRUE);
+			ERVS_Histogram_Set_Inspection(select_id, true);
 		}
-		else
-		{
-			CheckDlgButton(IDC_CHECK_INSPECTION_HISTOGRAM, FALSE);
-		}
+	}
+	else
+	{
+		ERVS_Histogram_Set_Inspection(select_id, false);
+	}
+
+	bool bInspection = ERVS_Histogram_Get_Inspection(select_id);
+
+	if (bInspection)
+	{
+		CheckDlgButton(IDC_CHECK_INSPECTION_HISTOGRAM, TRUE);
+		m_combo_get_image_option_base.SetCurSel(3);
+	}
+	else
+	{
+		CheckDlgButton(IDC_CHECK_INSPECTION_HISTOGRAM, FALSE);
 	}
 }
 

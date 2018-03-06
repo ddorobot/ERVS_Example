@@ -52,7 +52,6 @@ public:
 	afx_msg void OnBnClickedCheckHistoInspecGreen2();
 	afx_msg void OnBnClickedCheckHistoInspecBlue2();
 	afx_msg void OnBnClickedButtonGetPixelCount();
-	afx_msg void OnBnClickedButtonSetInspectionPixelCount();
 
 	bool m_run_thread;
 	boost::thread m_thread;
@@ -87,4 +86,7 @@ public:
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 	virtual void OnOK();
 	virtual void OnCancel();
+	afx_msg void OnBnClickedButtonHistogramTolGet();
+	afx_msg void OnBnClickedButtonHistogramTolSet();
+	afx_msg void OnBnClickedOk();
 };

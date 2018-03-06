@@ -151,6 +151,8 @@ public:
 	int Histogram_Get_Inspection_Pixel_Count(const int id, int *out_count);
 	int Histogram_Set_Inspection_Pixel_Count_Tolerance_Rate(const int id, const float rate);
 	int Histogram_Get_Inspection_Pixel_Count_Tolerance_Rate(const int id, float *out_rate);
+	int Histogram_Set_Inspection_Pixel_Count_Tolerance(const int id, const int min_value, const int max_value);
+	int Histogram_Get_Inspection_Pixel_Count_Tolerance(const int id, int *out_min_value, int *out_max_value);
 
 private:
 	//bool m_run_thread_net;			//eyedea - boost thread exit value

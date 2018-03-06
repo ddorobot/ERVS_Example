@@ -585,3 +585,44 @@ int ERVS_Histogram_Get_Inspection_Pixel_Count_Tolerance_Rate(const int id, float
 {
 	return g_cls_interface.Histogram_Get_Inspection_Pixel_Count_Tolerance_Rate(id, out_rate);
 }
+
+int ERVS_Histogram_Set_Inspection_Pixel_Count_Tolerance(const int id, const int min_value, const int max_value)
+{
+	return g_cls_interface.Histogram_Set_Inspection_Pixel_Count_Tolerance(id, min_value, max_value);
+}
+
+int ERVS_Histogram_Get_Inspection_Pixel_Count_Tolerance(const int id, int *out_min_value, int *out_max_value)
+{
+	return g_cls_interface.Histogram_Get_Inspection_Pixel_Count_Tolerance(id, out_min_value, out_max_value);
+}
+
+int ERVS_Histogram_Set_Inspection(const int id, const bool use)
+{
+	int bak_id = ERVS_DB_Get_Select_ID();
+
+	ERVS_SetObject(id);
+
+	ERVS_SetVisionConfigOption(VISION_CONFIG_USE_HISTOGRAM, (int)use);
+
+	return ERVS_SetObject(bak_id);
+}
+
+int ERVS_Histogram_Get_Inspection(const int id)
+{
+	int bak_id = ERVS_DB_Get_Select_ID();
+
+	ERVS_SetObject(id);
+
+	float use_histogram = ERVS_GetVisionConfigOption(VISION_CONFIG_USE_HISTOGRAM);
+
+	ERVS_SetObject(bak_id);
+
+	if (use_histogram)
+	{
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
+}

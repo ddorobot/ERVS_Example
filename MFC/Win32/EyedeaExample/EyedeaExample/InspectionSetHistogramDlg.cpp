@@ -82,11 +82,13 @@ BEGIN_MESSAGE_MAP(CInspectionSetHistogramDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_CHECK_HISTO_INSPEC_GREEN2, &CInspectionSetHistogramDlg::OnBnClickedCheckHistoInspecGreen2)
 	ON_BN_CLICKED(IDC_CHECK_HISTO_INSPEC_BLUE2, &CInspectionSetHistogramDlg::OnBnClickedCheckHistoInspecBlue2)
 	ON_BN_CLICKED(IDC_BUTTON_GET_PIXEL_COUNT, &CInspectionSetHistogramDlg::OnBnClickedButtonGetPixelCount)
-	ON_BN_CLICKED(IDC_BUTTON_SET_INSPECTION_PIXEL_COUNT, &CInspectionSetHistogramDlg::OnBnClickedButtonSetInspectionPixelCount)
 	ON_WM_CLOSE()
 	ON_WM_LBUTTONDOWN()
 	ON_WM_LBUTTONUP()
 	ON_WM_MOUSEMOVE()
+	ON_BN_CLICKED(IDC_BUTTON_HISTOGRAM_TOL_GET, &CInspectionSetHistogramDlg::OnBnClickedButtonHistogramTolGet)
+	ON_BN_CLICKED(IDC_BUTTON_HISTOGRAM_TOL_SET, &CInspectionSetHistogramDlg::OnBnClickedButtonHistogramTolSet)
+	ON_BN_CLICKED(IDOK, &CInspectionSetHistogramDlg::OnBnClickedOk)
 END_MESSAGE_MAP()
 
 
@@ -128,6 +130,48 @@ BOOL CInspectionSetHistogramDlg::OnInitDialog()
 	if (m_select_id > 0)
 	{
 		ERVS_Histogram_Get_Graph(m_select_id, &m_p_histogram, &m_p_histogram_r, &m_p_histogram_g, &m_p_histogram_b, &m_histogram_size);
+	}
+
+	OnBnClickedButtonHistogramTolGet();
+	
+	//Inspection Elem. Option
+	int option = 0;
+	ERVS_Histogram_Get_Use_Element(m_select_id, &option);
+	//Gray
+	if (option & HISTOGRAM_USE_GRAY)
+	{
+		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_GRAY, TRUE);
+	}
+	else
+	{
+		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_GRAY, FALSE);
+	}
+	//Red
+	if (option & HISTOGRAM_USE_RED)
+	{
+		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_RED2, TRUE);
+	}
+	else
+	{
+		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_RED2, FALSE);
+	}
+	//Green
+	if (option & HISTOGRAM_USE_GREEN)
+	{
+		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_GREEN2, TRUE);
+	}
+	else
+	{
+		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_GREEN2, FALSE);
+	}
+	//Blue
+	if (option & HISTOGRAM_USE_BLUE)
+	{
+		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_BLUE2, TRUE);
+	}
+	else
+	{
+		CheckDlgButton(IDC_CHECK_HISTO_INSPEC_BLUE2, FALSE);
 	}
 
 	//start Thread
@@ -334,8 +378,6 @@ void CInspectionSetHistogramDlg::ThreadFunctionDraw()
 
 	while (m_run_thread)
 	{
-		boost::this_thread::sleep(boost::posix_time::millisec(10));
-
 		//ROI
 		int len = 921600;
 
@@ -369,6 +411,8 @@ void CInspectionSetHistogramDlg::ThreadFunctionDraw()
 
 		vImage.CopyOf(&IplImage(m_result_histogram_b_image), 1);							//mat to vimage
 		vImage.DrawToHDC(dc_histogram_b_display.m_hDC, &rect_histogram_b_display);				//draw on display_rect
+
+		boost::this_thread::sleep(boost::posix_time::millisec(10));
 	}
 }
 
@@ -781,14 +825,14 @@ void CInspectionSetHistogramDlg::OnBnClickedButtonGetPixelCount()
 	}
 
 	//Get Base Information
-	float tol_rate = 0.0;
-	ERVS_Histogram_Get_Inspection_Pixel_Count_Tolerance_Rate(m_select_id, &tol_rate);
+	//float tol_rate = 0.0;
+	//ERVS_Histogram_Get_Inspection_Pixel_Count_Tolerance_Rate(m_select_id, &tol_rate);
 
-	str.Format(_T("%.2f"), tol_rate);
-	GetDlgItem(IDC_EDIT_PIXEL_COUNT_TOL)->SetWindowText(str);
+	//str.Format(_T("%.2f"), tol_rate);
+	//GetDlgItem(IDC_EDIT_PIXEL_COUNT_TOL)->SetWindowText(str);
 }
 
-
+#if 0
 void CInspectionSetHistogramDlg::OnBnClickedButtonSetInspectionPixelCount()
 {
 	// TODO: Add your control notification handler code here
@@ -806,6 +850,7 @@ void CInspectionSetHistogramDlg::OnBnClickedButtonSetInspectionPixelCount()
 	GetDlgItem(IDC_EDIT_PIXEL_COUNT)->SetWindowText(str);
 
 	//tol rate
+	/*
 	GetDlgItem(IDC_EDIT_PIXEL_COUNT_TOL)->GetWindowText(str);
 	float tol_rate = _ttof(str);
 
@@ -816,14 +861,16 @@ void CInspectionSetHistogramDlg::OnBnClickedButtonSetInspectionPixelCount()
 
 	str.Format(_T("%.2f"), tol_rate);
 	GetDlgItem(IDC_EDIT_PIXEL_COUNT_TOL)->SetWindowText(str);
+	*/
 }
-
+#endif
 
 void CInspectionSetHistogramDlg::OnClose()
 {
 	// TODO: Add your message handler code here and/or call default
 	m_run_thread = false;
-	m_thread.timed_join(boost::posix_time::seconds(1));			//wait for end of thread
+	//m_thread.timed_join(boost::posix_time::seconds(1));			//wait for end of thread
+	m_thread.join();			//wait for end of thread
 
 	CDialogEx::OnClose();
 }
@@ -1064,7 +1111,8 @@ void CInspectionSetHistogramDlg::OnOK()
 {
 	// TODO: Add your specialized code here and/or call the base class
 	m_run_thread = false;
-	m_thread.timed_join(boost::posix_time::seconds(1));			//wait for end of thread
+	//m_thread.timed_join(boost::posix_time::seconds(1));			//wait for end of thread
+	m_thread.join();			//wait for end of thread
 
 	CDialogEx::OnOK();
 }
@@ -1074,7 +1122,52 @@ void CInspectionSetHistogramDlg::OnCancel()
 {
 	// TODO: Add your specialized code here and/or call the base class
 	m_run_thread = false;
-	m_thread.timed_join(boost::posix_time::seconds(1));			//wait for end of thread
+	//m_thread.timed_join(boost::posix_time::seconds(1));			//wait for end of thread
+	m_thread.join();			//wait for end of thread
 
 	CDialogEx::OnCancel();
+}
+
+
+void CInspectionSetHistogramDlg::OnBnClickedButtonHistogramTolGet()
+{
+	// TODO: Add your control notification handler code here
+	int min_value = 0;
+	int max_value = 0;
+	ERVS_Histogram_Get_Inspection_Pixel_Count_Tolerance(m_select_id, &min_value, &max_value);
+
+	CString str;
+	str.Format(_T("%d"), min_value);
+	GetDlgItem(IDC_EDIT_HISTOGRAM_TOL_MIN)->SetWindowText(str);
+
+	str.Format(_T("%d"), max_value);
+	GetDlgItem(IDC_EDIT_HISTOGRAM_TOL_MAX)->SetWindowText(str);
+}
+
+
+void CInspectionSetHistogramDlg::OnBnClickedButtonHistogramTolSet()
+{
+	// TODO: Add your control notification handler code here
+	CString str;
+	GetDlgItem(IDC_EDIT_HISTOGRAM_TOL_MIN)->GetWindowText(str);
+	int min_value = _ttoi(str);
+
+	GetDlgItem(IDC_EDIT_HISTOGRAM_TOL_MAX)->GetWindowText(str);
+	int max_value = _ttoi(str);
+
+	ERVS_Histogram_Set_Inspection_Pixel_Count_Tolerance(m_select_id, min_value, max_value);
+
+	OnBnClickedButtonHistogramTolGet();
+
+}
+
+
+void CInspectionSetHistogramDlg::OnBnClickedOk()
+{
+	// TODO: Add your control notification handler code here
+	m_run_thread = false;
+	//m_thread.timed_join(boost::posix_time::seconds(1));			//wait for end of thread
+	m_thread.join();			//wait for end of thread
+
+	CDialogEx::OnOK();
 }

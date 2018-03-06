@@ -2184,11 +2184,11 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonBasePixelCountGet()
 	str.Format(_T("%d"), inspection_pixel_count);
 	GetDlgItem(IDC_EDIT_HISTOGRAM_INSPECTION_BASE_PIXEL_COUNT)->SetWindowText(str);
 
-	float tol_rate = 0.0;
-	ERVS_Histogram_Get_Inspection_Pixel_Count_Tolerance_Rate(m_select_id, &tol_rate);
+	//float tol_rate = 0.0;
+	//ERVS_Histogram_Get_Inspection_Pixel_Count_Tolerance_Rate(m_select_id, &tol_rate);
 
-	str.Format(_T("%.2f"), tol_rate);
-	GetDlgItem(IDC_EDIT_PIXEL_COUNT_TOL)->SetWindowText(str);
+	//str.Format(_T("%.2f"), tol_rate);
+	//GetDlgItem(IDC_EDIT_PIXEL_COUNT_TOL)->SetWindowText(str);
 }
 
 void CEyedeaCheckDefectTabDlg::OnBnClickedButtonGeometryDistanceBaseGet()

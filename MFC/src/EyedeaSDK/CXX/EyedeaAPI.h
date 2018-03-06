@@ -157,8 +157,11 @@ int ERVS_Histogram_Set_Inspection_Pixel_Count(const int id, const int count);
 int ERVS_Histogram_Get_Inspection_Pixel_Count(const int id, int *out_count);
 int ERVS_Histogram_Set_Inspection_Pixel_Count_Tolerance_Rate(const int id, const float rate);
 int ERVS_Histogram_Get_Inspection_Pixel_Count_Tolerance_Rate(const int id, float *out_rate);
+int ERVS_Histogram_Set_Inspection_Pixel_Count_Tolerance(const int id, const int min_value, const int max_value);
+int ERVS_Histogram_Get_Inspection_Pixel_Count_Tolerance(const int id, int *out_min_value, int *out_max_value);
 int ERVS_Histogram_Get_Pixel_Count(const int id, int *out_count);
 int ERVS_Histogram_Get_Pixel_Count(const int index1, const int index2, int *out_count);
-
+int ERVS_Histogram_Set_Inspection(const int id, const bool use);
+int ERVS_Histogram_Get_Inspection(const int id);
 
 #endif

@@ -97,6 +97,15 @@ public:
 
 	
 	int GetFindObjectInfo(int index, int max_objects_count, int option, float** out_id, float** out_cx, float** out_cy, float** out_rx, float** out_ry, float** out_bound_cx, float** out_bound_cy, float** out_bound_rx, float** out_bound_ry, float** out_mass_cx, float** out_mass_cy, float** out_mass_rx, float** out_mass_ry, float** out_circle_rx, float** out_circle_ry, float** out_line1_x, float** out_line1_y, float** out_line2_x, float** out_line2_y, float** out_angle, float** out_type, float** out_score, float** out_pass);
+	int GetFindObjectInfo(int index, int max_objects_count, int option, float** out_id,
+							float** out_cx, float** out_cy, float** out_rx, float** out_ry,
+							float** out_bound_cx, float** out_bound_cy, float** out_bound_rx, float** out_bound_ry,
+							float** out_mass_cx, float** out_mass_cy, float** out_mass_rx, float** out_mass_ry,
+							float** out_circle_rx, float** out_circle_ry, float ** out_circle_diameter, float** out_circle_pass,
+							float** out_line_distance, float** out_line_distance_pass,
+							float** out_line_angle, float** out_line_angle_pass,
+							float** out_histogram, float** out_histogram_pass,
+							float** out_angle, float** out_type, float** out_score);
 	int GetFindObjectResultInfo(int base_index, int sub_index, float* out_id, float* out_cx, float* out_cy, float* out_rx, float* out_ry, float* out_angle, float* out_type, float* out_score, float** out_histogram, float** out_histogram_b, float** out_histogram_g, float** out_histogram_r, float* out_histogram_size);
 
 	int Calibration_Add(float robot_x, float robot_y);

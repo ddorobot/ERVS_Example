@@ -639,3 +639,33 @@ int ERVS_Histogram_Get_Inspection(const int id)
 		return 0;
 	}
 }
+
+int ERVS_CalcFocusRate(const int id)
+{
+	return g_cls_interface.CalcFocusRate(id);
+}
+
+int ERVS_SetFocusRate(const int id, const int rate)
+{
+	return g_cls_interface.SetFocusRate(id, rate);
+}
+
+int ERVS_GetFocusRate(const int id)
+{
+	return g_cls_interface.GetFocusRate(id);
+}
+
+int ERVS_CalcContrastRate(const int id)
+{
+	return g_cls_interface.CalcContrastRate(id);
+}
+
+int ERVS_SetContrastRate(const int id, const int rate)
+{
+	return g_cls_interface.SetContrastRate(id, rate);
+}
+
+int ERVS_GetContrastRate(const int id)
+{
+	return g_cls_interface.GetContrastRate(id);
+}

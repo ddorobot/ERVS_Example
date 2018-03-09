@@ -5374,8 +5374,8 @@ int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, int op
 		printf("Before accessing the ERVS\n");
 		return EYEDEA_ERROR_INVALID_MEMORY;
 	}
-
-	char command = COMMAND_GET_FIND_OBJECT_INFO;
+	 
+	char command = COMMAND_GET_FIND_OBJECT_INFO2;
 
 	int len = 4 + 4 + 4;
 	unsigned char* data = new unsigned char[len];
@@ -8036,6 +8036,12 @@ int CEyedeaInterface::Histogram_Get_Use_Element(const int id, int *out_option)
 
 	(*out_option) = i_option;
 
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+
 	return ret;
 }
 
@@ -8097,6 +8103,12 @@ int CEyedeaInterface::Histogram_Get_Pixel_Count(const int index1, const int inde
 
 	(*out_count) = i_count;
 
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+
 	return ret;
 }
 
@@ -8151,6 +8163,12 @@ int CEyedeaInterface::Histogram_Get_Pixel_Count(const int id, int *out_count)
 	}
 
 	(*out_count) = i_count;
+
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
 
 	return ret;
 }
@@ -8249,6 +8267,12 @@ int CEyedeaInterface::Histogram_Get_Inspection_Pixel_Count(const int id, int *ou
 	}
 
 	(*out_count) = i_count;
+
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
 
 	return ret;
 }
@@ -8459,6 +8483,370 @@ int CEyedeaInterface::Histogram_Get_Inspection_Pixel_Count_Tolerance(const int i
 
 	(*out_min_value) = (float)i_min;
 	(*out_max_value) = (float)i_max;
+
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+
+	return ret;
+}
+
+int CEyedeaInterface::CalcFocusRate(const int id)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_CALC_FOCUS_RATE;
+
+	int len = 4;
+	unsigned char* data = new unsigned char[len];
+
+	unsigned int scale_factor = 1;
+
+	int index = 0;
+
+	//id
+	data[index++] = (id & 0xFF000000) >> 24;
+	data[index++] = (id & 0x00FF0000) >> 16;
+	data[index++] = (id & 0x0000FF00) >> 8;
+	data[index++] = (id & 0x000000FF);
+
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+
+		return ret;
+	}
+
+	index = 0;
+	int i_rate = 0;
+	if (len >= 4)
+	{
+		//i_value
+		i_rate = ((int)data[index++] << 24) & 0xFF000000;
+		i_rate |= ((int)data[index++] << 16) & 0x00FF0000;
+		i_rate |= ((int)data[index++] << 8) & 0x0000FF00;
+		i_rate |= ((int)data[index++]) & 0x000000FF;
+
+		ret = i_rate;
+	}
+
+	
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+
+	return ret;
+}
+
+int CEyedeaInterface::SetFocusRate(const int id, const int rate)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_SET_FOCUS_RATE;
+
+	int len = 4+4;
+	unsigned char* data = new unsigned char[len];
+
+	unsigned int scale_factor = 1;
+
+	int index = 0;
+
+	//id
+	data[index++] = (id & 0xFF000000) >> 24;
+	data[index++] = (id & 0x00FF0000) >> 16;
+	data[index++] = (id & 0x0000FF00) >> 8;
+	data[index++] = (id & 0x000000FF);
+
+	//rate
+	data[index++] = (rate & 0xFF000000) >> 24;
+	data[index++] = (rate & 0x00FF0000) >> 16;
+	data[index++] = (rate & 0x0000FF00) >> 8;
+	data[index++] = (rate & 0x000000FF);
+
+
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+
+		return ret;
+	}
+
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+
+	return ret;
+}
+
+int CEyedeaInterface::GetFocusRate(const int id)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_GET_FOCUS_RATE;
+
+	int len = 4;
+	unsigned char* data = new unsigned char[len];
+
+	unsigned int scale_factor = 1;
+
+	int index = 0;
+
+	//id
+	data[index++] = (id & 0xFF000000) >> 24;
+	data[index++] = (id & 0x00FF0000) >> 16;
+	data[index++] = (id & 0x0000FF00) >> 8;
+	data[index++] = (id & 0x000000FF);
+
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+
+		return ret;
+	}
+
+	index = 0;
+	int i_rate = 0;
+	if (len >= 4)
+	{
+		//i_value
+		i_rate = ((int)data[index++] << 24) & 0xFF000000;
+		i_rate |= ((int)data[index++] << 16) & 0x00FF0000;
+		i_rate |= ((int)data[index++] << 8) & 0x0000FF00;
+		i_rate |= ((int)data[index++]) & 0x000000FF;
+
+		ret = i_rate;
+	}
+
+
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+
+	return ret;
+}
+
+int CEyedeaInterface::CalcContrastRate(const int id)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_CALC_CONTRAST_RATE;
+
+	int len = 4;
+	unsigned char* data = new unsigned char[len];
+
+	unsigned int scale_factor = 1;
+
+	int index = 0;
+
+	//id
+	data[index++] = (id & 0xFF000000) >> 24;
+	data[index++] = (id & 0x00FF0000) >> 16;
+	data[index++] = (id & 0x0000FF00) >> 8;
+	data[index++] = (id & 0x000000FF);
+
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+
+		return ret;
+	}
+
+	index = 0;
+	int i_rate = 0;
+	if (len >= 4)
+	{
+		//i_value
+		i_rate = ((int)data[index++] << 24) & 0xFF000000;
+		i_rate |= ((int)data[index++] << 16) & 0x00FF0000;
+		i_rate |= ((int)data[index++] << 8) & 0x0000FF00;
+		i_rate |= ((int)data[index++]) & 0x000000FF;
+
+		ret = i_rate;
+	}
+
+
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+
+	return ret;
+}
+
+int CEyedeaInterface::SetContrastRate(const int id, const int rate)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_SET_CONTRAST_RATE;
+
+	int len = 4 + 4;
+	unsigned char* data = new unsigned char[len];
+
+	unsigned int scale_factor = 1;
+
+	int index = 0;
+
+	//id
+	data[index++] = (id & 0xFF000000) >> 24;
+	data[index++] = (id & 0x00FF0000) >> 16;
+	data[index++] = (id & 0x0000FF00) >> 8;
+	data[index++] = (id & 0x000000FF);
+
+	//rate
+	data[index++] = (rate & 0xFF000000) >> 24;
+	data[index++] = (rate & 0x00FF0000) >> 16;
+	data[index++] = (rate & 0x0000FF00) >> 8;
+	data[index++] = (rate & 0x000000FF);
+
+
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+
+		return ret;
+	}
+
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+
+	return ret;
+}
+
+int CEyedeaInterface::GetContrastRate(const int id)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_GET_CONTRAST_RATE;
+
+	int len = 4;
+	unsigned char* data = new unsigned char[len];
+
+	unsigned int scale_factor = 1;
+
+	int index = 0;
+
+	//id
+	data[index++] = (id & 0xFF000000) >> 24;
+	data[index++] = (id & 0x00FF0000) >> 16;
+	data[index++] = (id & 0x0000FF00) >> 8;
+	data[index++] = (id & 0x000000FF);
+
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+
+		return ret;
+	}
+
+	index = 0;
+	int i_rate = 0;
+	if (len >= 4)
+	{
+		//i_value
+		i_rate = ((int)data[index++] << 24) & 0xFF000000;
+		i_rate |= ((int)data[index++] << 16) & 0x00FF0000;
+		i_rate |= ((int)data[index++] << 8) & 0x0000FF00;
+		i_rate |= ((int)data[index++]) & 0x000000FF;
+
+		ret = i_rate;
+	}
+
+
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
 
 	return ret;
 }

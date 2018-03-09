@@ -163,6 +163,14 @@ public:
 	int Histogram_Set_Inspection_Pixel_Count_Tolerance(const int id, const int min_value, const int max_value);
 	int Histogram_Get_Inspection_Pixel_Count_Tolerance(const int id, int *out_min_value, int *out_max_value);
 
+	int CalcFocusRate(const int id);
+	int SetFocusRate(const int id, const int rate);
+	int GetFocusRate(const int id);
+
+	int CalcContrastRate(const int id);
+	int SetContrastRate(const int id, const int rate);
+	int GetContrastRate(const int id);
+
 private:
 	//bool m_run_thread_net;			//eyedea - boost thread exit value
 	//boost::thread m_thread_net;		//eyedea - network thread

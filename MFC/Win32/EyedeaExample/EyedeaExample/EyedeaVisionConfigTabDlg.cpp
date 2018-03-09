@@ -97,6 +97,8 @@ BEGIN_MESSAGE_MAP(CEyedeaVisionConfigTabDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_SELECT_LINE2, &CEyedeaVisionConfigTabDlg::OnBnClickedButtonSelectLine2)
 	ON_BN_CLICKED(IDC_CHECK_INSPECTION_ANGLE, &CEyedeaVisionConfigTabDlg::OnBnClickedCheckInspectionAngle)
 	ON_BN_CLICKED(IDC_CHECK_INSPECTION_DIAMETER, &CEyedeaVisionConfigTabDlg::OnBnClickedCheckInspectionDiameter)
+	ON_BN_CLICKED(IDC_BUTTON_CALC_FOCUS_RATE, &CEyedeaVisionConfigTabDlg::OnBnClickedButtonCalcFocusRate)
+	ON_BN_CLICKED(IDC_BUTTON_CALC_CONTRAST_RATE, &CEyedeaVisionConfigTabDlg::OnBnClickedButtonCalcContrastRate)
 END_MESSAGE_MAP()
 
 
@@ -2110,4 +2112,30 @@ void CEyedeaVisionConfigTabDlg::OnBnClickedCheckInspectionDiameter()
 		CheckDlgButton(IDC_CHECK_INSPECTION_DIAMETER, TRUE);
 	else
 		CheckDlgButton(IDC_CHECK_INSPECTION_DIAMETER, FALSE);
+}
+
+
+void CEyedeaVisionConfigTabDlg::OnBnClickedButtonCalcFocusRate()
+{
+	// TODO: Add your control notification handler code here
+	int select_id = ERVS_DB_Get_Select_ID();
+
+	int focus_rate = ERVS_CalcFocusRate(select_id);
+
+	CString str;
+	str.Format(_T("%d"), focus_rate);
+	GetDlgItem(IDC_EDIT_CALC_FOCUS_RATE)->SetWindowText(str);
+}
+
+
+void CEyedeaVisionConfigTabDlg::OnBnClickedButtonCalcContrastRate()
+{
+	// TODO: Add your control notification handler code here
+	int select_id = ERVS_DB_Get_Select_ID();
+
+	int contrast_rate = ERVS_CalcContrastRate(select_id);
+
+	CString str;
+	str.Format(_T("%d"), contrast_rate);
+	GetDlgItem(IDC_EDIT_CALC_CONTRAST)->SetWindowText(str);
 }

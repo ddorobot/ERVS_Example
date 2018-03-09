@@ -125,4 +125,6 @@ public:
 	afx_msg void OnBnClickedButtonSelectLine2();
 	afx_msg void OnBnClickedCheckInspectionAngle();
 	afx_msg void OnBnClickedCheckInspectionDiameter();
+	afx_msg void OnBnClickedButtonCalcFocusRate();
+	afx_msg void OnBnClickedButtonCalcContrastRate();
 };

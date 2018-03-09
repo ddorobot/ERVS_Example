@@ -173,4 +173,12 @@ int ERVS_Histogram_Get_Pixel_Count(const int index1, const int index2, int *out_
 int ERVS_Histogram_Set_Inspection(const int id, const bool use);
 int ERVS_Histogram_Get_Inspection(const int id);
 
+//Image Focus Rate
+int ERVS_CalcFocusRate(const int id);
+int ERVS_SetFocusRate(const int id, const int rate);
+int ERVS_GetFocusRate(const int id);
+//Image Contrast Rate
+int ERVS_CalcContrastRate(const int id);
+int ERVS_SetContrastRate(const int id, const int rate);
+int ERVS_GetContrastRate(const int id);
 #endif

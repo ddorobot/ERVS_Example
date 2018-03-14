@@ -1,6 +1,8 @@
 #include "EyedeaInterface.h"
 #include "EyedeaErrorType.h"
 
+//#define EYEDEA_JAVA_API
+
 CEyedeaInterface::CEyedeaInterface(void) :
 	m_cls_eth_client(NULL)
 {
@@ -4932,9 +4934,11 @@ int CEyedeaInterface::GetFindObjectResultInfo(int base_index, int sub_index, flo
 		int histogram_size = (int)(*out_histogram_size);
 		if (histogram_size > 0)
 		{
+#ifndef EYEDEA_JAVA_API
 			//gray
 			if ((*out_histogram) != NULL)	free((*out_histogram));
 			(*out_histogram) = (float *)malloc(sizeof(float)*histogram_size);
+#endif
 
 			for (int i = 0; i < histogram_size; i++)
 			{
@@ -4947,9 +4951,11 @@ int CEyedeaInterface::GetFindObjectResultInfo(int base_index, int sub_index, flo
 				(*out_histogram)[i] = (float)i_histogram_data / (float)scale_factor;
 			}
 
+#ifndef EYEDEA_JAVA_API
 			//b
 			if ((*out_histogram_b) != NULL)	free((*out_histogram_b));
 			(*out_histogram_b) = (float *)malloc(sizeof(float)*histogram_size);
+#endif
 
 			for (int i = 0; i < histogram_size; i++)
 			{
@@ -4962,9 +4968,11 @@ int CEyedeaInterface::GetFindObjectResultInfo(int base_index, int sub_index, flo
 				(*out_histogram_b)[i] = (float)i_histogram_data / (float)scale_factor;
 			}
 
+#ifndef EYEDEA_JAVA_API
 			//g
 			if ((*out_histogram_g) != NULL)	free((*out_histogram_g));
 			(*out_histogram_g) = (float *)malloc(sizeof(float)*histogram_size);
+#endif
 
 			for (int i = 0; i < histogram_size; i++)
 			{
@@ -4977,9 +4985,11 @@ int CEyedeaInterface::GetFindObjectResultInfo(int base_index, int sub_index, flo
 				(*out_histogram_g)[i] = (float)i_histogram_data / (float)scale_factor;
 			}
 
+#ifndef EYEDEA_JAVA_API
 			//r
 			if ((*out_histogram_r) != NULL)	free((*out_histogram_r));
 			(*out_histogram_r) = (float *)malloc(sizeof(float)*histogram_size);
+#endif
 
 			for (int i = 0; i < histogram_size; i++)
 			{
@@ -5116,6 +5126,7 @@ int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, int op
 
 		if (nObject > 0 && len >= 4 + ((23*4)* nObject))
 		{
+#ifndef EYEDEA_JAVA_API
 			if ((*out_id) != NULL)	free((*out_id));
 			if ((*out_cx) != NULL)	free((*out_cx));
 			if ((*out_cy) != NULL)	free((*out_cy));
@@ -5165,6 +5176,7 @@ int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, int op
 			(*out_score) = (float *)malloc(sizeof(float)*nObject);
 			(*out_pass) = (float *)malloc(sizeof(float)*nObject);
 			//(*out_index) = (float *)malloc(sizeof(float)*nObject);
+#endif
 
 			for (int i = 0; i < nObject; i++)
 			{
@@ -5480,6 +5492,7 @@ int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, int op
 
 		if (nObject > 0 && len >= 4 + ((26 * 4)* nObject))
 		{
+#ifndef EYEDEA_JAVA_API
 			if ((*out_id) != NULL)	free((*out_id));
 			if ((*out_cx) != NULL)	free((*out_cx));
 			if ((*out_cy) != NULL)	free((*out_cy));
@@ -5533,6 +5546,7 @@ int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, int op
 			(*out_angle) = (float *)malloc(sizeof(float)*nObject);
 			(*out_type) = (float *)malloc(sizeof(float)*nObject);
 			(*out_score) = (float *)malloc(sizeof(float)*nObject);
+#endif
 
 			for (int i = 0; i < nObject; i++)
 			{
@@ -7867,9 +7881,11 @@ int CEyedeaInterface::Histogram_Get_Graph(const int id, float** out_histogram, f
 		int histogram_size = (int)(*out_histogram_size);
 		if (histogram_size > 0)
 		{
+#ifndef EYEDEA_JAVA_API
 			//gray
 			if ((*out_histogram) != NULL)	free((*out_histogram));
 			(*out_histogram) = (float *)malloc(sizeof(float)*histogram_size);
+#endif
 
 			for (int i = 0; i < histogram_size; i++)
 			{
@@ -7882,9 +7898,11 @@ int CEyedeaInterface::Histogram_Get_Graph(const int id, float** out_histogram, f
 				(*out_histogram)[i] = (float)i_histogram_data / (float)scale_factor;
 			}
 
+#ifndef EYEDEA_JAVA_API
 			//b
 			if ((*out_histogram_b) != NULL)	free((*out_histogram_b));
 			(*out_histogram_b) = (float *)malloc(sizeof(float)*histogram_size);
+#endif
 
 			for (int i = 0; i < histogram_size; i++)
 			{
@@ -7897,9 +7915,11 @@ int CEyedeaInterface::Histogram_Get_Graph(const int id, float** out_histogram, f
 				(*out_histogram_b)[i] = (float)i_histogram_data / (float)scale_factor;
 			}
 
+#ifndef EYEDEA_JAVA_API
 			//g
 			if ((*out_histogram_g) != NULL)	free((*out_histogram_g));
 			(*out_histogram_g) = (float *)malloc(sizeof(float)*histogram_size);
+#endif
 
 			for (int i = 0; i < histogram_size; i++)
 			{
@@ -7912,9 +7932,11 @@ int CEyedeaInterface::Histogram_Get_Graph(const int id, float** out_histogram, f
 				(*out_histogram_g)[i] = (float)i_histogram_data / (float)scale_factor;
 			}
 
+#ifndef EYEDEA_JAVA_API
 			//r
 			if ((*out_histogram_r) != NULL)	free((*out_histogram_r));
 			(*out_histogram_r) = (float *)malloc(sizeof(float)*histogram_size);
+#endif
 
 			for (int i = 0; i < histogram_size; i++)
 			{

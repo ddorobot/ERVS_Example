@@ -269,9 +269,13 @@ void CEyedeaCameraConfigTabDlg::SetCameraConfigUI()
 		str.Format(_T("%d"), gain);
 		GetDlgItem(IDC_EDIT_CAMERA_VAL_GAIN)->SetWindowText(str);
 
-		m_Slider_Camera_Exposure.SetRange(exposure_min, exposure_max, TRUE);
+		if (exposure_min != -1 && exposure_max != -1)
+		{
+			m_Slider_Camera_Exposure.SetRange(exposure_min, exposure_max, TRUE);
 
-		m_Slider_Camera_GAIN.SetRange(gain_min, gain_max, TRUE);
+			m_Slider_Camera_GAIN.SetRange(gain_min, gain_max, TRUE);
+		}
+		
 
 	}
 	m_Slider_Camera_LED_Brightness.SetPos(ledbright);

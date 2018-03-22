@@ -1,8 +1,6 @@
 #include "EyedeaInterface.h"
 #include "EyedeaErrorType.h"
 
-//#define EYEDEA_JAVA_API
-
 CEyedeaInterface::CEyedeaInterface(void) :
 	m_cls_eth_client(NULL)
 {
@@ -4934,11 +4932,9 @@ int CEyedeaInterface::GetFindObjectResultInfo(int base_index, int sub_index, flo
 		int histogram_size = (int)(*out_histogram_size);
 		if (histogram_size > 0)
 		{
-#ifndef EYEDEA_JAVA_API
 			//gray
 			if ((*out_histogram) != NULL)	free((*out_histogram));
 			(*out_histogram) = (float *)malloc(sizeof(float)*histogram_size);
-#endif
 
 			for (int i = 0; i < histogram_size; i++)
 			{
@@ -4951,11 +4947,9 @@ int CEyedeaInterface::GetFindObjectResultInfo(int base_index, int sub_index, flo
 				(*out_histogram)[i] = (float)i_histogram_data / (float)scale_factor;
 			}
 
-#ifndef EYEDEA_JAVA_API
 			//b
 			if ((*out_histogram_b) != NULL)	free((*out_histogram_b));
 			(*out_histogram_b) = (float *)malloc(sizeof(float)*histogram_size);
-#endif
 
 			for (int i = 0; i < histogram_size; i++)
 			{
@@ -4968,11 +4962,9 @@ int CEyedeaInterface::GetFindObjectResultInfo(int base_index, int sub_index, flo
 				(*out_histogram_b)[i] = (float)i_histogram_data / (float)scale_factor;
 			}
 
-#ifndef EYEDEA_JAVA_API
 			//g
 			if ((*out_histogram_g) != NULL)	free((*out_histogram_g));
 			(*out_histogram_g) = (float *)malloc(sizeof(float)*histogram_size);
-#endif
 
 			for (int i = 0; i < histogram_size; i++)
 			{
@@ -4985,11 +4977,9 @@ int CEyedeaInterface::GetFindObjectResultInfo(int base_index, int sub_index, flo
 				(*out_histogram_g)[i] = (float)i_histogram_data / (float)scale_factor;
 			}
 
-#ifndef EYEDEA_JAVA_API
 			//r
 			if ((*out_histogram_r) != NULL)	free((*out_histogram_r));
 			(*out_histogram_r) = (float *)malloc(sizeof(float)*histogram_size);
-#endif
 
 			for (int i = 0; i < histogram_size; i++)
 			{
@@ -5126,32 +5116,6 @@ int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, int op
 
 		if (nObject > 0 && len >= 4 + ((23*4)* nObject))
 		{
-#ifndef EYEDEA_JAVA_API
-			if ((*out_id) != NULL)	free((*out_id));
-			if ((*out_cx) != NULL)	free((*out_cx));
-			if ((*out_cy) != NULL)	free((*out_cy));
-			if ((*out_rx) != NULL)	free((*out_rx));
-			if ((*out_ry) != NULL)	free((*out_ry));
-			if ((*out_bound_cx) != NULL)	free((*out_bound_cx));
-			if ((*out_bound_cy) != NULL)	free((*out_bound_cy));
-			if ((*out_bound_rx) != NULL)	free((*out_bound_rx));
-			if ((*out_bound_ry) != NULL)	free((*out_bound_ry));
-			if ((*out_mass_cx) != NULL)	free((*out_mass_cx));
-			if ((*out_mass_cy) != NULL)	free((*out_mass_cy));
-			if ((*out_mass_rx) != NULL)	free((*out_mass_rx));
-			if ((*out_mass_ry) != NULL)	free((*out_mass_ry));
-			if ((*out_circle_rx) != NULL)	free((*out_circle_rx));
-			if ((*out_circle_ry) != NULL)	free((*out_circle_ry));
-			if ((*out_line1_x) != NULL)	free((*out_line1_x));
-			if ((*out_line1_y) != NULL)	free((*out_line1_y));
-			if ((*out_line2_x) != NULL)	free((*out_line2_x));
-			if ((*out_line2_y) != NULL)	free((*out_line2_y));
-			if ((*out_angle) != NULL)	free((*out_angle));
-			if ((*out_type) != NULL)	free((*out_type));
-			if ((*out_score) != NULL)	free((*out_score));
-			if ((*out_pass) != NULL)	free((*out_pass));
-			//if ((*out_index) != NULL)	free((*out_index));
-
 			(*out_id) = (float *)malloc(sizeof(float)*nObject);
 			(*out_cx) = (float *)malloc(sizeof(float)*nObject);
 			(*out_cy) = (float *)malloc(sizeof(float)*nObject);
@@ -5176,7 +5140,6 @@ int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, int op
 			(*out_score) = (float *)malloc(sizeof(float)*nObject);
 			(*out_pass) = (float *)malloc(sizeof(float)*nObject);
 			//(*out_index) = (float *)malloc(sizeof(float)*nObject);
-#endif
 
 			for (int i = 0; i < nObject; i++)
 			{
@@ -5377,7 +5340,7 @@ int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, int op
 	float** out_line_distance, float** out_line_distance_pass,
 	float** out_line_angle, float** out_line_angle_pass,
 	float** out_histogram, float** out_histogram_pass,
-	float** out_angle, float** out_type, float** out_score)
+	float** out_angle, float** out_type, float** out_score, float** out_tool_type)
 {
 	boost::unique_lock<boost::mutex> scoped_lock(mutex);
 
@@ -5477,6 +5440,7 @@ int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, int op
 	int i_angle = 0;
 	int i_type = 0;
 	int i_score = 0;
+	int i_tool_type = 0;
 
 	int nObject = 0;
 	//int index = 0;
@@ -5490,9 +5454,8 @@ int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, int op
 		nObject |= ((int)data[index++] << 8) & 0x0000FF00;
 		nObject |= ((int)data[index++]) & 0x000000FF;
 
-		if (nObject > 0 && len >= 4 + ((26 * 4)* nObject))
+		if (nObject > 0 && len >= 4 + ((27 * 4)* nObject))
 		{
-#ifndef EYEDEA_JAVA_API
 			if ((*out_id) != NULL)	free((*out_id));
 			if ((*out_cx) != NULL)	free((*out_cx));
 			if ((*out_cy) != NULL)	free((*out_cy));
@@ -5519,6 +5482,7 @@ int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, int op
 			if ((*out_angle) != NULL)	free((*out_angle));
 			if ((*out_type) != NULL)	free((*out_type));
 			if ((*out_score) != NULL)	free((*out_score));
+			if ((*out_tool_type) != NULL)	free((*out_tool_type));
 			
 			(*out_id) = (float *)malloc(sizeof(float)*nObject);
 			(*out_cx) = (float *)malloc(sizeof(float)*nObject);
@@ -5546,7 +5510,7 @@ int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, int op
 			(*out_angle) = (float *)malloc(sizeof(float)*nObject);
 			(*out_type) = (float *)malloc(sizeof(float)*nObject);
 			(*out_score) = (float *)malloc(sizeof(float)*nObject);
-#endif
+			(*out_tool_type) = (float *)malloc(sizeof(float)*nObject);
 
 			for (int i = 0; i < nObject; i++)
 			{
@@ -5702,6 +5666,12 @@ int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, int op
 				i_type |= ((int)data[index++] << 8) & 0x0000FF00;
 				i_type |= ((int)data[index++]) & 0x000000FF;
 
+				//i_tool_type
+				i_tool_type = ((int)data[index++] << 24) & 0xFF000000;
+				i_tool_type |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_tool_type |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_tool_type |= ((int)data[index++]) & 0x000000FF;
+
 				//i_score
 				i_score = ((int)data[index++] << 24) & 0xFF000000;
 				i_score |= ((int)data[index++] << 16) & 0x00FF0000;
@@ -5734,6 +5704,7 @@ int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, int op
 				(*out_angle)[i] = (float)i_angle / (float)scale_factor;
 				(*out_type)[i] = (float)i_type / (float)scale_factor;
 				(*out_score)[i] = (float)i_score / (float)scale_factor;
+				(*out_tool_type)[i] = (float)i_tool_type / (float)scale_factor;
 			}
 		}
 	}
@@ -7881,11 +7852,9 @@ int CEyedeaInterface::Histogram_Get_Graph(const int id, float** out_histogram, f
 		int histogram_size = (int)(*out_histogram_size);
 		if (histogram_size > 0)
 		{
-#ifndef EYEDEA_JAVA_API
 			//gray
 			if ((*out_histogram) != NULL)	free((*out_histogram));
 			(*out_histogram) = (float *)malloc(sizeof(float)*histogram_size);
-#endif
 
 			for (int i = 0; i < histogram_size; i++)
 			{
@@ -7898,11 +7867,9 @@ int CEyedeaInterface::Histogram_Get_Graph(const int id, float** out_histogram, f
 				(*out_histogram)[i] = (float)i_histogram_data / (float)scale_factor;
 			}
 
-#ifndef EYEDEA_JAVA_API
 			//b
 			if ((*out_histogram_b) != NULL)	free((*out_histogram_b));
 			(*out_histogram_b) = (float *)malloc(sizeof(float)*histogram_size);
-#endif
 
 			for (int i = 0; i < histogram_size; i++)
 			{
@@ -7915,11 +7882,9 @@ int CEyedeaInterface::Histogram_Get_Graph(const int id, float** out_histogram, f
 				(*out_histogram_b)[i] = (float)i_histogram_data / (float)scale_factor;
 			}
 
-#ifndef EYEDEA_JAVA_API
 			//g
 			if ((*out_histogram_g) != NULL)	free((*out_histogram_g));
 			(*out_histogram_g) = (float *)malloc(sizeof(float)*histogram_size);
-#endif
 
 			for (int i = 0; i < histogram_size; i++)
 			{
@@ -7932,11 +7897,9 @@ int CEyedeaInterface::Histogram_Get_Graph(const int id, float** out_histogram, f
 				(*out_histogram_g)[i] = (float)i_histogram_data / (float)scale_factor;
 			}
 
-#ifndef EYEDEA_JAVA_API
 			//r
 			if ((*out_histogram_r) != NULL)	free((*out_histogram_r));
 			(*out_histogram_r) = (float *)malloc(sizeof(float)*histogram_size);
-#endif
 
 			for (int i = 0; i < histogram_size; i++)
 			{
@@ -8863,293 +8826,6 @@ int CEyedeaInterface::GetContrastRate(const int id)
 		ret = i_rate;
 	}
 
-
-	if (data != NULL)
-	{
-		delete data;
-		data = NULL;
-	}
-
-	return ret;
-}
-
-int CEyedeaInterface::Calibration_StandAlone_Run(void)
-{
-	boost::unique_lock<boost::mutex> scoped_lock(mutex);
-
-	if (m_cls_eth_client == NULL)
-	{
-		printf("Before accessing the ERVS\n");
-		return EYEDEA_ERROR_INVALID_MEMORY;
-	}
-
-	char command = COMMAND_CALIB_STANDALONE_RUN;
-
-	int len = 0;
-	unsigned char* data = NULL;
-
-	unsigned int scale_factor = 1;
-	int ret = 0;
-	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
-	if (ret == EYEDEA_ERROR_INVALID_MEMORY)
-	{
-		int sec = 0;
-		while (1)
-		{
-			ret = m_cls_eth_client->Open(m_ip, m_port);
-			if (ret == 0) {
-				ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
-				break;
-			}
-			else
-			{
-				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
-				sec++;
-				if (sec >= 60)
-				{
-					if (data != NULL)
-					{
-						delete data;
-						data = NULL;
-					}
-					return ret;
-				}
-				continue;
-			}
-		}
-	}
-	if (ret != 0)
-	{
-		if (data != NULL)
-		{
-			delete data;
-			data = NULL;
-		}
-		return ret;
-	}
-
-	if (data != NULL)
-	{
-		delete data;
-		data = NULL;
-	}
-
-	return ret;
-}
-int CEyedeaInterface::Calibration_StandAlone_Set_Matrix(float matrix[12])
-{
-	boost::unique_lock<boost::mutex> scoped_lock(mutex);
-
-	if (m_cls_eth_client == NULL)
-	{
-		printf("Before accessing the ERVS\n");
-		return EYEDEA_ERROR_INVALID_MEMORY;
-	}
-
-	char command = COMMAND_CALIB_STANDALONE_SET_CALIB_MAT;
-
-	int len = 4*12;
-	unsigned char* data = new unsigned char[len];
-
-	int data_index = 0;
-	unsigned int scale_factor = 100;
-
-	for (int i = 0; i < 12; i++)
-	{
-		int matval = (float)matrix[i] * (float)scale_factor;
-		data[data_index++] = (matval & 0xFF000000) >> 24;
-		data[data_index++] = (matval & 0x00FF0000) >> 16;
-		data[data_index++] = (matval & 0x0000FF00) >> 8;
-		data[data_index++] = (matval & 0x000000FF);
-	}
-
-	int ret = 0;
-	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
-
-}
-int CEyedeaInterface::Calibration_StandAlone_Get_Matrix(float matrix[12])
-{
-	boost::unique_lock<boost::mutex> scoped_lock(mutex);
-
-	if (m_cls_eth_client == NULL)
-	{
-		printf("Before accessing the ERVS\n");
-		return EYEDEA_ERROR_INVALID_MEMORY;
-	}
-
-	char command = COMMAND_CALIB_STANDALONE_GET_CALIB_MAT;
-
-	int len = 0;
-	unsigned char* data = NULL;
-
-	//index
-	unsigned int scale_factor = 1;
-	int ret = 0;
-	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
-
-	if (ret == EYEDEA_ERROR_INVALID_MEMORY)
-	{
-		int sec = 0;
-		while (1)
-		{
-			ret = m_cls_eth_client->Open(m_ip, m_port);
-			if (ret == 0) {
-				ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
-				break;
-			}
-			else
-			{
-				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
-				sec++;
-				if (sec >= 60)
-				{
-					if (data != NULL)
-					{
-						delete data;
-						data = NULL;
-					}
-					return ret;
-				}
-				continue;
-			}
-		}
-	}
-	if (ret != 0)
-	{
-		if (data != NULL)
-		{
-			delete data;
-			data = NULL;
-		}
-		return ret;
-	}
-
-	int i_robot_x = 0;
-	int i_robot_y = 0;
-
-	if (len >= (4 * 12))
-	{
-		int posAll[12];
-		int data_index = 0;
-		for (int i = 0; i < 12; i++)
-		{
-			int matval = 0;
-			matval = ((int)data[data_index++] << 24) & 0xFF000000;
-			matval |= ((int)data[data_index++] << 16) & 0x00FF0000;
-			matval |= ((int)data[data_index++] << 8) & 0x0000FF00;
-			matval |= ((int)data[data_index++]) & 0x000000FF;
-			matrix[i] = (float)matval / (float)scale_factor;
-		}
-		//i_robot_x
-
-	}
-
-	if (data != NULL)
-	{
-		delete data;
-		data = NULL;
-	}
-
-	return ret;
-}
-
-int CEyedeaInterface::Calibration_StandAlone_Get_Feature_Pos(int index,float posA[3], float posB[3], float posC[3], float posD[3])
-{
-
-	boost::unique_lock<boost::mutex> scoped_lock(mutex);
-
-	if (m_cls_eth_client == NULL)
-	{
-		printf("Before accessing the ERVS\n");
-		return EYEDEA_ERROR_INVALID_MEMORY;
-	}
-
-	char command = COMMAND_CALIB_STANDALONE_GET_FEATURE_POSE;
-
-	int len = 4;
-	unsigned char* data = new unsigned char[len];
-
-	//index
-	data[0] = (index & 0xFF000000) >> 24;
-	data[1] = (index & 0x00FF0000) >> 16;
-	data[2] = (index & 0x0000FF00) >> 8;
-	data[3] = (index & 0x000000FF);
-
-
-	unsigned int scale_factor = 1;
-	int ret = 0;
-	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
-
-	if (ret == EYEDEA_ERROR_INVALID_MEMORY)
-	{
-		int sec = 0;
-		while (1)
-		{
-			ret = m_cls_eth_client->Open(m_ip, m_port);
-			if (ret == 0) {
-				ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
-				break;
-			}
-			else
-			{
-				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
-				sec++;
-				if (sec >= 60)
-				{
-					if (data != NULL)
-					{
-						delete data;
-						data = NULL;
-					}
-					return ret;
-				}
-				continue;
-			}
-		}
-	}
-	if (ret != 0)
-	{
-		if (data != NULL)
-		{
-			delete data;
-			data = NULL;
-		}
-		return ret;
-	}
-
-	int i_robot_x = 0;
-	int i_robot_y = 0;
-
-	if ( len >= (4*12) )
-	{
-		float posAll[12];
-		int data_index = 0;
-		for (int i = 0; i < 12; i++)
-		{
-			int pos = 0;
-			pos = ((int)data[data_index++] << 24) & 0xFF000000;
-			pos |= ((int)data[data_index++] << 16) & 0x00FF0000;
-			pos |= ((int)data[data_index++] << 8) & 0x0000FF00;
-			pos |= ((int)data[data_index++]) & 0x000000FF;
-			posAll[i] = (float)pos / (float)scale_factor;
-		}
-		//i_robot_x
-		posA[0] = posAll[0] ;
-		posA[1] = posAll[1] ;
-		posA[2] = posAll[2] ;
-
-		posB[0] = posAll[3] ;
-		posB[1] = posAll[4] ;
-		posB[2] = posAll[5] ;
-
-		posC[0] = posAll[6] ;
-		posC[1] = posAll[7] ;
-		posC[2] = posAll[8] ;
-
-		posD[0] = posAll[9] ;
-		posD[1] = posAll[10];
-		posD[2] = posAll[11];
-	}
 
 	if (data != NULL)
 	{

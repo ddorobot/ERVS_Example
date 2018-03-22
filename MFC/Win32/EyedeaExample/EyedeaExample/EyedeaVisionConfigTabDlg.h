@@ -127,4 +127,8 @@ public:
 	afx_msg void OnBnClickedCheckInspectionDiameter();
 	afx_msg void OnBnClickedButtonCalcFocusRate();
 	afx_msg void OnBnClickedButtonCalcContrastRate();
+	afx_msg void OnBnClickedButtonGetFocusRate();
+	afx_msg void OnBnClickedButtonSetFocusRate();
+	afx_msg void OnBnClickedButtonGetContrasetRate();
+	afx_msg void OnBnClickedButtonSetContrastRate();
 };

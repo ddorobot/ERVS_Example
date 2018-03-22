@@ -99,6 +99,10 @@ BEGIN_MESSAGE_MAP(CEyedeaVisionConfigTabDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_CHECK_INSPECTION_DIAMETER, &CEyedeaVisionConfigTabDlg::OnBnClickedCheckInspectionDiameter)
 	ON_BN_CLICKED(IDC_BUTTON_CALC_FOCUS_RATE, &CEyedeaVisionConfigTabDlg::OnBnClickedButtonCalcFocusRate)
 	ON_BN_CLICKED(IDC_BUTTON_CALC_CONTRAST_RATE, &CEyedeaVisionConfigTabDlg::OnBnClickedButtonCalcContrastRate)
+	ON_BN_CLICKED(IDC_BUTTON_GET_FOCUS_RATE, &CEyedeaVisionConfigTabDlg::OnBnClickedButtonGetFocusRate)
+	ON_BN_CLICKED(IDC_BUTTON_SET_FOCUS_RATE, &CEyedeaVisionConfigTabDlg::OnBnClickedButtonSetFocusRate)
+	ON_BN_CLICKED(IDC_BUTTON_GET_CONTRASET_RATE, &CEyedeaVisionConfigTabDlg::OnBnClickedButtonGetContrasetRate)
+	ON_BN_CLICKED(IDC_BUTTON_SET_CONTRAST_RATE, &CEyedeaVisionConfigTabDlg::OnBnClickedButtonSetContrastRate)
 END_MESSAGE_MAP()
 
 
@@ -2138,4 +2142,64 @@ void CEyedeaVisionConfigTabDlg::OnBnClickedButtonCalcContrastRate()
 	CString str;
 	str.Format(_T("%d"), contrast_rate);
 	GetDlgItem(IDC_EDIT_CALC_CONTRAST)->SetWindowText(str);
+}
+
+
+void CEyedeaVisionConfigTabDlg::OnBnClickedButtonGetFocusRate()
+{
+	// TODO: Add your control notification handler code here
+	int select_id = ERVS_DB_Get_Select_ID();
+
+	int focus_rate = ERVS_GetFocusRate(select_id);
+
+	CString str;
+	str.Format(_T("%d"), focus_rate);
+	GetDlgItem(IDC_EDIT_FOCUS_RATE)->SetWindowText(str);
+}
+
+
+void CEyedeaVisionConfigTabDlg::OnBnClickedButtonSetFocusRate()
+{
+	// TODO: Add your control notification handler code here
+	int select_id = ERVS_DB_Get_Select_ID();
+
+	int focus_rate = 0;
+	
+	CString str;
+	GetDlgItem(IDC_EDIT_FOCUS_RATE)->GetWindowText(str);
+	focus_rate = _ttoi(str);
+
+	ERVS_SetFocusRate(select_id, focus_rate);
+
+	OnBnClickedButtonGetFocusRate();
+}
+
+
+void CEyedeaVisionConfigTabDlg::OnBnClickedButtonGetContrasetRate()
+{
+	// TODO: Add your control notification handler code here
+	int select_id = ERVS_DB_Get_Select_ID();
+
+	int contrast_rate = ERVS_GetContrastRate(select_id);
+
+	CString str;
+	str.Format(_T("%d"), contrast_rate);
+	GetDlgItem(IDC_EDIT_CONTRAST_RATE)->SetWindowText(str);
+}
+
+
+void CEyedeaVisionConfigTabDlg::OnBnClickedButtonSetContrastRate()
+{
+	// TODO: Add your control notification handler code here
+	int select_id = ERVS_DB_Get_Select_ID();
+
+	int contrast_rate = 0;
+
+	CString str;
+	GetDlgItem(IDC_EDIT_CONTRAST_RATE)->GetWindowText(str);
+	contrast_rate = _ttoi(str);
+
+	ERVS_SetContrastRate(select_id, contrast_rate);
+
+	OnBnClickedButtonGetContrasetRate();
 }

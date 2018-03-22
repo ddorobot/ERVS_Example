@@ -62,9 +62,4 @@ public:
 	void Update();
 	afx_msg void OnBnClickedButtonCalibrationCopy();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
-	afx_msg void OnBnClickedButtonStandaloneCalibRun();
-	afx_msg void OnBnClickedButtonstandaloneCalibGetFeaturePos();
-	afx_msg void OnBnClickedButtonStandaloneCalibGetFeaturePos();
-	afx_msg void OnBnClickedButtonStandaloneCalibSetMatrix();
-	afx_msg void OnBnClickedButtonStandaloneCalibGetMatrix();
 };

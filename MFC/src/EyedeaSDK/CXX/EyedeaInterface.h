@@ -105,7 +105,7 @@ public:
 							float** out_line_distance, float** out_line_distance_pass,
 							float** out_line_angle, float** out_line_angle_pass,
 							float** out_histogram, float** out_histogram_pass,
-							float** out_angle, float** out_type, float** out_score);
+							float** out_angle, float** out_type, float** out_score, float** out_tool_type);
 	int GetFindObjectResultInfo(int base_index, int sub_index, float* out_id, float* out_cx, float* out_cy, float* out_rx, float* out_ry, float* out_angle, float* out_type, float* out_score, float** out_histogram, float** out_histogram_b, float** out_histogram_g, float** out_histogram_r, float* out_histogram_size);
 
 	int Calibration_Add(float robot_x, float robot_y);
@@ -115,10 +115,6 @@ public:
 	int Calibration_Del(int index);
 	int Calibration_Clear(void);
 	int Calibration_Run(void);
-	int Calibration_StandAlone_Run(void);
-	int Calibration_StandAlone_Get_Feature_Pos(int index,float posA[3], float posB[3], float posC[3], float posD[3]);
-	int Calibration_StandAlone_Set_Matrix(float matrix[12]);
-	int Calibration_StandAlone_Get_Matrix(float matrix[12]);
 	int Calibration_GetPoint(const float in_px, const float in_py, float* out_rx, float* out_ry);
 	int Calibration_GetChessPoint(const int index, float* out_rx, float* out_ry);
 	int Calibration_isOK(void);

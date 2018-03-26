@@ -672,10 +672,26 @@ int ERVS_GetContrastRate(const int id)
 
 int ERVS_SetDetectRetry(const int id, int nRetryCount)
 {
-	//return g_cls_interface.SetDetectRetry(id, nRetryCount);
+	int bak_id = ERVS_DB_Get_Select_ID();
+
+	ERVS_SetObject(id);
+
+	int ret = ERVS_SetVisionConfigOption(VISION_CONFIG_DETECT_RETRY, nRetryCount);
+
+	ERVS_SetObject(bak_id);
 }
 
 int ERVS_GetDetectRetry(const int id)
 {
-	//return g_cls_interface.GetDetectRetry(id);
+	int bak_id = ERVS_DB_Get_Select_ID();
+
+	ERVS_SetObject(id);
+
+	float value = ERVS_GetVisionConfigOption(VISION_CONFIG_DETECT_RETRY);
+
+	ERVS_SetObject(bak_id);
+
+	int retry = (int)value;
+
+	return retry;
 }

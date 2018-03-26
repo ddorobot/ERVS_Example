@@ -8870,7 +8870,7 @@ int CEyedeaInterface::SetDetectRetry(const int id, int nRetryCount)
 
 	char command = COMMAND_SET_DETECT_RETRY;
 
-	int len = 4;
+	int len = 8;
 	unsigned char* data = new unsigned char[len];
 
 	unsigned int scale_factor = 1;
@@ -8882,6 +8882,12 @@ int CEyedeaInterface::SetDetectRetry(const int id, int nRetryCount)
 	data[index++] = (id & 0x00FF0000) >> 16;
 	data[index++] = (id & 0x0000FF00) >> 8;
 	data[index++] = (id & 0x000000FF);
+
+	//count
+	data[index++] = (nRetryCount & 0xFF000000) >> 24;
+	data[index++] = (nRetryCount & 0x00FF0000) >> 16;
+	data[index++] = (nRetryCount & 0x0000FF00) >> 8;
+	data[index++] = (nRetryCount & 0x000000FF);
 
 	int ret = 0;
 	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);

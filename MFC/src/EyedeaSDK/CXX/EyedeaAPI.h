@@ -99,7 +99,9 @@ int ERVS_GetObjectTwoLineAngleInspection(const int id);
 //Region Object
 int ERVS_SetSelectBaseObject(float x, float y, float w, float h);
 
-//Detect
+//Detect 
+int ERVS_SetDetectRetry(const int id, int nRetryCount);
+int ERVS_GetDetectRetry(const int id);
 int ERVS_DetectWithGrab(int index, int max_objects_count, float** out_id, float** out_cx, float** out_cy, float** out_rx, float** out_ry, float** out_bound_cx, float** out_bound_cy, float** out_bound_rx, float** out_bound_ry, float** out_mass_cx, float** out_mass_cy, float** out_mass_rx, float** out_mass_ry, float** out_circle_rx, float** out_circle_ry, float** out_line1_x, float** out_line1_y, float** out_line2_x, float** out_line2_y, float** out_angle, float** out_type, float** out_score, float** out_pass);
 int ERVS_DetectWithGrab(int index, int max_objects_count, float** out_id, 
 						float** out_cx, float** out_cy, float** out_rx, float** out_ry, 

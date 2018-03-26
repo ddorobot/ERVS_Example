@@ -669,3 +669,13 @@ int ERVS_GetContrastRate(const int id)
 {
 	return g_cls_interface.GetContrastRate(id);
 }
+
+int ERVS_SetDetectRetry(const int id, int nRetryCount)
+{
+	return g_cls_interface.SetDetectRetry(id, nRetryCount);
+}
+
+int ERVS_GetDetectRetry(const int id)
+{
+	return g_cls_interface.GetDetectRetry(id);
+}

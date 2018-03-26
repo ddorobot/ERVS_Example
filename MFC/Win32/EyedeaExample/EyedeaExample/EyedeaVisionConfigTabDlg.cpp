@@ -1093,6 +1093,7 @@ void CEyedeaVisionConfigTabDlg::OnBnClickedButtonVisionConfigGet2()
 	float edge_margin = ERVS_GetVisionConfigOption(VISION_CONFIG_EDGE_MATCHING_MARGIN);
 	float masking_option = ERVS_GetVisionConfigOption(VISION_CONFIG_FIND_OBJECT_MASKING_OPTION);
 	float masking_option_find_object_threshold = ERVS_GetVisionConfigOption(VISION_CONFIG_FIND_OBJECT_MASKING_OPTION_THRESHOLD);
+	float find_detect_retry = ERVS_GetVisionConfigOption(VISION_CONFIG_DETECT_RETRY); //IDC_EDIT_VISION_CONFIG_DETECT_RETRY
 
 	CString str;
 	str.Format(_T("%.2f"), image_morph_size);
@@ -1112,6 +1113,9 @@ void CEyedeaVisionConfigTabDlg::OnBnClickedButtonVisionConfigGet2()
 	GetDlgItem(IDC_EDIT_VISION_CONFIG_EDGE_MATCHING_MARGIN)->SetWindowText(str);
 	str.Format(_T("%.2f"), masking_option_find_object_threshold);
 	GetDlgItem(IDC_EDIT_VISION_CONFIG_FIND_OBJECT_THRESHOLD)->SetWindowText(str);
+
+	str.Format(_T("%d"), (int)find_detect_retry);
+	GetDlgItem(IDC_EDIT_VISION_CONFIG_DETECT_RETRY)->SetWindowText(str);
 
 	
 	if (masking_option == 0)
@@ -1169,6 +1173,7 @@ void CEyedeaVisionConfigTabDlg::OnBnClickedButtonVisionConfigSet2()
 	float edge_margin = 0.0; 
 	float masking_option = 0.0;
 	float masking_option_find_threshold = 0.0;
+	float find_detect_retry = 0.0;
 
 	CString str;
 	GetDlgItem(IDC_EDIT_VISION_CONFIG_IMAGE_MORPH)->GetWindowText(str);
@@ -1187,6 +1192,9 @@ void CEyedeaVisionConfigTabDlg::OnBnClickedButtonVisionConfigSet2()
 	edge_margin = _ttof(str);
 	GetDlgItem(IDC_EDIT_VISION_CONFIG_FIND_OBJECT_THRESHOLD)->GetWindowText(str);
 	masking_option_find_threshold = _ttof(str);
+	GetDlgItem(IDC_EDIT_VISION_CONFIG_DETECT_RETRY)->GetWindowText(str);
+	find_detect_retry = _ttof(str);
+	
 
 	BOOL bCheck = IsDlgButtonChecked(IDC_CHECK_FIND_OBJECT_MASKING_OPTION);
 	if (bCheck)
@@ -1211,7 +1219,7 @@ void CEyedeaVisionConfigTabDlg::OnBnClickedButtonVisionConfigSet2()
 	ERVS_SetVisionConfigOption(VISION_CONFIG_EDGE_MATCHING_MARGIN, edge_margin);
 	ERVS_SetVisionConfigOption(VISION_CONFIG_FIND_OBJECT_MASKING_OPTION, masking_option);
 	ERVS_SetVisionConfigOption(VISION_CONFIG_FIND_OBJECT_MASKING_OPTION_THRESHOLD, masking_option_find_threshold);
-	
+	ERVS_SetVisionConfigOption(VISION_CONFIG_DETECT_RETRY, find_detect_retry);
 	//
 	GetDlgItem(IDC_EDIT_FIND_OBJECT_DETECTION_LEVEL)->GetWindowText(str);
 	int level = _ttoi(str);

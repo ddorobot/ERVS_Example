@@ -171,9 +171,6 @@ public:
 	int SetContrastRate(const int id, const int rate);
 	int GetContrastRate(const int id);
 
-	int SetDetectRetry(const int id, int nRetryCount);
-	int GetDetectRetry(const int id);
-
 private:
 	//bool m_run_thread_net;			//eyedea - boost thread exit value
 	//boost::thread m_thread_net;		//eyedea - network thread

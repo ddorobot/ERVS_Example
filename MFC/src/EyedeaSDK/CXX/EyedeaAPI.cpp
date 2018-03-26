@@ -731,6 +731,8 @@ int ERVS_SetDetectRetry(const int id, int nRetryCount)
 	int ret = ERVS_SetVisionConfigOption(VISION_CONFIG_DETECT_RETRY, nRetryCount);
 
 	ERVS_SetObject(bak_id);
+
+	return 0;
 }
 
 int ERVS_GetDetectRetry(const int id)

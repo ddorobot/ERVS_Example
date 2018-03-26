@@ -391,7 +391,33 @@ int ERVS_GetFindObjectResultInfo(int base_index, int sub_index, float* out_id, f
 
 int ERVS_DetectWithGrab(int index, int max_objects_count, float** out_id, float** out_cx, float** out_cy, float** out_rx, float** out_ry, float** out_bound_cx, float** out_bound_cy, float** out_bound_rx, float** out_bound_ry, float** out_mass_cx, float** out_mass_cy, float** out_mass_rx, float** out_mass_ry, float** out_circle_rx, float** out_circle_ry, float** out_line1_x, float** out_line1_y, float** out_line2_x, float** out_line2_y, float** out_angle, float** out_type, float** out_score, float** out_pass)
 {
-	return g_cls_interface.GetFindObjectInfo(index, max_objects_count, 0/*grab*/, out_id, out_cx, out_cy, out_rx, out_ry, out_bound_cx, out_bound_cy, out_bound_rx, out_bound_ry, out_mass_cx, out_mass_cy, out_mass_rx, out_mass_ry, out_circle_rx, out_circle_ry, out_line1_x, out_line1_y, out_line2_x, out_line2_y, out_angle, out_type, out_score, out_pass);
+	int base_id = index / 1000;
+	base_id *= 1000;
+
+	int retry = 0;
+	if (base_id >= 1000)
+	{
+		retry = ERVS_GetDetectRetry(base_id);
+	}
+
+	int ret = 0;
+	int run_count = 0;
+	do
+	{
+		ret = g_cls_interface.GetFindObjectInfo(index, max_objects_count, 0/*grab*/, out_id, out_cx, out_cy, out_rx, out_ry, out_bound_cx, out_bound_cy, out_bound_rx, out_bound_ry, out_mass_cx, out_mass_cy, out_mass_rx, out_mass_ry, out_circle_rx, out_circle_ry, out_line1_x, out_line1_y, out_line2_x, out_line2_y, out_angle, out_type, out_score, out_pass);
+
+		run_count++;
+
+		if (retry>0)
+		{
+			if (ret == 0)
+			{
+				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
+			}
+		}
+	} while (retry > run_count);
+
+	return ret;
 }
 
 int ERVS_DetectWithGrab(int index, int max_objects_count, float** out_id,
@@ -404,7 +430,33 @@ int ERVS_DetectWithGrab(int index, int max_objects_count, float** out_id,
 	float** out_histogram, float** out_histogram_pass,
 	float** out_angle, float** out_type, float** out_score, float** out_tool_type)
 {
-	return g_cls_interface.GetFindObjectInfo(index, max_objects_count, 0/*grab*/, out_id, out_cx, out_cy, out_rx, out_ry, out_bound_cx, out_bound_cy, out_bound_rx, out_bound_ry, out_mass_cx, out_mass_cy, out_mass_rx, out_mass_ry, out_circle_rx, out_circle_ry, out_circle_diameter, out_circle_pass, out_line_distance, out_line_distance_pass, out_line_angle, out_line_angle_pass, out_histogram, out_histogram_pass, out_angle, out_type, out_score, out_tool_type);
+	int base_id = index / 1000;
+	base_id *= 1000;
+
+	int retry = 0;
+	if (base_id >= 1000)
+	{
+		retry = ERVS_GetDetectRetry(base_id);
+	}
+
+	int ret = 0;
+	int run_count = 0;
+	do
+	{
+		ret = g_cls_interface.GetFindObjectInfo(index, max_objects_count, 0/*grab*/, out_id, out_cx, out_cy, out_rx, out_ry, out_bound_cx, out_bound_cy, out_bound_rx, out_bound_ry, out_mass_cx, out_mass_cy, out_mass_rx, out_mass_ry, out_circle_rx, out_circle_ry, out_circle_diameter, out_circle_pass, out_line_distance, out_line_distance_pass, out_line_angle, out_line_angle_pass, out_histogram, out_histogram_pass, out_angle, out_type, out_score, out_tool_type);
+
+		run_count++;
+
+		if (retry > 0)
+		{
+			if (ret == 0)
+			{
+				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
+			}
+		}
+	} while (retry > run_count);
+
+	return ret;
 }
 
 int ERVS_DetectWithPrevImage(int index, int max_objects_count, float** out_id, float** out_cx, float** out_cy, float** out_rx, float** out_ry, float** out_bound_cx, float** out_bound_cy, float** out_bound_rx, float** out_bound_ry, float** out_mass_cx, float** out_mass_cy, float** out_mass_rx, float** out_mass_ry, float** out_circle_rx, float** out_circle_ry, float** out_line1_x, float** out_line1_y, float** out_line2_x, float** out_line2_y, float** out_angle, float** out_type, float** out_score, float** out_pass)

@@ -163,7 +163,7 @@ void CEyedeaEthernetClient::Close()
 	*/
 }
 
-int CEyedeaEthernetClient::Send(char command, unsigned int* scalefactor, unsigned char** out_data, int* len)
+int CEyedeaEthernetClient::Send(unsigned char command, unsigned int* scalefactor, unsigned char** out_data, int* len)
 {
 #if 0
 	if (client_socket < 0)

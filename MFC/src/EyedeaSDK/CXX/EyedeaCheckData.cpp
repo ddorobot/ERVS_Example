@@ -80,11 +80,11 @@ unsigned char* CEyedeaCheckData::FindData(char* input_buf, int input_size, int* 
 				if (m_tmp_buf[m_tmp_index - 1] == 'S' && m_tmp_buf[m_tmp_index - 2] == 'V' && 
 					m_tmp_buf[m_tmp_index - 3] == 'R' && m_tmp_buf[m_tmp_index - 4] == 'E')
 				{
-					m_head_find_count = 0;
-					m_tmp_index = 0;
-
 					//ok
 					(*out_size) = m_tmp_index;
+
+					m_head_find_count = 0;
+					m_tmp_index = 0;
 
 					return m_tmp_buf;
 				}

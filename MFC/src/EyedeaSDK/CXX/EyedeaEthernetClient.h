@@ -183,7 +183,7 @@ public:
 	CEyedeaEthernetClient(void);
 	~CEyedeaEthernetClient(void);
 
-	int Send(char command, unsigned int* scalefactor, unsigned char** out_data, int* len);
+	int Send(unsigned char command, unsigned int* scalefactor, unsigned char** out_data, int* len);
 	int Open(char* ip, int port);
 	void Close();
 	int handle_connect(const boost::system::error_code& err);

@@ -161,4 +161,7 @@ public:
 	afx_msg void OnBnClickedButtonGeometryAngleBaseGet();
 	afx_msg void OnBnClickedButtonGeometryAngleBaseSet();
 	afx_msg void OnBnClickedButtonGeoMeetPoint();
+	afx_msg void OnBnClickedButtonGetDetectData();
+	afx_msg void OnBnClickedButtonSetDetectDataInit();
+	afx_msg void OnBnClickedButtonGetDetectDataInit();
 };

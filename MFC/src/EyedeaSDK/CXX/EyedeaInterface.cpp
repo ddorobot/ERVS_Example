@@ -5735,6 +5735,827 @@ int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, int op
 	return ret;
 }
 
+int CEyedeaInterface::GetDetectData(const int id, 
+	float** out_id,
+	float** out_cx, float** out_cy, float** out_rx, float** out_ry,
+	float** out_bound_cx, float** out_bound_cy, float** out_bound_rx, float** out_bound_ry,
+	float** out_mass_cx, float** out_mass_cy, float** out_mass_rx, float** out_mass_ry,
+	float** out_circle_rx, float** out_circle_ry, float ** out_circle_diameter, float** out_circle_pass,
+	float** out_line_distance, float** out_line_distance_pass,
+	float** out_line_angle, float** out_line_angle_pass,
+	float** out_histogram, float** out_histogram_pass,
+	float** out_angle, float** out_type, float** out_score, float** out_tool_type)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_GET_DETECT_DATA ;
+
+	int len = 4 ;
+	unsigned char* data = new unsigned char[len];
+
+	//index
+	int data_index = 0;
+	data[data_index++] = (id & 0xFF000000) >> 24;
+	data[data_index++] = (id & 0x00FF0000) >> 16;
+	data[data_index++] = (id & 0x0000FF00) >> 8;
+	data[data_index++] = (id & 0x000000FF);
+
+	unsigned int scale_factor = 1;
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+	if (ret == EYEDEA_ERROR_INVALID_MEMORY)
+	{
+		int sec = 0;
+		while (1)
+		{
+			ret = m_cls_eth_client->Open(m_ip, m_port);
+			if (ret == 0) {
+				ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+				break;
+			}
+			else
+			{
+				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
+				sec++;
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
+					return ret;
+				}
+				continue;
+			}
+		}
+	}
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
+
+	int i_id = 0;
+	int i_camera_x = 0;
+	int i_camera_y = 0;
+	int i_robot_x = 0;
+	int i_robot_y = 0;
+	int i_camera_bound_x = 0;
+	int i_camera_bound_y = 0;
+	int i_robot_bound_x = 0;
+	int i_robot_bound_y = 0;
+	int i_camera_mass_x = 0;
+	int i_camera_mass_y = 0;
+	int i_robot_mass_x = 0;
+	int i_robot_mass_y = 0;
+	int i_circle_rx = 0;
+	int i_circle_ry = 0;
+	int i_circle_diameter = 0;
+	int i_circle_pass = 0;
+	int i_line_distance = 0;
+	int i_line_distance_pass = 0;
+	int i_line_angle = 0;
+	int i_line_angle_pass = 0;
+	int i_histogram = 0;
+	int i_histogram_pass = 0;
+	int i_angle = 0;
+	int i_type = 0;
+	int i_score = 0;
+	int i_tool_type = 0;
+
+	int nObject = 0;
+	//int index = 0;
+	int index = 0;
+
+	if (len >= 4)
+	{
+		//nObject
+		nObject = ((int)data[index++] << 24) & 0xFF000000;
+		nObject |= ((int)data[index++] << 16) & 0x00FF0000;
+		nObject |= ((int)data[index++] << 8) & 0x0000FF00;
+		nObject |= ((int)data[index++]) & 0x000000FF;
+
+		if (nObject > 0 && len >= 4 + ((27 * 4)* nObject))
+		{
+#ifndef EYEDEA_JAVA_API
+			if ((*out_id) != NULL)	free((*out_id));
+			if ((*out_cx) != NULL)	free((*out_cx));
+			if ((*out_cy) != NULL)	free((*out_cy));
+			if ((*out_rx) != NULL)	free((*out_rx));
+			if ((*out_ry) != NULL)	free((*out_ry));
+			if ((*out_bound_cx) != NULL)	free((*out_bound_cx));
+			if ((*out_bound_cy) != NULL)	free((*out_bound_cy));
+			if ((*out_bound_rx) != NULL)	free((*out_bound_rx));
+			if ((*out_bound_ry) != NULL)	free((*out_bound_ry));
+			if ((*out_mass_cx) != NULL)	free((*out_mass_cx));
+			if ((*out_mass_cy) != NULL)	free((*out_mass_cy));
+			if ((*out_mass_rx) != NULL)	free((*out_mass_rx));
+			if ((*out_mass_ry) != NULL)	free((*out_mass_ry));
+			if ((*out_circle_rx) != NULL)	free((*out_circle_rx));
+			if ((*out_circle_ry) != NULL)	free((*out_circle_ry));
+			if ((*out_circle_diameter) != NULL)	free((*out_circle_diameter));
+			if ((*out_circle_pass) != NULL)	free((*out_circle_pass));
+			if ((*out_line_distance) != NULL)	free((*out_line_distance));
+			if ((*out_line_distance_pass) != NULL)	free((*out_line_distance_pass));
+			if ((*out_line_angle) != NULL)	free((*out_line_angle));
+			if ((*out_line_angle_pass) != NULL)	free((*out_line_angle_pass));
+			if ((*out_histogram) != NULL)	free((*out_histogram));
+			if ((*out_histogram_pass) != NULL)	free((*out_histogram_pass));
+			if ((*out_angle) != NULL)	free((*out_angle));
+			if ((*out_type) != NULL)	free((*out_type));
+			if ((*out_score) != NULL)	free((*out_score));
+			if ((*out_tool_type) != NULL)	free((*out_tool_type));
+
+			(*out_id) = (float *)malloc(sizeof(float)*nObject);
+			(*out_cx) = (float *)malloc(sizeof(float)*nObject);
+			(*out_cy) = (float *)malloc(sizeof(float)*nObject);
+			(*out_rx) = (float *)malloc(sizeof(float)*nObject);
+			(*out_ry) = (float *)malloc(sizeof(float)*nObject);
+			(*out_bound_cx) = (float *)malloc(sizeof(float)*nObject);
+			(*out_bound_cy) = (float *)malloc(sizeof(float)*nObject);
+			(*out_bound_rx) = (float *)malloc(sizeof(float)*nObject);
+			(*out_bound_ry) = (float *)malloc(sizeof(float)*nObject);
+			(*out_mass_cx) = (float *)malloc(sizeof(float)*nObject);
+			(*out_mass_cy) = (float *)malloc(sizeof(float)*nObject);
+			(*out_mass_rx) = (float *)malloc(sizeof(float)*nObject);
+			(*out_mass_ry) = (float *)malloc(sizeof(float)*nObject);
+			(*out_circle_rx) = (float *)malloc(sizeof(float)*nObject);
+			(*out_circle_ry) = (float *)malloc(sizeof(float)*nObject);
+			(*out_circle_diameter) = (float *)malloc(sizeof(float)*nObject);
+			(*out_circle_pass) = (float *)malloc(sizeof(float)*nObject);
+			(*out_line_distance) = (float *)malloc(sizeof(float)*nObject);
+			(*out_line_distance_pass) = (float *)malloc(sizeof(float)*nObject);
+			(*out_line_angle) = (float *)malloc(sizeof(float)*nObject);
+			(*out_line_angle_pass) = (float *)malloc(sizeof(float)*nObject);
+			(*out_histogram) = (float *)malloc(sizeof(float)*nObject);
+			(*out_histogram_pass) = (float *)malloc(sizeof(float)*nObject);
+			(*out_angle) = (float *)malloc(sizeof(float)*nObject);
+			(*out_type) = (float *)malloc(sizeof(float)*nObject);
+			(*out_score) = (float *)malloc(sizeof(float)*nObject);
+			(*out_tool_type) = (float *)malloc(sizeof(float)*nObject);
+#endif
+
+			for (int i = 0; i < nObject; i++)
+			{
+				//i_id
+				i_id = ((int)data[index++] << 24) & 0xFF000000;
+				i_id |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_id |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_id |= ((int)data[index++]) & 0x000000FF;
+
+				//i_camera_x
+				i_camera_x = ((int)data[index++] << 24) & 0xFF000000;
+				i_camera_x |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_camera_x |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_camera_x |= ((int)data[index++]) & 0x000000FF;
+
+				//i_camera_y
+				i_camera_y = ((int)data[index++] << 24) & 0xFF000000;
+				i_camera_y |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_camera_y |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_camera_y |= ((int)data[index++]) & 0x000000FF;
+
+				//i_robot_x
+				i_robot_x = ((int)data[index++] << 24) & 0xFF000000;
+				i_robot_x |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_robot_x |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_robot_x |= ((int)data[index++]) & 0x000000FF;
+
+				//i_robot_y
+				i_robot_y = ((int)data[index++] << 24) & 0xFF000000;
+				i_robot_y |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_robot_y |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_robot_y |= ((int)data[index++]) & 0x000000FF;
+
+				//bound center
+				//i_camera_x
+				i_camera_bound_x = ((int)data[index++] << 24) & 0xFF000000;
+				i_camera_bound_x |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_camera_bound_x |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_camera_bound_x |= ((int)data[index++]) & 0x000000FF;
+
+				//i_camera_y
+				i_camera_bound_y = ((int)data[index++] << 24) & 0xFF000000;
+				i_camera_bound_y |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_camera_bound_y |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_camera_bound_y |= ((int)data[index++]) & 0x000000FF;
+
+				//i_robot_x
+				i_robot_bound_x = ((int)data[index++] << 24) & 0xFF000000;
+				i_robot_bound_x |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_robot_bound_x |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_robot_bound_x |= ((int)data[index++]) & 0x000000FF;
+
+				//i_robot_y
+				i_robot_bound_y = ((int)data[index++] << 24) & 0xFF000000;
+				i_robot_bound_y |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_robot_bound_y |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_robot_bound_y |= ((int)data[index++]) & 0x000000FF;
+
+				//center of mass
+				//i_camera_x
+				i_camera_mass_x = ((int)data[index++] << 24) & 0xFF000000;
+				i_camera_mass_x |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_camera_mass_x |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_camera_mass_x |= ((int)data[index++]) & 0x000000FF;
+
+				//i_camera_y
+				i_camera_mass_y = ((int)data[index++] << 24) & 0xFF000000;
+				i_camera_mass_y |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_camera_mass_y |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_camera_mass_y |= ((int)data[index++]) & 0x000000FF;
+
+				//i_robot_x
+				i_robot_mass_x = ((int)data[index++] << 24) & 0xFF000000;
+				i_robot_mass_x |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_robot_mass_x |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_robot_mass_x |= ((int)data[index++]) & 0x000000FF;
+
+				//i_robot_y
+				i_robot_mass_y = ((int)data[index++] << 24) & 0xFF000000;
+				i_robot_mass_y |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_robot_mass_y |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_robot_mass_y |= ((int)data[index++]) & 0x000000FF;
+
+				//i_circle_rx
+				i_circle_rx = ((int)data[index++] << 24) & 0xFF000000;
+				i_circle_rx |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_circle_rx |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_circle_rx |= ((int)data[index++]) & 0x000000FF;
+
+				//i_circle_ry
+				i_circle_ry = ((int)data[index++] << 24) & 0xFF000000;
+				i_circle_ry |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_circle_ry |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_circle_ry |= ((int)data[index++]) & 0x000000FF;
+
+				//i_circle_diameter
+				i_circle_diameter = ((int)data[index++] << 24) & 0xFF000000;
+				i_circle_diameter |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_circle_diameter |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_circle_diameter |= ((int)data[index++]) & 0x000000FF;
+
+				//i_circle_pass
+				i_circle_pass = ((int)data[index++] << 24) & 0xFF000000;
+				i_circle_pass |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_circle_pass |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_circle_pass |= ((int)data[index++]) & 0x000000FF;
+
+				//i_line_distance
+				i_line_distance = ((int)data[index++] << 24) & 0xFF000000;
+				i_line_distance |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_line_distance |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_line_distance |= ((int)data[index++]) & 0x000000FF;
+
+				//i_line_distance_pass
+				i_line_distance_pass = ((int)data[index++] << 24) & 0xFF000000;
+				i_line_distance_pass |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_line_distance_pass |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_line_distance_pass |= ((int)data[index++]) & 0x000000FF;
+
+				//i_line_angle
+				i_line_angle = ((int)data[index++] << 24) & 0xFF000000;
+				i_line_angle |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_line_angle |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_line_angle |= ((int)data[index++]) & 0x000000FF;
+
+				//i_line_angle_pass
+				i_line_angle_pass = ((int)data[index++] << 24) & 0xFF000000;
+				i_line_angle_pass |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_line_angle_pass |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_line_angle_pass |= ((int)data[index++]) & 0x000000FF;
+
+				//i_histogram
+				i_histogram = ((int)data[index++] << 24) & 0xFF000000;
+				i_histogram |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_histogram |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_histogram |= ((int)data[index++]) & 0x000000FF;
+
+				//i_histogram_pass
+				i_histogram_pass = ((int)data[index++] << 24) & 0xFF000000;
+				i_histogram_pass |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_histogram_pass |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_histogram_pass |= ((int)data[index++]) & 0x000000FF;
+
+				//i_angle
+				i_angle = ((int)data[index++] << 24) & 0xFF000000;
+				i_angle |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_angle |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_angle |= ((int)data[index++]) & 0x000000FF;
+
+				//i_type
+				i_type = ((int)data[index++] << 24) & 0xFF000000;
+				i_type |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_type |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_type |= ((int)data[index++]) & 0x000000FF;
+
+				//i_tool_type
+				i_tool_type = ((int)data[index++] << 24) & 0xFF000000;
+				i_tool_type |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_tool_type |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_tool_type |= ((int)data[index++]) & 0x000000FF;
+
+				//i_score
+				i_score = ((int)data[index++] << 24) & 0xFF000000;
+				i_score |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_score |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_score |= ((int)data[index++]) & 0x000000FF;
+
+				(*out_id)[i] = (float)i_id / (float)scale_factor;
+				(*out_cx)[i] = (float)i_camera_x / (float)scale_factor;
+				(*out_cy)[i] = (float)i_camera_y / (float)scale_factor;
+				(*out_rx)[i] = (float)i_robot_x / (float)scale_factor;
+				(*out_ry)[i] = (float)i_robot_y / (float)scale_factor;
+				(*out_bound_cx)[i] = (float)i_camera_bound_x / (float)scale_factor;
+				(*out_bound_cy)[i] = (float)i_camera_bound_y / (float)scale_factor;
+				(*out_bound_rx)[i] = (float)i_robot_bound_x / (float)scale_factor;
+				(*out_bound_ry)[i] = (float)i_robot_bound_y / (float)scale_factor;
+				(*out_mass_cx)[i] = (float)i_camera_mass_x / (float)scale_factor;
+				(*out_mass_cy)[i] = (float)i_camera_mass_y / (float)scale_factor;
+				(*out_mass_rx)[i] = (float)i_robot_mass_x / (float)scale_factor;
+				(*out_mass_ry)[i] = (float)i_robot_mass_y / (float)scale_factor;
+				(*out_circle_rx)[i] = (float)i_circle_rx / (float)scale_factor;
+				(*out_circle_ry)[i] = (float)i_circle_ry / (float)scale_factor;
+				(*out_circle_diameter)[i] = (float)i_circle_diameter / (float)scale_factor;
+				(*out_circle_pass)[i] = (float)i_circle_pass / (float)scale_factor;
+				(*out_line_distance)[i] = (float)i_line_distance / (float)scale_factor;
+				(*out_line_distance_pass)[i] = (float)i_line_distance_pass / (float)scale_factor;
+				(*out_line_angle)[i] = (float)i_line_angle / (float)scale_factor;
+				(*out_line_angle_pass)[i] = (float)i_line_angle_pass / (float)scale_factor;
+				(*out_histogram)[i] = (float)i_histogram / (float)scale_factor;
+				(*out_histogram_pass)[i] = (float)i_histogram_pass / (float)scale_factor;
+				(*out_angle)[i] = (float)i_angle / (float)scale_factor;
+				(*out_type)[i] = (float)i_type / (float)scale_factor;
+				(*out_score)[i] = (float)i_score / (float)scale_factor;
+				(*out_tool_type)[i] = (float)i_tool_type / (float)scale_factor;
+			}
+		}
+	}
+
+
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+
+	ret = nObject;
+
+	return ret;
+}
+
+int CEyedeaInterface::GetDetectData_Init(const int id,
+	float** out_id,
+	float** out_cx, float** out_cy, float** out_rx, float** out_ry,
+	float** out_bound_cx, float** out_bound_cy, float** out_bound_rx, float** out_bound_ry,
+	float** out_mass_cx, float** out_mass_cy, float** out_mass_rx, float** out_mass_ry,
+	float** out_circle_rx, float** out_circle_ry, float ** out_circle_diameter, float** out_circle_pass,
+	float** out_line_distance, float** out_line_distance_pass,
+	float** out_line_angle, float** out_line_angle_pass,
+	float** out_histogram, float** out_histogram_pass,
+	float** out_angle, float** out_type, float** out_score, float** out_tool_type)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_GET_DETECT_DATA_INIT;
+
+	int len = 4;
+	unsigned char* data = new unsigned char[len];
+
+	//index
+	int data_index = 0;
+	data[data_index++] = (id & 0xFF000000) >> 24;
+	data[data_index++] = (id & 0x00FF0000) >> 16;
+	data[data_index++] = (id & 0x0000FF00) >> 8;
+	data[data_index++] = (id & 0x000000FF);
+
+	unsigned int scale_factor = 1;
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+	if (ret == EYEDEA_ERROR_INVALID_MEMORY)
+	{
+		int sec = 0;
+		while (1)
+		{
+			ret = m_cls_eth_client->Open(m_ip, m_port);
+			if (ret == 0) {
+				ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+				break;
+			}
+			else
+			{
+				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
+				sec++;
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
+					return ret;
+				}
+				continue;
+			}
+		}
+	}
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
+
+	int i_id = 0;
+	int i_camera_x = 0;
+	int i_camera_y = 0;
+	int i_robot_x = 0;
+	int i_robot_y = 0;
+	int i_camera_bound_x = 0;
+	int i_camera_bound_y = 0;
+	int i_robot_bound_x = 0;
+	int i_robot_bound_y = 0;
+	int i_camera_mass_x = 0;
+	int i_camera_mass_y = 0;
+	int i_robot_mass_x = 0;
+	int i_robot_mass_y = 0;
+	int i_circle_rx = 0;
+	int i_circle_ry = 0;
+	int i_circle_diameter = 0;
+	int i_circle_pass = 0;
+	int i_line_distance = 0;
+	int i_line_distance_pass = 0;
+	int i_line_angle = 0;
+	int i_line_angle_pass = 0;
+	int i_histogram = 0;
+	int i_histogram_pass = 0;
+	int i_angle = 0;
+	int i_type = 0;
+	int i_score = 0;
+	int i_tool_type = 0;
+
+	int nObject = 0;
+	//int index = 0;
+	int index = 0;
+
+	if (len >= 4)
+	{
+		//nObject
+		nObject = ((int)data[index++] << 24) & 0xFF000000;
+		nObject |= ((int)data[index++] << 16) & 0x00FF0000;
+		nObject |= ((int)data[index++] << 8) & 0x0000FF00;
+		nObject |= ((int)data[index++]) & 0x000000FF;
+
+		if (nObject > 0 && len >= 4 + ((27 * 4)* nObject))
+		{
+#ifndef EYEDEA_JAVA_API
+			if ((*out_id) != NULL)	free((*out_id));
+			if ((*out_cx) != NULL)	free((*out_cx));
+			if ((*out_cy) != NULL)	free((*out_cy));
+			if ((*out_rx) != NULL)	free((*out_rx));
+			if ((*out_ry) != NULL)	free((*out_ry));
+			if ((*out_bound_cx) != NULL)	free((*out_bound_cx));
+			if ((*out_bound_cy) != NULL)	free((*out_bound_cy));
+			if ((*out_bound_rx) != NULL)	free((*out_bound_rx));
+			if ((*out_bound_ry) != NULL)	free((*out_bound_ry));
+			if ((*out_mass_cx) != NULL)	free((*out_mass_cx));
+			if ((*out_mass_cy) != NULL)	free((*out_mass_cy));
+			if ((*out_mass_rx) != NULL)	free((*out_mass_rx));
+			if ((*out_mass_ry) != NULL)	free((*out_mass_ry));
+			if ((*out_circle_rx) != NULL)	free((*out_circle_rx));
+			if ((*out_circle_ry) != NULL)	free((*out_circle_ry));
+			if ((*out_circle_diameter) != NULL)	free((*out_circle_diameter));
+			if ((*out_circle_pass) != NULL)	free((*out_circle_pass));
+			if ((*out_line_distance) != NULL)	free((*out_line_distance));
+			if ((*out_line_distance_pass) != NULL)	free((*out_line_distance_pass));
+			if ((*out_line_angle) != NULL)	free((*out_line_angle));
+			if ((*out_line_angle_pass) != NULL)	free((*out_line_angle_pass));
+			if ((*out_histogram) != NULL)	free((*out_histogram));
+			if ((*out_histogram_pass) != NULL)	free((*out_histogram_pass));
+			if ((*out_angle) != NULL)	free((*out_angle));
+			if ((*out_type) != NULL)	free((*out_type));
+			if ((*out_score) != NULL)	free((*out_score));
+			if ((*out_tool_type) != NULL)	free((*out_tool_type));
+
+			(*out_id) = (float *)malloc(sizeof(float)*nObject);
+			(*out_cx) = (float *)malloc(sizeof(float)*nObject);
+			(*out_cy) = (float *)malloc(sizeof(float)*nObject);
+			(*out_rx) = (float *)malloc(sizeof(float)*nObject);
+			(*out_ry) = (float *)malloc(sizeof(float)*nObject);
+			(*out_bound_cx) = (float *)malloc(sizeof(float)*nObject);
+			(*out_bound_cy) = (float *)malloc(sizeof(float)*nObject);
+			(*out_bound_rx) = (float *)malloc(sizeof(float)*nObject);
+			(*out_bound_ry) = (float *)malloc(sizeof(float)*nObject);
+			(*out_mass_cx) = (float *)malloc(sizeof(float)*nObject);
+			(*out_mass_cy) = (float *)malloc(sizeof(float)*nObject);
+			(*out_mass_rx) = (float *)malloc(sizeof(float)*nObject);
+			(*out_mass_ry) = (float *)malloc(sizeof(float)*nObject);
+			(*out_circle_rx) = (float *)malloc(sizeof(float)*nObject);
+			(*out_circle_ry) = (float *)malloc(sizeof(float)*nObject);
+			(*out_circle_diameter) = (float *)malloc(sizeof(float)*nObject);
+			(*out_circle_pass) = (float *)malloc(sizeof(float)*nObject);
+			(*out_line_distance) = (float *)malloc(sizeof(float)*nObject);
+			(*out_line_distance_pass) = (float *)malloc(sizeof(float)*nObject);
+			(*out_line_angle) = (float *)malloc(sizeof(float)*nObject);
+			(*out_line_angle_pass) = (float *)malloc(sizeof(float)*nObject);
+			(*out_histogram) = (float *)malloc(sizeof(float)*nObject);
+			(*out_histogram_pass) = (float *)malloc(sizeof(float)*nObject);
+			(*out_angle) = (float *)malloc(sizeof(float)*nObject);
+			(*out_type) = (float *)malloc(sizeof(float)*nObject);
+			(*out_score) = (float *)malloc(sizeof(float)*nObject);
+			(*out_tool_type) = (float *)malloc(sizeof(float)*nObject);
+#endif
+
+			for (int i = 0; i < nObject; i++)
+			{
+				//i_id
+				i_id = ((int)data[index++] << 24) & 0xFF000000;
+				i_id |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_id |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_id |= ((int)data[index++]) & 0x000000FF;
+
+				//i_camera_x
+				i_camera_x = ((int)data[index++] << 24) & 0xFF000000;
+				i_camera_x |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_camera_x |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_camera_x |= ((int)data[index++]) & 0x000000FF;
+
+				//i_camera_y
+				i_camera_y = ((int)data[index++] << 24) & 0xFF000000;
+				i_camera_y |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_camera_y |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_camera_y |= ((int)data[index++]) & 0x000000FF;
+
+				//i_robot_x
+				i_robot_x = ((int)data[index++] << 24) & 0xFF000000;
+				i_robot_x |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_robot_x |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_robot_x |= ((int)data[index++]) & 0x000000FF;
+
+				//i_robot_y
+				i_robot_y = ((int)data[index++] << 24) & 0xFF000000;
+				i_robot_y |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_robot_y |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_robot_y |= ((int)data[index++]) & 0x000000FF;
+
+				//bound center
+				//i_camera_x
+				i_camera_bound_x = ((int)data[index++] << 24) & 0xFF000000;
+				i_camera_bound_x |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_camera_bound_x |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_camera_bound_x |= ((int)data[index++]) & 0x000000FF;
+
+				//i_camera_y
+				i_camera_bound_y = ((int)data[index++] << 24) & 0xFF000000;
+				i_camera_bound_y |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_camera_bound_y |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_camera_bound_y |= ((int)data[index++]) & 0x000000FF;
+
+				//i_robot_x
+				i_robot_bound_x = ((int)data[index++] << 24) & 0xFF000000;
+				i_robot_bound_x |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_robot_bound_x |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_robot_bound_x |= ((int)data[index++]) & 0x000000FF;
+
+				//i_robot_y
+				i_robot_bound_y = ((int)data[index++] << 24) & 0xFF000000;
+				i_robot_bound_y |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_robot_bound_y |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_robot_bound_y |= ((int)data[index++]) & 0x000000FF;
+
+				//center of mass
+				//i_camera_x
+				i_camera_mass_x = ((int)data[index++] << 24) & 0xFF000000;
+				i_camera_mass_x |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_camera_mass_x |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_camera_mass_x |= ((int)data[index++]) & 0x000000FF;
+
+				//i_camera_y
+				i_camera_mass_y = ((int)data[index++] << 24) & 0xFF000000;
+				i_camera_mass_y |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_camera_mass_y |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_camera_mass_y |= ((int)data[index++]) & 0x000000FF;
+
+				//i_robot_x
+				i_robot_mass_x = ((int)data[index++] << 24) & 0xFF000000;
+				i_robot_mass_x |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_robot_mass_x |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_robot_mass_x |= ((int)data[index++]) & 0x000000FF;
+
+				//i_robot_y
+				i_robot_mass_y = ((int)data[index++] << 24) & 0xFF000000;
+				i_robot_mass_y |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_robot_mass_y |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_robot_mass_y |= ((int)data[index++]) & 0x000000FF;
+
+				//i_circle_rx
+				i_circle_rx = ((int)data[index++] << 24) & 0xFF000000;
+				i_circle_rx |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_circle_rx |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_circle_rx |= ((int)data[index++]) & 0x000000FF;
+
+				//i_circle_ry
+				i_circle_ry = ((int)data[index++] << 24) & 0xFF000000;
+				i_circle_ry |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_circle_ry |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_circle_ry |= ((int)data[index++]) & 0x000000FF;
+
+				//i_circle_diameter
+				i_circle_diameter = ((int)data[index++] << 24) & 0xFF000000;
+				i_circle_diameter |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_circle_diameter |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_circle_diameter |= ((int)data[index++]) & 0x000000FF;
+
+				//i_circle_pass
+				i_circle_pass = ((int)data[index++] << 24) & 0xFF000000;
+				i_circle_pass |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_circle_pass |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_circle_pass |= ((int)data[index++]) & 0x000000FF;
+
+				//i_line_distance
+				i_line_distance = ((int)data[index++] << 24) & 0xFF000000;
+				i_line_distance |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_line_distance |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_line_distance |= ((int)data[index++]) & 0x000000FF;
+
+				//i_line_distance_pass
+				i_line_distance_pass = ((int)data[index++] << 24) & 0xFF000000;
+				i_line_distance_pass |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_line_distance_pass |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_line_distance_pass |= ((int)data[index++]) & 0x000000FF;
+
+				//i_line_angle
+				i_line_angle = ((int)data[index++] << 24) & 0xFF000000;
+				i_line_angle |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_line_angle |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_line_angle |= ((int)data[index++]) & 0x000000FF;
+
+				//i_line_angle_pass
+				i_line_angle_pass = ((int)data[index++] << 24) & 0xFF000000;
+				i_line_angle_pass |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_line_angle_pass |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_line_angle_pass |= ((int)data[index++]) & 0x000000FF;
+
+				//i_histogram
+				i_histogram = ((int)data[index++] << 24) & 0xFF000000;
+				i_histogram |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_histogram |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_histogram |= ((int)data[index++]) & 0x000000FF;
+
+				//i_histogram_pass
+				i_histogram_pass = ((int)data[index++] << 24) & 0xFF000000;
+				i_histogram_pass |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_histogram_pass |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_histogram_pass |= ((int)data[index++]) & 0x000000FF;
+
+				//i_angle
+				i_angle = ((int)data[index++] << 24) & 0xFF000000;
+				i_angle |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_angle |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_angle |= ((int)data[index++]) & 0x000000FF;
+
+				//i_type
+				i_type = ((int)data[index++] << 24) & 0xFF000000;
+				i_type |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_type |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_type |= ((int)data[index++]) & 0x000000FF;
+
+				//i_tool_type
+				i_tool_type = ((int)data[index++] << 24) & 0xFF000000;
+				i_tool_type |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_tool_type |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_tool_type |= ((int)data[index++]) & 0x000000FF;
+
+				//i_score
+				i_score = ((int)data[index++] << 24) & 0xFF000000;
+				i_score |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_score |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_score |= ((int)data[index++]) & 0x000000FF;
+
+				(*out_id)[i] = (float)i_id / (float)scale_factor;
+				(*out_cx)[i] = (float)i_camera_x / (float)scale_factor;
+				(*out_cy)[i] = (float)i_camera_y / (float)scale_factor;
+				(*out_rx)[i] = (float)i_robot_x / (float)scale_factor;
+				(*out_ry)[i] = (float)i_robot_y / (float)scale_factor;
+				(*out_bound_cx)[i] = (float)i_camera_bound_x / (float)scale_factor;
+				(*out_bound_cy)[i] = (float)i_camera_bound_y / (float)scale_factor;
+				(*out_bound_rx)[i] = (float)i_robot_bound_x / (float)scale_factor;
+				(*out_bound_ry)[i] = (float)i_robot_bound_y / (float)scale_factor;
+				(*out_mass_cx)[i] = (float)i_camera_mass_x / (float)scale_factor;
+				(*out_mass_cy)[i] = (float)i_camera_mass_y / (float)scale_factor;
+				(*out_mass_rx)[i] = (float)i_robot_mass_x / (float)scale_factor;
+				(*out_mass_ry)[i] = (float)i_robot_mass_y / (float)scale_factor;
+				(*out_circle_rx)[i] = (float)i_circle_rx / (float)scale_factor;
+				(*out_circle_ry)[i] = (float)i_circle_ry / (float)scale_factor;
+				(*out_circle_diameter)[i] = (float)i_circle_diameter / (float)scale_factor;
+				(*out_circle_pass)[i] = (float)i_circle_pass / (float)scale_factor;
+				(*out_line_distance)[i] = (float)i_line_distance / (float)scale_factor;
+				(*out_line_distance_pass)[i] = (float)i_line_distance_pass / (float)scale_factor;
+				(*out_line_angle)[i] = (float)i_line_angle / (float)scale_factor;
+				(*out_line_angle_pass)[i] = (float)i_line_angle_pass / (float)scale_factor;
+				(*out_histogram)[i] = (float)i_histogram / (float)scale_factor;
+				(*out_histogram_pass)[i] = (float)i_histogram_pass / (float)scale_factor;
+				(*out_angle)[i] = (float)i_angle / (float)scale_factor;
+				(*out_type)[i] = (float)i_type / (float)scale_factor;
+				(*out_score)[i] = (float)i_score / (float)scale_factor;
+				(*out_tool_type)[i] = (float)i_tool_type / (float)scale_factor;
+			}
+		}
+	}
+
+
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+
+	ret = nObject;
+
+	return ret;
+}
+
+int CEyedeaInterface::SetDetectData_Init(const int id)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_SET_DETECT_DATA_INIT;
+
+	int len = 4;
+	unsigned char* data = new unsigned char[len];
+
+	//index
+	int data_index = 0;
+	data[data_index++] = (id & 0xFF000000) >> 24;
+	data[data_index++] = (id & 0x00FF0000) >> 16;
+	data[data_index++] = (id & 0x0000FF00) >> 8;
+	data[data_index++] = (id & 0x000000FF);
+
+	unsigned int scale_factor = 1;
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+	if (ret == EYEDEA_ERROR_INVALID_MEMORY)
+	{
+		int sec = 0;
+		while (1)
+		{
+			ret = m_cls_eth_client->Open(m_ip, m_port);
+			if (ret == 0) {
+				ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+				break;
+			}
+			else
+			{
+				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
+				sec++;
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
+					return ret;
+				}
+				continue;
+			}
+		}
+	}
+
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+	return ret;
+}
+
 char* CEyedeaInterface::DB_Get_Mode(int id)
 {
 	boost::unique_lock<boost::mutex> scoped_lock(mutex);

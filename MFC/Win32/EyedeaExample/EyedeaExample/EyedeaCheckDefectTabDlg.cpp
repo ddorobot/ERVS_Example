@@ -159,6 +159,9 @@ BEGIN_MESSAGE_MAP(CEyedeaCheckDefectTabDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_GEOMETRY_ANGLE_BASE_GET, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonGeometryAngleBaseGet)
 	ON_BN_CLICKED(IDC_BUTTON_GEOMETRY_ANGLE_BASE_SET, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonGeometryAngleBaseSet)
 	ON_BN_CLICKED(IDC_BUTTON_GEO_MEET_POINT, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonGeoMeetPoint)
+	ON_BN_CLICKED(IDC_BUTTON_GET_DETECT_DATA, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonGetDetectData)
+	ON_BN_CLICKED(IDC_BUTTON_SET_DETECT_DATA_INIT, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonSetDetectDataInit)
+	ON_BN_CLICKED(IDC_BUTTON_GET_DETECT_DATA_INIT, &CEyedeaCheckDefectTabDlg::OnBnClickedButtonGetDetectDataInit)
 END_MESSAGE_MAP()
 
 
@@ -1042,21 +1045,47 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindGetInfo2()
 				//MyTextOut(" - [%d] : id=%04d / type=%d / cpos=(%.4f, %.4f) / rpos=(%.4f, %.4f) / angle=%d / score=%.4f\n", i, (int)p_id[i], (int)p_type[i], p_camera_center_x[i], p_camera_center_y[i], p_robot_center_x[i], p_robot_center_y[i], p_angle[i], p_score[i]);
 			}
 
+			if (p_id != NULL) free(p_id);
 			if (p_camera_center_x != NULL) free(p_camera_center_x);
 			if (p_camera_center_y != NULL) free(p_camera_center_y);
 			if (p_robot_center_x != NULL) free(p_robot_center_x);
 			if (p_robot_center_y != NULL) free(p_robot_center_y);
+
 			if (p_camera_bound_center_x != NULL) free(p_camera_bound_center_x);
 			if (p_camera_bound_center_y != NULL) free(p_camera_bound_center_y);
 			if (p_robot_bound_center_x != NULL) free(p_robot_bound_center_x);
 			if (p_robot_bound_center_y != NULL) free(p_robot_bound_center_y);
+
 			if (p_camera_mass_center_x != NULL) free(p_camera_mass_center_x);
 			if (p_camera_mass_center_y != NULL) free(p_camera_mass_center_y);
 			if (p_robot_mass_center_x != NULL) free(p_robot_mass_center_x);
 			if (p_robot_mass_center_y != NULL) free(p_robot_mass_center_y);
+
+			if (p_circle_rx != NULL) free(p_circle_rx);
+			if (p_circle_ry != NULL) free(p_circle_ry);
+
+			if (p_circle_diameter != NULL) free(p_circle_diameter);
+			if (p_circle_pass != NULL) free(p_circle_pass);
+
+			if (p_line1_x != NULL) free(p_line1_x);
+			if (p_line1_y != NULL) free(p_line1_y);
+			if (p_line2_x != NULL) free(p_line2_x);
+			if (p_line2_y != NULL) free(p_line2_y);
+
+			if (p_line_distance != NULL) free(p_line_distance);
+			if (p_line_distance_pass != NULL) free(p_line_distance_pass);
+
+			if (p_line_angle != NULL) free(p_line_angle);
+			if (p_line_angle_pass != NULL) free(p_line_angle_pass);
+
+			if (p_histogram != NULL) free(p_histogram);
+			if (p_histogram_pass != NULL) free(p_histogram_pass);
+
 			if (p_angle != NULL) free(p_angle);
 			if (p_type != NULL) free(p_type);
+			if (p_tool_type != NULL) free(p_tool_type);
 			if (p_score != NULL) free(p_score);
+			if (p_pass != NULL) free(p_pass);
 
 			//Result image
 			int len = 921600;
@@ -2385,4 +2414,378 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonGeoMeetPoint()
 	//Result image
 	int len = 921600;
 	ERVS_GetFindObjectResultImage(-1, -1, (char**)&m_result_image.data, &len);
+}
+
+
+void CEyedeaCheckDefectTabDlg::OnBnClickedButtonGetDetectData()
+{
+	// TODO: Add your control notification handler code here
+	CString strID;
+	GetDlgItem(IDC_EDIT_DETECT_DATA_ID)->GetWindowText(strID);
+	int user_id = _ttoi(strID);
+
+	float *p_id = NULL;
+	float *p_camera_center_x = NULL;
+	float *p_camera_center_y = NULL;
+	float *p_robot_center_x = NULL;
+	float *p_robot_center_y = NULL;
+
+	float *p_camera_bound_center_x = NULL;
+	float *p_camera_bound_center_y = NULL;
+	float *p_robot_bound_center_x = NULL;
+	float *p_robot_bound_center_y = NULL;
+
+	float *p_camera_mass_center_x = NULL;
+	float *p_camera_mass_center_y = NULL;
+	float *p_robot_mass_center_x = NULL;
+	float *p_robot_mass_center_y = NULL;
+
+	float *p_circle_rx = NULL;
+	float *p_circle_ry = NULL;
+
+	float *p_circle_diameter = NULL;
+	float *p_circle_pass = NULL;
+
+	float *p_line1_x = NULL;
+	float *p_line1_y = NULL;
+	float *p_line2_x = NULL;
+	float *p_line2_y = NULL;
+
+	float *p_line_distance = NULL;
+	float *p_line_distance_pass = NULL;
+
+	float *p_line_angle = NULL;
+	float *p_line_angle_pass = NULL;
+
+	float *p_histogram = NULL;
+	float *p_histogram_pass = NULL;
+
+	float *p_angle = NULL;
+	float *p_type = NULL;
+	float *p_tool_type = NULL;
+	float *p_score = NULL;
+	float *p_pass = NULL;
+
+	int nObject = ERVS_GetDetectData(user_id, 
+				&p_id,
+				&p_camera_center_x, &p_camera_center_y, &p_robot_center_x, &p_robot_center_y,
+				&p_camera_bound_center_x, &p_camera_bound_center_y, &p_robot_bound_center_x, &p_robot_bound_center_y,
+				&p_camera_mass_center_x, &p_camera_mass_center_y, &p_robot_mass_center_x, &p_robot_mass_center_y,
+				&p_circle_rx, &p_circle_ry,
+				&p_circle_diameter, &p_circle_pass,
+				&p_line_distance, &p_line_distance_pass,
+				&p_line_angle, &p_line_angle_pass,
+				&p_histogram, &p_histogram_pass,
+				&p_angle,
+				&p_type,
+				&p_score,
+				&p_tool_type);
+
+	CString str;
+	str.Format(_T("Get Detect Data object count = %d\r\n"), nObject);
+	//printf("%s", str);
+	MyTextOut(str, RGB(0, 0, 255));
+
+		for (int i = 0; i < nObject; i++)
+	{
+		//printf("%s", str);
+		if ((int)p_id[i] % 1000 == 0)
+		{
+			str.Format(_T(" - [%d] : id=%04d/type=%d/cpos=(%.2f,%.2f)/rpos=(%.2f,%.2f)/cbpos=(%.2f,%.2f)/rbpos=(%.2f,%.2f)/cmpos=(%.2f,%.2f)/rmpos=(%.2f,%.2f)/angle=%d/score=%.2f\n"),
+				i, (int)p_id[i], (int)p_type[i],
+				p_camera_center_x[i], p_camera_center_y[i], p_robot_center_x[i], p_robot_center_y[i],
+				p_camera_bound_center_x[i], p_camera_bound_center_y[i], p_robot_bound_center_x[i], p_robot_bound_center_y[i],
+				p_camera_mass_center_x[i], p_camera_mass_center_y[i], p_robot_mass_center_x[i], p_robot_mass_center_y[i],
+				(int)p_angle[i], p_score[i]);
+
+			MyTextOut(str, RGB(255, 100, 0));
+		}
+		else
+		{
+			if (p_type[i] == -200)	//circle
+			{
+#if 0
+				str.Format(_T("       : (CIRCLE) id=%04d/type=%d/cpos=(%.2f,%.2f)/rpos=(%.2f,%.2f)/radiusx=(%.2f)/radiusy=(%.2f)/score=%.2f\n"),
+					(int)p_id[i], (int)p_type[i],
+					p_camera_center_x[i], p_camera_center_y[i], p_robot_center_x[i], p_robot_center_y[i],
+					p_circle_rx[i], p_circle_ry[i],
+					p_score[i]);
+#else
+				str.Format(_T("       : (CIRCLE) id=%04d/type=%d/cpos=(%.2f,%.2f)/rpos=(%.2f,%.2f)/radiusx=(%.2f)/radiusy=(%.2f)/score=%.2f/diameter=%.2f(%d)\n"),
+					(int)p_id[i], (int)p_type[i],
+					p_camera_center_x[i], p_camera_center_y[i], p_robot_center_x[i], p_robot_center_y[i],
+					p_circle_rx[i], p_circle_ry[i],
+					p_score[i],
+					p_circle_diameter[i],
+					(int)p_circle_pass[i]);
+#endif
+			}
+			else if (p_type[i] == -300)	//line
+			{
+#if 0
+				str.Format(_T("       : (LINE) id=%04d/type=%d/cpos=(%.2f,%.2f)/rpos=(%.2f,%.2f)/line1=(%.2f,%.2f)/line2=(%.2f,%.2f)/angle=%d/score=%.2f\n"),
+					(int)p_id[i], (int)p_type[i],
+					p_camera_center_x[i], p_camera_center_y[i], p_robot_center_x[i], p_robot_center_y[i],
+					p_line1_x[i], p_line1_y[i], p_line2_x[i], p_line2_y[i],
+					(int)p_angle[i], p_score[i]);
+#else
+				str.Format(_T("       : (LINE) id=%04d/type=%d/cpos=(%.2f,%.2f)/rpos=(%.2f,%.2f)/angle=%d/score=%.2f/line_distance=%.2f(%d)/line_angle=%.2f(%d)\n"),
+					(int)p_id[i], (int)p_type[i],
+					p_camera_center_x[i], p_camera_center_y[i], p_robot_center_x[i], p_robot_center_y[i],
+					(int)p_angle[i], p_score[i],
+					p_line_distance[i],
+					(int)p_line_distance_pass[i],
+					p_line_angle[i],
+					(int)p_line_angle_pass[i]);
+#endif
+			}
+			else
+			{
+				str.Format(_T("       : (REGION) id=%04d/type=%d/cpos=(%.2f,%.2f)/rpos=(%.2f,%.2f)/cbpos=(%.2f,%.2f)/rbpos=(%.2f,%.2f)/cmpos=(%.2f,%.2f)/rmpos=(%.2f,%.2f)/angle=%d/score=%.2f\n"),
+					(int)p_id[i], (int)p_type[i],
+					p_camera_center_x[i], p_camera_center_y[i], p_robot_center_x[i], p_robot_center_y[i],
+					p_camera_bound_center_x[i], p_camera_bound_center_y[i], p_robot_bound_center_x[i], p_robot_bound_center_y[i],
+					p_camera_mass_center_x[i], p_camera_mass_center_y[i], p_robot_mass_center_x[i], p_robot_mass_center_y[i],
+					(int)p_angle[i], p_score[i]);
+			}
+
+			MyTextOut(str, RGB(0, 100, 255));
+		}
+		//MyTextOut(" - [%d] : id=%04d / type=%d / cpos=(%.4f, %.4f) / rpos=(%.4f, %.4f) / angle=%d / score=%.4f\n", i, (int)p_id[i], (int)p_type[i], p_camera_center_x[i], p_camera_center_y[i], p_robot_center_x[i], p_robot_center_y[i], p_angle[i], p_score[i]);
+	}
+
+	if( p_id != NULL ) free(p_id) ;
+	if (p_camera_center_x != NULL ) free(p_camera_center_x) ;
+	if (p_camera_center_y != NULL ) free(p_camera_center_y) ;
+	if (p_robot_center_x != NULL ) free(p_robot_center_x) ;
+	if (p_robot_center_y != NULL ) free(p_robot_center_y) ;
+
+	if (p_camera_bound_center_x != NULL ) free(p_camera_bound_center_x) ;
+	if (p_camera_bound_center_y != NULL ) free(p_camera_bound_center_y) ;
+	if (p_robot_bound_center_x != NULL ) free(p_robot_bound_center_x) ;
+	if (p_robot_bound_center_y != NULL ) free(p_robot_bound_center_y) ;
+
+	if( p_camera_mass_center_x != NULL ) free(p_camera_mass_center_x) ;
+	if( p_camera_mass_center_y != NULL ) free(p_camera_mass_center_y) ;
+	if( p_robot_mass_center_x != NULL ) free(p_robot_mass_center_x) ;
+	if( p_robot_mass_center_y != NULL ) free(p_robot_mass_center_y) ;
+
+	if( p_circle_rx != NULL ) free(p_circle_rx) ;
+	if( p_circle_ry != NULL ) free(p_circle_ry) ;
+
+	if( p_circle_diameter != NULL ) free(p_circle_diameter) ;
+	if( p_circle_pass != NULL ) free(p_circle_pass) ;
+
+	if( p_line1_x != NULL ) free(p_line1_x) ;
+	if( p_line1_y != NULL ) free(p_line1_y) ;
+	if( p_line2_x != NULL ) free(p_line2_x) ;
+	if( p_line2_y != NULL ) free(p_line2_y) ;
+
+	if( p_line_distance != NULL ) free(p_line_distance) ;
+	if( p_line_distance_pass != NULL ) free(p_line_distance_pass) ;
+
+	if( p_line_angle != NULL ) free(p_line_angle) ;
+	if( p_line_angle_pass != NULL ) free(p_line_angle_pass) ;
+
+	if( p_histogram != NULL ) free(p_histogram) ;
+	if( p_histogram_pass != NULL ) free(p_histogram_pass) ;
+
+	if( p_angle != NULL ) free(p_angle) ;
+	if( p_type != NULL ) free(p_type) ;
+	if( p_tool_type != NULL ) free(p_tool_type) ;
+	if( p_score != NULL ) free(p_score) ;
+	if( p_pass != NULL ) free(p_pass) ;
+
+}
+
+
+void CEyedeaCheckDefectTabDlg::OnBnClickedButtonSetDetectDataInit()
+{
+	// TODO: Add your control notification handler code here
+	CString strID;
+	GetDlgItem(IDC_EDIT_DETECT_DATA_ID)->GetWindowText(strID);
+	int user_id = _ttoi(strID);
+
+	ERVS_SetDetectData_Init(user_id);
+}
+
+
+void CEyedeaCheckDefectTabDlg::OnBnClickedButtonGetDetectDataInit()
+{
+	// TODO: Add your control notification handler code here
+	CString strID;
+	GetDlgItem(IDC_EDIT_DETECT_DATA_ID)->GetWindowText(strID);
+	int user_id = _ttoi(strID);
+
+	float *p_id = NULL;
+	float *p_camera_center_x = NULL;
+	float *p_camera_center_y = NULL;
+	float *p_robot_center_x = NULL;
+	float *p_robot_center_y = NULL;
+
+	float *p_camera_bound_center_x = NULL;
+	float *p_camera_bound_center_y = NULL;
+	float *p_robot_bound_center_x = NULL;
+	float *p_robot_bound_center_y = NULL;
+
+	float *p_camera_mass_center_x = NULL;
+	float *p_camera_mass_center_y = NULL;
+	float *p_robot_mass_center_x = NULL;
+	float *p_robot_mass_center_y = NULL;
+
+	float *p_circle_rx = NULL;
+	float *p_circle_ry = NULL;
+
+	float *p_circle_diameter = NULL;
+	float *p_circle_pass = NULL;
+
+	float *p_line1_x = NULL;
+	float *p_line1_y = NULL;
+	float *p_line2_x = NULL;
+	float *p_line2_y = NULL;
+
+	float *p_line_distance = NULL;
+	float *p_line_distance_pass = NULL;
+
+	float *p_line_angle = NULL;
+	float *p_line_angle_pass = NULL;
+
+	float *p_histogram = NULL;
+	float *p_histogram_pass = NULL;
+
+	float *p_angle = NULL;
+	float *p_type = NULL;
+	float *p_tool_type = NULL;
+	float *p_score = NULL;
+	float *p_pass = NULL;
+
+	int nObject = ERVS_GetDetectData_Init(user_id,
+		&p_id,
+		&p_camera_center_x, &p_camera_center_y, &p_robot_center_x, &p_robot_center_y,
+		&p_camera_bound_center_x, &p_camera_bound_center_y, &p_robot_bound_center_x, &p_robot_bound_center_y,
+		&p_camera_mass_center_x, &p_camera_mass_center_y, &p_robot_mass_center_x, &p_robot_mass_center_y,
+		&p_circle_rx, &p_circle_ry,
+		&p_circle_diameter, &p_circle_pass,
+		&p_line_distance, &p_line_distance_pass,
+		&p_line_angle, &p_line_angle_pass,
+		&p_histogram, &p_histogram_pass,
+		&p_angle,
+		&p_type,
+		&p_score,
+		&p_tool_type);
+
+	CString str;
+	str.Format(_T("Get Init. Detect Data object count = %d\r\n"), nObject);
+	//printf("%s", str);
+	MyTextOut(str, RGB(0, 0, 255));
+
+	for (int i = 0; i < nObject; i++)
+	{
+		//printf("%s", str);
+		if ((int)p_id[i] % 1000 == 0)
+		{
+			str.Format(_T(" - [%d] : id=%04d/type=%d/cpos=(%.2f,%.2f)/rpos=(%.2f,%.2f)/cbpos=(%.2f,%.2f)/rbpos=(%.2f,%.2f)/cmpos=(%.2f,%.2f)/rmpos=(%.2f,%.2f)/angle=%d/score=%.2f\n"),
+				i, (int)p_id[i], (int)p_type[i],
+				p_camera_center_x[i], p_camera_center_y[i], p_robot_center_x[i], p_robot_center_y[i],
+				p_camera_bound_center_x[i], p_camera_bound_center_y[i], p_robot_bound_center_x[i], p_robot_bound_center_y[i],
+				p_camera_mass_center_x[i], p_camera_mass_center_y[i], p_robot_mass_center_x[i], p_robot_mass_center_y[i],
+				(int)p_angle[i], p_score[i]);
+
+			MyTextOut(str, RGB(255, 100, 0));
+		}
+		else
+		{
+			if (p_type[i] == -200)	//circle
+			{
+#if 0
+				str.Format(_T("       : (CIRCLE) id=%04d/type=%d/cpos=(%.2f,%.2f)/rpos=(%.2f,%.2f)/radiusx=(%.2f)/radiusy=(%.2f)/score=%.2f\n"),
+					(int)p_id[i], (int)p_type[i],
+					p_camera_center_x[i], p_camera_center_y[i], p_robot_center_x[i], p_robot_center_y[i],
+					p_circle_rx[i], p_circle_ry[i],
+					p_score[i]);
+#else
+				str.Format(_T("       : (CIRCLE) id=%04d/type=%d/cpos=(%.2f,%.2f)/rpos=(%.2f,%.2f)/radiusx=(%.2f)/radiusy=(%.2f)/score=%.2f/diameter=%.2f(%d)\n"),
+					(int)p_id[i], (int)p_type[i],
+					p_camera_center_x[i], p_camera_center_y[i], p_robot_center_x[i], p_robot_center_y[i],
+					p_circle_rx[i], p_circle_ry[i],
+					p_score[i],
+					p_circle_diameter[i],
+					(int)p_circle_pass[i]);
+#endif
+			}
+			else if (p_type[i] == -300)	//line
+			{
+#if 0
+				str.Format(_T("       : (LINE) id=%04d/type=%d/cpos=(%.2f,%.2f)/rpos=(%.2f,%.2f)/line1=(%.2f,%.2f)/line2=(%.2f,%.2f)/angle=%d/score=%.2f\n"),
+					(int)p_id[i], (int)p_type[i],
+					p_camera_center_x[i], p_camera_center_y[i], p_robot_center_x[i], p_robot_center_y[i],
+					p_line1_x[i], p_line1_y[i], p_line2_x[i], p_line2_y[i],
+					(int)p_angle[i], p_score[i]);
+#else
+				str.Format(_T("       : (LINE) id=%04d/type=%d/cpos=(%.2f,%.2f)/rpos=(%.2f,%.2f)/angle=%d/score=%.2f/line_distance=%.2f(%d)/line_angle=%.2f(%d)\n"),
+					(int)p_id[i], (int)p_type[i],
+					p_camera_center_x[i], p_camera_center_y[i], p_robot_center_x[i], p_robot_center_y[i],
+					(int)p_angle[i], p_score[i],
+					p_line_distance[i],
+					(int)p_line_distance_pass[i],
+					p_line_angle[i],
+					(int)p_line_angle_pass[i]);
+#endif
+			}
+			else
+			{
+				str.Format(_T("       : (REGION) id=%04d/type=%d/cpos=(%.2f,%.2f)/rpos=(%.2f,%.2f)/cbpos=(%.2f,%.2f)/rbpos=(%.2f,%.2f)/cmpos=(%.2f,%.2f)/rmpos=(%.2f,%.2f)/angle=%d/score=%.2f\n"),
+					(int)p_id[i], (int)p_type[i],
+					p_camera_center_x[i], p_camera_center_y[i], p_robot_center_x[i], p_robot_center_y[i],
+					p_camera_bound_center_x[i], p_camera_bound_center_y[i], p_robot_bound_center_x[i], p_robot_bound_center_y[i],
+					p_camera_mass_center_x[i], p_camera_mass_center_y[i], p_robot_mass_center_x[i], p_robot_mass_center_y[i],
+					(int)p_angle[i], p_score[i]);
+			}
+
+			MyTextOut(str, RGB(0, 100, 255));
+		}
+		//MyTextOut(" - [%d] : id=%04d / type=%d / cpos=(%.4f, %.4f) / rpos=(%.4f, %.4f) / angle=%d / score=%.4f\n", i, (int)p_id[i], (int)p_type[i], p_camera_center_x[i], p_camera_center_y[i], p_robot_center_x[i], p_robot_center_y[i], p_angle[i], p_score[i]);
+	}
+
+	if (p_id != NULL) free(p_id);
+	if (p_camera_center_x != NULL) free(p_camera_center_x);
+	if (p_camera_center_y != NULL) free(p_camera_center_y);
+	if (p_robot_center_x != NULL) free(p_robot_center_x);
+	if (p_robot_center_y != NULL) free(p_robot_center_y);
+
+	if (p_camera_bound_center_x != NULL) free(p_camera_bound_center_x);
+	if (p_camera_bound_center_y != NULL) free(p_camera_bound_center_y);
+	if (p_robot_bound_center_x != NULL) free(p_robot_bound_center_x);
+	if (p_robot_bound_center_y != NULL) free(p_robot_bound_center_y);
+
+	if (p_camera_mass_center_x != NULL) free(p_camera_mass_center_x);
+	if (p_camera_mass_center_y != NULL) free(p_camera_mass_center_y);
+	if (p_robot_mass_center_x != NULL) free(p_robot_mass_center_x);
+	if (p_robot_mass_center_y != NULL) free(p_robot_mass_center_y);
+
+	if (p_circle_rx != NULL) free(p_circle_rx);
+	if (p_circle_ry != NULL) free(p_circle_ry);
+
+	if (p_circle_diameter != NULL) free(p_circle_diameter);
+	if (p_circle_pass != NULL) free(p_circle_pass);
+
+	if (p_line1_x != NULL) free(p_line1_x);
+	if (p_line1_y != NULL) free(p_line1_y);
+	if (p_line2_x != NULL) free(p_line2_x);
+	if (p_line2_y != NULL) free(p_line2_y);
+
+	if (p_line_distance != NULL) free(p_line_distance);
+	if (p_line_distance_pass != NULL) free(p_line_distance_pass);
+
+	if (p_line_angle != NULL) free(p_line_angle);
+	if (p_line_angle_pass != NULL) free(p_line_angle_pass);
+
+	if (p_histogram != NULL) free(p_histogram);
+	if (p_histogram_pass != NULL) free(p_histogram_pass);
+
+	if (p_angle != NULL) free(p_angle);
+	if (p_type != NULL) free(p_type);
+	if (p_tool_type != NULL) free(p_tool_type);
+	if (p_score != NULL) free(p_score);
+	if (p_pass != NULL) free(p_pass);
 }

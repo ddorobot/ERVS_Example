@@ -43,6 +43,10 @@ BEGIN_MESSAGE_MAP(CEyedeaCalibrationTabDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_LOAD_CALIBRATION, &CEyedeaCalibrationTabDlg::OnBnClickedButtonLoadCalibration)
 	ON_BN_CLICKED(IDC_BUTTON_GET_CALIBRATION_IMAGE, &CEyedeaCalibrationTabDlg::OnBnClickedButtonGetCalibrationImage)
 	ON_BN_CLICKED(IDC_BUTTON_CALIBRATION_COPY, &CEyedeaCalibrationTabDlg::OnBnClickedButtonCalibrationCopy)
+	ON_BN_CLICKED(IDC_BUTTON_STANDALONE_CALIB_RUN, &CEyedeaCalibrationTabDlg::OnBnClickedButtonStandaloneCalibRun)
+	ON_BN_CLICKED(IDC_BUTTON_STANDALONE_CALIB_GET_FEATURE_POS, &CEyedeaCalibrationTabDlg::OnBnClickedButtonStandaloneCalibGetFeaturePos)
+	ON_BN_CLICKED(IDC_BUTTON_STANDALONE_CALIB_SET_MATRIX, &CEyedeaCalibrationTabDlg::OnBnClickedButtonStandaloneCalibSetMatrix)
+	ON_BN_CLICKED(IDC_BUTTON_STANDALONE_CALIB_GET_MATRIX, &CEyedeaCalibrationTabDlg::OnBnClickedButtonStandaloneCalibGetMatrix)
 END_MESSAGE_MAP()
 
 
@@ -501,4 +505,67 @@ BOOL CEyedeaCalibrationTabDlg::PreTranslateMessage(MSG* pMsg)
 	}
 
 	return CDialogEx::PreTranslateMessage(pMsg);
+}
+
+
+void CEyedeaCalibrationTabDlg::OnBnClickedButtonStandaloneCalibRun()
+{
+	// TODO: Add your control notification handler code here
+	ERVS_Calibration_StandAlone_Run();
+
+//	UpdateDataCalibrationRun();
+}
+
+
+
+void CEyedeaCalibrationTabDlg::OnBnClickedButtonStandaloneCalibGetFeaturePos()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	float posA[3], posB[3], posC[3], posD[3];
+	int nCalibrationInfo = ERVS_Calibration_GetCount();
+
+	CString PosStr;
+	for (int i = 0; i < nCalibrationInfo ; i++)
+	{
+
+		ERVS_Calibration_StandAlone_Get_Feature_Pos(i, posA, posB, posC, posD);
+
+		CString str;
+		str.Format(_T("PosA:[%.2f,%.2f,%.2f] / "), posA[0], posA[1], posA[2]);
+
+		PosStr += str;
+
+		str.Format(_T("PosB:[%.2f,%.2f,%.2f] / "), posB[0], posB[1], posB[2]);
+
+		PosStr += str;
+
+		str.Format(_T("PosC:[%.2f,%.2f,%.2f] / "), posC[0], posC[1], posC[2]);
+
+		PosStr += str;
+
+		str.Format(_T("PosD:[%.2f,%.2f,%.2f] \r\n"), posD[0], posD[1], posD[2]);
+
+		PosStr += str;
+	}
+
+	GetDlgItem(IDC_EDIT_STANDALONE_CALIB_SHOW_FEATURE_POS)->SetWindowText(PosStr);
+}
+
+
+void CEyedeaCalibrationTabDlg::OnBnClickedButtonStandaloneCalibSetMatrix()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	float matrix[12] = { 1.1,2.2,3.3,4.4,5.5,6.6,7.7,8.8,9.9,10.0,11.1,12.1};
+	ERVS_Calibration_StandAlone_Set_Matrix(matrix);
+}
+
+
+void CEyedeaCalibrationTabDlg::OnBnClickedButtonStandaloneCalibGetMatrix()
+{
+	float matrix[12];
+	ERVS_Calibration_StandAlone_Get_Matrix(matrix);
+	for (int i = 0; i < 12; i++)
+	{
+		printf("matval[%d] : %f\n", i, matrix[i]);
+	}
 }

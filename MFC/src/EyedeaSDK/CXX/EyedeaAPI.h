@@ -145,6 +145,10 @@ int ERVS_Calibration_GetRobotInfo(int index, float *out_robot_x, float *out_robo
 int ERVS_Calibration_Del(int index);
 int ERVS_Calibration_Clear(void);
 int ERVS_Calibration_Run(void);
+int ERVS_Calibration_StandAlone_Run(void);
+int ERVS_Calibration_StandAlone_Get_Feature_Pos(int index,float posA[3], float posB[3], float posC[3], float posD[3]);
+int ERVS_Calibration_StandAlone_Set_Matrix(float matrix[12]);
+int ERVS_Calibration_StandAlone_Get_Matrix(float matrix[12]);
 int ERVS_Calibration_GetPoint(const float in_px, const float in_py, float* out_rx, float* out_ry);
 int ERVS_Calibration_GetChessPoint(const int index, float* out_rx, float* out_ry);
 int ERVS_Calibration_isOK(void);

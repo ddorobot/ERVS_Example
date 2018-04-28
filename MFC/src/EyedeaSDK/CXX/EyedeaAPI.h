@@ -74,6 +74,7 @@ int ERVS_GetObjectCircle(float *out_x, float *out_y, float *out_r1, float *out_r
 
 //Line Object
 int ERVS_SetObjectLine(float x, float y, float w, float h);
+int ERVS_SetObjectLine(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4);
 int ERVS_DelObjectLine(void);
 int ERVS_ClrObjectLine(void);
 int ERVS_SetObjectTwoLine(const int id, float x1, float y1, float w1, float h1, float x2, float y2, float w2, float h2);

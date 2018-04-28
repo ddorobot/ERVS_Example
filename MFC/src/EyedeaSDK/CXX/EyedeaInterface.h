@@ -42,6 +42,7 @@ public:
 	float GetObjectCircleCalcDiameter(const int id);
 	int GetObjectCircle(float *out_x, float *out_y, float *out_r1, float *out_r2);
 	int SetObjectLine(float x, float y, float w, float h);
+	int SetObjectLine(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4);
 	int DeleteObjectLine(void);
 	int ClearObjectLine(void);
 	int SetObjectTwoLine(const int id, float x1, float y1, float w1, float h1, float x2, float y2, float w2, float h2);

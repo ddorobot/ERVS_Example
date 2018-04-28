@@ -1487,6 +1487,119 @@ int CEyedeaInterface::SetObjectLine(float x, float y, float w, float h)
 	return ret;
 }
 
+int CEyedeaInterface::SetObjectLine(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_SET_OBJECT_LINE;
+
+	int len = 4 * 8;
+	unsigned char* data = new unsigned char[len];
+
+	unsigned int scale_factor = 10000;
+	int _x1 = x1 * scale_factor;
+	int _y1 = y1 * scale_factor;
+	int _x2 = x2 * scale_factor;
+	int _y2 = y2 * scale_factor;
+	int _x3 = x3 * scale_factor;
+	int _y3 = y3 * scale_factor;
+	int _x4 = x4 * scale_factor;
+	int _y4 = y4 * scale_factor;
+
+	int index = 0;
+
+	//x
+	data[index++] = (_x1 & 0xFF000000) >> 24;
+	data[index++] = (_x1 & 0x00FF0000) >> 16;
+	data[index++] = (_x1 & 0x0000FF00) >> 8;
+	data[index++] = (_x1 & 0x000000FF);
+
+	//y
+	data[index++] = (_y1 & 0xFF000000) >> 24;
+	data[index++] = (_y1 & 0x00FF0000) >> 16;
+	data[index++] = (_y1 & 0x0000FF00) >> 8;
+	data[index++] = (_y1 & 0x000000FF);
+
+	//r1
+	data[index++] = (_x2 & 0xFF000000) >> 24;
+	data[index++] = (_x2 & 0x00FF0000) >> 16;
+	data[index++] = (_x2 & 0x0000FF00) >> 8;
+	data[index++] = (_x2 & 0x000000FF);
+
+	//r2
+	data[index++] = (_y2 & 0xFF000000) >> 24;
+	data[index++] = (_y2 & 0x00FF0000) >> 16;
+	data[index++] = (_y2 & 0x0000FF00) >> 8;
+	data[index++] = (_y2 & 0x000000FF);
+
+	//r1
+	data[index++] = (_x3 & 0xFF000000) >> 24;
+	data[index++] = (_x3 & 0x00FF0000) >> 16;
+	data[index++] = (_x3 & 0x0000FF00) >> 8;
+	data[index++] = (_x3 & 0x000000FF);
+
+	//r2
+	data[index++] = (_y3 & 0xFF000000) >> 24;
+	data[index++] = (_y3 & 0x00FF0000) >> 16;
+	data[index++] = (_y3 & 0x0000FF00) >> 8;
+	data[index++] = (_y3 & 0x000000FF);
+
+	//r1
+	data[index++] = (_x4 & 0xFF000000) >> 24;
+	data[index++] = (_x4 & 0x00FF0000) >> 16;
+	data[index++] = (_x4 & 0x0000FF00) >> 8;
+	data[index++] = (_x4 & 0x000000FF);
+
+	//r2
+	data[index++] = (_y4 & 0xFF000000) >> 24;
+	data[index++] = (_y4 & 0x00FF0000) >> 16;
+	data[index++] = (_y4 & 0x0000FF00) >> 8;
+	data[index++] = (_y4 & 0x000000FF);
+
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+	if (ret == EYEDEA_ERROR_INVALID_MEMORY)
+	{
+		int sec = 0;
+		while (1)
+		{
+			ret = m_cls_eth_client->Open(m_ip, m_port);
+			if (ret == 0) {
+				ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+				break;
+			}
+			else
+			{
+				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
+				sec++;
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
+					return ret;
+				}
+				continue;
+			}
+		}
+	}
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+
+	return ret;
+}
+
 int CEyedeaInterface::DeleteObjectLine(void)
 {
 	boost::unique_lock<boost::mutex> scoped_lock(mutex);

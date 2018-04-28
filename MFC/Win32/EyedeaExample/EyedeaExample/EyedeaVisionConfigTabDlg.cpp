@@ -1769,6 +1769,30 @@ void CEyedeaVisionConfigTabDlg::OnLButtonUp(UINT nFlags, CPoint point)
 				//printf("select rate = %f, %f, %f, %f", rate_x, rate_y, rate_w, rate_h);
 				//ERVS_SetSelectBaseObject(rate_x, rate_y, rate_w, rate_h);
 				ERVS_SetSelectBaseObject(m_select_rate_x, m_select_rate_y, m_select_rate_w, m_select_rate_h);
+
+				//Get
+				float object_x = 0;
+				float object_y = 0;
+				float object_w = 0;
+				float object_h = 0;
+				float object_center_roi_x = 0;
+				float object_center_roi_y = 0;
+				float object_center_bound_x = 0;
+				float object_center_bound_y = 0;
+				float object_center_mass_x = 0;
+				float object_center_mass_y = 0;
+				
+				ERVS_GetSelectBaseObject(&object_x, &object_y, &object_w, &object_h,
+					&object_center_roi_x, &object_center_roi_y, 
+					&object_center_bound_x, &object_center_bound_y, 
+					&object_center_mass_x, &object_center_mass_y);
+
+				printf("Test : Get Object Info : %.4f, %.4f, %.4f, %.4f, (%.4f, %.4f), (%.4f, %.4f), (%.4f, %.4f)\n", 
+					object_x, object_y, object_w, object_h, 
+					object_center_roi_x, object_center_roi_y, 
+					object_center_bound_x, object_center_bound_y, 
+					object_center_mass_x, object_center_mass_y);
+
 			}
 			else if (m_command == USER_COMMAND_SELECT_MASK_AREA)
 			{

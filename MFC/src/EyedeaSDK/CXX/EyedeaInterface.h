@@ -26,6 +26,7 @@ public:
 	int GetImage(int option, int option2, char** out_data, int* len);
 	int GetResultImage(int option, int option2, char** out_data, int* len);
 	int SetSelectBaseObject(float x, float y, float w, float h);
+	int GetSelectBaseObject(float *out_x, float *out_y, float *out_w, float *out_h, float *out_roi_center_x, float *out_roi_center_y, float *out_bound_center_x, float *out_bound_center_y, float *out_mass_center_x, float *out_mass_center_y);
 	int SetZoomArea(float x, float y, float w, float h);
 	int ResetZoomArea(void);
 	int SetMaskArea(float x, float y, float w, float h, bool inverse);

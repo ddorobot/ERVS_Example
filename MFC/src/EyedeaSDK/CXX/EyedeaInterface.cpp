@@ -737,6 +737,159 @@ int CEyedeaInterface::SetSelectBaseObject(float x, float y, float w, float h)
     return ret;
 }
 
+int CEyedeaInterface::GetSelectBaseObject(float *out_x, float *out_y, float *out_w, float *out_h, float *out_roi_center_x, float *out_roi_center_y, float *out_bound_center_x, float *out_bound_center_y, float *out_mass_center_x, float *out_mass_center_y)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	//printf("SetMasterArea - %d %d %d %d\n", x, y, w, h);
+
+	char command = COMMAND_GET_SELECT_BASE_OBJECT;
+
+	int len = 0;
+	unsigned char* data = NULL;
+
+	unsigned int scale_factor = 10000;
+
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+	if (ret == EYEDEA_ERROR_INVALID_MEMORY)
+	{
+		int sec = 0;
+		while (1)
+		{
+			ret = m_cls_eth_client->Open(m_ip, m_port);
+			if (ret == 0) {
+				ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+				break;
+			}
+			else
+			{
+				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
+				sec++;
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
+					return ret;
+				}
+				continue;
+			}
+		}
+	}
+
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
+
+	//
+	if (len == 40)
+	{
+		int index = 0;
+
+		//x
+		int x = ((int)data[index++] << 24) & 0xFF000000;
+		x |=	((int)data[index++] << 16) & 0x00FF0000;
+		x |=	((int)data[index++] << 8) & 0x0000FF00;
+		x |=	((int)data[index++]) & 0x000000FF;
+
+		//y
+		int y = ((int)data[index++] << 24) & 0xFF000000;
+		y |=	((int)data[index++] << 16) & 0x00FF0000;
+		y |=	((int)data[index++] << 8) & 0x0000FF00;
+		y |=	((int)data[index++]) & 0x000000FF;
+
+		//w
+		int w = ((int)data[index++] << 24) & 0xFF000000;
+		w |=	((int)data[index++] << 16) & 0x00FF0000;
+		w |=	((int)data[index++] << 8) & 0x0000FF00;
+		w |=	((int)data[index++]) & 0x000000FF;
+
+		//r2
+		int h = ((int)data[index++] << 24) & 0xFF000000;
+		h |=	((int)data[index++] << 16) & 0x00FF0000;
+		h |=	((int)data[index++] << 8) & 0x0000FF00;
+		h |=	((int)data[index++]) & 0x000000FF;
+
+		//center roi
+		int roi_center_x = ((int)data[index++] << 24) & 0xFF000000;
+		roi_center_x |= ((int)data[index++] << 16) & 0x00FF0000;
+		roi_center_x |= ((int)data[index++] << 8) & 0x0000FF00;
+		roi_center_x |= ((int)data[index++]) & 0x000000FF;
+
+		int roi_center_y = ((int)data[index++] << 24) & 0xFF000000;
+		roi_center_y |= ((int)data[index++] << 16) & 0x00FF0000;
+		roi_center_y |= ((int)data[index++] << 8) & 0x0000FF00;
+		roi_center_y |= ((int)data[index++]) & 0x000000FF;
+
+		//center bound
+		int bound_center_x = ((int)data[index++] << 24) & 0xFF000000;
+		bound_center_x |= ((int)data[index++] << 16) & 0x00FF0000;
+		bound_center_x |= ((int)data[index++] << 8) & 0x0000FF00;
+		bound_center_x |= ((int)data[index++]) & 0x000000FF;
+
+		int bound_center_y = ((int)data[index++] << 24) & 0xFF000000;
+		bound_center_y |= ((int)data[index++] << 16) & 0x00FF0000;
+		bound_center_y |= ((int)data[index++] << 8) & 0x0000FF00;
+		bound_center_y |= ((int)data[index++]) & 0x000000FF;
+
+		//center mass
+		int mass_center_x = ((int)data[index++] << 24) & 0xFF000000;
+		mass_center_x |= ((int)data[index++] << 16) & 0x00FF0000;
+		mass_center_x |= ((int)data[index++] << 8) & 0x0000FF00;
+		mass_center_x |= ((int)data[index++]) & 0x000000FF;
+
+		int mass_center_y = ((int)data[index++] << 24) & 0xFF000000;
+		mass_center_y |= ((int)data[index++] << 16) & 0x00FF0000;
+		mass_center_y |= ((int)data[index++] << 8) & 0x0000FF00;
+		mass_center_y |= ((int)data[index++]) & 0x000000FF;
+
+		float _x = (float)x / (float)scale_factor;
+		float _y = (float)y / (float)scale_factor;
+		float _w = (float)w / (float)scale_factor;
+		float _h = (float)h / (float)scale_factor;
+		float _roi_center_x = (float)roi_center_x / (float)scale_factor;
+		float _roi_center_y = (float)roi_center_y / (float)scale_factor;
+		float _bound_center_x = (float)bound_center_x / (float)scale_factor;
+		float _bound_center_y = (float)bound_center_y / (float)scale_factor;
+		float _mass_center_x = (float)mass_center_x / (float)scale_factor;
+		float _mass_center_y = (float)mass_center_y / (float)scale_factor;
+
+		(*out_x) = _x;
+		(*out_y) = _y;
+		(*out_w) = _w;
+		(*out_h) = _h;
+		(*out_roi_center_x) = _roi_center_x;
+		(*out_roi_center_y) = _roi_center_y;
+		(*out_bound_center_x) = _bound_center_x;
+		(*out_bound_center_y) = _bound_center_y;
+		(*out_mass_center_x) = _mass_center_x;
+		(*out_mass_center_y) = _mass_center_y;
+	}
+
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+
+	return ret;
+}
+
 int CEyedeaInterface::SetZoomArea(float x, float y, float w, float h)
 {
 	boost::unique_lock<boost::mutex> scoped_lock(mutex);

@@ -30,6 +30,11 @@ int ERVS_SetSelectBaseObject(float x, float y, float w, float h)
 	return g_cls_interface.SetSelectBaseObject(x, y, w, h);
 }
 
+int ERVS_GetSelectBaseObject(float *out_x, float *out_y, float *out_w, float *out_h, float *out_roi_center_x, float *out_roi_center_y, float *out_bound_center_x, float *out_bound_center_y, float *out_mass_center_x, float *out_mass_center_y)
+{
+	return g_cls_interface.GetSelectBaseObject(out_x, out_y, out_w, out_h, out_roi_center_x, out_roi_center_y, out_bound_center_x, out_bound_center_y, out_mass_center_x, out_mass_center_y);
+}
+
 int ERVS_SetZoomArea(float x, float y, float w, float h)
 {
 	//printf("ERVS_SetSelectBaseObject\n");

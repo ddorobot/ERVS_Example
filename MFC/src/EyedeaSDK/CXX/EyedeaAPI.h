@@ -99,6 +99,7 @@ int ERVS_GetObjectTwoLineAngleInspection(const int id);
 
 //Region Object
 int ERVS_SetSelectBaseObject(float x, float y, float w, float h);
+int ERVS_GetSelectBaseObject(float *out_x, float *out_y, float *out_w, float *out_h, float *out_roi_center_x, float *out_roi_center_y, float *out_bound_center_x, float *out_bound_center_y, float *out_mass_center_x, float *out_mass_center_y);
 
 //Detect 
 int ERVS_SetDetectRetry(const int id, int nRetryCount);

@@ -69,11 +69,6 @@ int ERVS_ResetZoomArea(void)
 	return g_cls_interface.ResetZoomArea();
 }
 
-int ERVS_GetObjectCircle(float *out_x, float *out_y, float *out_r1, float *out_r2)
-{
-	return g_cls_interface.GetObjectCircle(out_x, out_y, out_r1, out_r2);
-}
-
 int ERVS_SetObjectCircle(float x, float y, float r1, float r2)
 {
 	return g_cls_interface.SetObjectCircle(x, y, r1, r2);
@@ -82,6 +77,11 @@ int ERVS_SetObjectCircle(float x, float y, float r1, float r2)
 int ERVS_SetObjectCircle(const float x, const float y, const float r1, const float r2, const float min_r1, const float min_r2, const float max_r1, const float max_r2)
 {
 	return g_cls_interface.SetObjectCircle(x, y, r1, r2, min_r1, min_r2, max_r1, max_r2);
+}
+
+int ERVS_GetObjectCircle(float *out_x, float *out_y, float *out_r1, float *out_r2, float *out_min_r1, float *out_min_r2, float *out_max_r1, float *out_max_r2)
+{
+	return g_cls_interface.GetObjectCircle(out_x, out_y, out_r1, out_r2, out_min_r1, out_min_r2, out_max_r1, out_max_r2);
 }
 
 int ERVS_SetObjectLine(float x, float y, float w, float h)

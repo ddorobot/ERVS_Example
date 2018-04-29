@@ -1368,127 +1368,6 @@ int CEyedeaInterface::ResetZoomArea(void)
 	return ret;
 }
 
-int CEyedeaInterface::GetObjectCircle(float *out_x, float *out_y, float *out_r1, float *out_r2)
-{
-	boost::unique_lock<boost::mutex> scoped_lock(mutex);
-
-	if (m_cls_eth_client == NULL)
-	{
-		printf("Before accessing the ERVS\n");
-		return EYEDEA_ERROR_INVALID_MEMORY;
-	}
-
-	char command = COMMAND_GET_OBJECT;
-	int len = 4;
-	unsigned char* data = new unsigned char[len];
-
-	int type = 1;		//circle
-
-	//x
-	data[0] = (type & 0xFF000000) >> 24;
-	data[1] = (type & 0x00FF0000) >> 16;
-	data[2] = (type & 0x0000FF00) >> 8;
-	data[3] = (type & 0x000000FF);
-
-	unsigned int scale_factor = 1;
-	int ret = 0;
-    ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
-	if(ret == EYEDEA_ERROR_INVALID_MEMORY)
-	{
-		int sec = 0;
-		while(1)
-		{
-			ret = m_cls_eth_client->Open(m_ip, m_port);
-			if(ret == 0){
-				ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
-				break;
-			}
-			else
-			{
-				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
-				sec++;
-				if (sec >= 60)
-				{
-					if (data != NULL)
-					{
-						delete data;
-						data = NULL;
-					}
-
-					return ret;
-				}
-				continue;
-			}
-		}
-	}
-	if (ret != 0)
-	{
-		if (data != NULL)
-		{
-			delete data;
-			data = NULL;
-		}
-		return ret;
-	}
-
-	if (len >= 16)
-	{
-		//x
-		int x = ((int)data[0] << 24) & 0xFF000000;
-		x |= ((int)data[1] << 16) & 0x00FF0000;
-		x |= ((int)data[2] << 8) & 0x0000FF00;
-		x |= ((int)data[3]) & 0x000000FF;
-
-		//y
-		int y = ((int)data[4] << 24) & 0xFF000000;
-		y |= ((int)data[5] << 16) & 0x00FF0000;
-		y |= ((int)data[6] << 8) & 0x0000FF00;
-		y |= ((int)data[7]) & 0x000000FF;
-
-		//r1
-		int r1 = ((int)data[8] << 24) & 0xFF000000;
-		r1 |= ((int)data[9] << 16) & 0x00FF0000;
-		r1 |= ((int)data[10] << 8) & 0x0000FF00;
-		r1 |= ((int)data[11]) & 0x000000FF;
-
-		//r2
-		int r2 = ((int)data[12] << 24) & 0xFF000000;
-		r2 |= ((int)data[13] << 16) & 0x00FF0000;
-		r2 |= ((int)data[14] << 8) & 0x0000FF00;
-		r2 |= ((int)data[15]) & 0x000000FF;
-
-		float _x = (float)x / (float)scale_factor;
-		//_x = (float)(((_x*640.0) * (float)TRANS_IAMGE_WIDTH) / 640.0);
-		//x = (int)((float)m_source.gray.cols*((_x*640.0))/((float)m_source.gray.cols)) ;
-		//x = (int)((float)m_source.gray.cols * _x) ;
-
-		float _y = (float)y / (float)scale_factor;
-		//_y = (float)(((_y*480.0) * (float)TRANS_IAMGE_HEIGHT) / 480.0);
-		//y = (int)((float)m_source.gray.rows*((_y*480.0)/((float)m_source.gray.rows))) ;
-		//y = (int)((float)m_source.gray.rows * _y) ;
-
-		float _r1 = (float)r1 / (float)scale_factor;
-		//_r1 = (float)(((_r1*640.0) * (float)TRANS_IAMGE_WIDTH) / 640.0);
-		//w = (int)((float)m_source.gray.cols*((_w*640.0))/((float)m_source.gray.cols)) ;
-		//w = (int)((float)m_source.gray.cols * _w) ;
-
-		float _r2 = (float)r2 / (float)scale_factor;
-		//_r2 = (float)(((_r2*480.0) * (float)TRANS_IAMGE_HEIGHT) / 480.0);
-		//h = (int)((float)m_source.gray.rows*((_h*480.0)/((float)m_source.gray.rows))) ;
-		//h = (int)((float)m_source.gray.rows * _h) ;
-
-		(*out_x) = _x ;
-		(*out_y) = _y ;
-		(*out_r1) = _r1 ;
-		(*out_r2) = _r2 ;
-	}
-
-	delete (data);
-	data = NULL;
-
-    return ret;
-}
-
 int CEyedeaInterface::SetObjectCircle(float x, float y, float r1, float r2)
 {
 	//printf("test = %f, %f, %f, %f\n", x, y, r1, r2);
@@ -1681,6 +1560,139 @@ int CEyedeaInterface::SetObjectCircle(const float x, const float y, const float 
 			}
 		}
 	}
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+
+	return ret;
+}
+
+int CEyedeaInterface::GetObjectCircle(float *out_x, float *out_y, float *out_r1, float *out_r2, float *out_min_r1, float *out_min_r2, float *out_max_r1, float *out_max_r2)
+{
+	//printf("test = %f, %f, %f, %f\n", x, y, r1, r2);
+
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	unsigned int scale_factor = 1;
+	int len = 0;
+
+	char command = COMMAND_GET_OBJECT_CIRCLE_WITH_BOUND;
+	unsigned char* data = NULL;
+
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+	if (ret == EYEDEA_ERROR_INVALID_MEMORY)
+	{
+		int sec = 0;
+		while (1)
+		{
+			ret = m_cls_eth_client->Open(m_ip, m_port);
+			if (ret == 0) {
+				ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+				break;
+			}
+			else
+			{
+				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
+				sec++;
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
+					return ret;
+				}
+				continue;
+			}
+		}
+	}
+
+	//float *out_x, float *out_y, float *out_r1, float *out_r2, float *out_min_r1, float *out_min_r2, float *out_max_r1, float *out_max_r2)
+
+	int i_x = 0;
+	int i_y = 0;
+	int i_r1 = 0;
+	int i_r2 = 0;
+	int i_min_r1 = 0;
+	int i_min_r2 = 0;
+	int i_max_r1 = 0;
+	int i_max_r2 = 0;
+
+	int index = 0;
+
+	//printf("len = %d\n", len);
+
+	if (len >= 4 * 8)
+	{
+		i_x = ((int)data[index++] << 24) & 0xFF000000;
+		i_x |= ((int)data[index++] << 16) & 0x00FF0000;
+		i_x |= ((int)data[index++] << 8) & 0x0000FF00;
+		i_x |= ((int)data[index++]) & 0x000000FF;
+
+		i_y = ((int)data[index++] << 24) & 0xFF000000;
+		i_y |= ((int)data[index++] << 16) & 0x00FF0000;
+		i_y |= ((int)data[index++] << 8) & 0x0000FF00;
+		i_y |= ((int)data[index++]) & 0x000000FF;
+
+		i_r1 = ((int)data[index++] << 24) & 0xFF000000;
+		i_r1 |= ((int)data[index++] << 16) & 0x00FF0000;
+		i_r1 |= ((int)data[index++] << 8) & 0x0000FF00;
+		i_r1 |= ((int)data[index++]) & 0x000000FF;
+
+		i_r2 = ((int)data[index++] << 24) & 0xFF000000;
+		i_r2 |= ((int)data[index++] << 16) & 0x00FF0000;
+		i_r2 |= ((int)data[index++] << 8) & 0x0000FF00;
+		i_r2 |= ((int)data[index++]) & 0x000000FF;
+
+		i_min_r1 = ((int)data[index++] << 24) & 0xFF000000;
+		i_min_r1 |= ((int)data[index++] << 16) & 0x00FF0000;
+		i_min_r1 |= ((int)data[index++] << 8) & 0x0000FF00;
+		i_min_r1 |= ((int)data[index++]) & 0x000000FF;
+
+		i_min_r2 = ((int)data[index++] << 24) & 0xFF000000;
+		i_min_r2 |= ((int)data[index++] << 16) & 0x00FF0000;
+		i_min_r2 |= ((int)data[index++] << 8) & 0x0000FF00;
+		i_min_r2 |= ((int)data[index++]) & 0x000000FF;
+
+		i_max_r1 = ((int)data[index++] << 24) & 0xFF000000;
+		i_max_r1 |= ((int)data[index++] << 16) & 0x00FF0000;
+		i_max_r1 |= ((int)data[index++] << 8) & 0x0000FF00;
+		i_max_r1 |= ((int)data[index++]) & 0x000000FF;
+
+		i_max_r2 = ((int)data[index++] << 24) & 0xFF000000;
+		i_max_r2 |= ((int)data[index++] << 16) & 0x00FF0000;
+		i_max_r2 |= ((int)data[index++] << 8) & 0x0000FF00;
+		i_max_r2 |= ((int)data[index++]) & 0x000000FF;
+
+		float f_x = (float)i_x / (float)scale_factor;
+		float f_y = (float)i_y / (float)scale_factor;
+		float f_r1 = (float)i_r1 / (float)scale_factor;
+		float f_r2 = (float)i_r2 / (float)scale_factor;
+		float f_min_r1 = (float)i_min_r1 / (float)scale_factor;
+		float f_min_r2 = (float)i_min_r2 / (float)scale_factor;
+		float f_max_r1 = (float)i_max_r1 / (float)scale_factor;
+		float f_max_r2 = (float)i_max_r2 / (float)scale_factor;
+
+		if (out_x != NULL) (*out_x) = f_x;
+		if (out_y != NULL) (*out_y) = f_y;
+		if (out_r1 != NULL) (*out_r1) = f_r1;
+		if (out_r2 != NULL) (*out_r2) = f_r2;
+		if (out_min_r1 != NULL) (*out_min_r1) = f_min_r1;
+		if (out_min_r2 != NULL) (*out_min_r2) = f_min_r2;
+		if (out_max_r1 != NULL) (*out_max_r1) = f_max_r1;
+		if (out_max_r2 != NULL) (*out_max_r2) = f_max_r2;
+	}
+
 	if (data != NULL)
 	{
 		delete data;

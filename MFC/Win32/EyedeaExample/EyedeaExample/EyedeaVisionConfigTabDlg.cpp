@@ -1827,6 +1827,19 @@ void CEyedeaVisionConfigTabDlg::OnLButtonUp(UINT nFlags, CPoint point)
 			else if (m_command == USER_COMMAND_SELECT_OBJECT_CIRCLE)
 			{
 				ERVS_SetObjectCircle(m_select_rate_x, m_select_rate_y, m_select_rate_w, m_select_rate_h);
+
+				float circle_center_x = 0;
+				float circle_center_y = 0;
+				float circle_r1 = 0;
+				float circle_r2 = 0;
+				float circle_mask_min_r1 = 0;
+				float circle_mask_min_r2 = 0;
+				float circle_mask_max_r1 = 0;
+				float circle_mask_max_r2 = 0;
+
+				ERVS_GetObjectCircle(&circle_center_x, &circle_center_y, &circle_r1, &circle_r2, &circle_mask_min_r1, &circle_mask_min_r2, &circle_mask_max_r1, &circle_mask_max_r2);
+
+				printf("Circle Info = Center(%f, %f), Radius(%f, %f), Mask(Min:%f,%f / Max:%f,%f)\n", circle_center_x, circle_center_y, circle_r1, circle_r2, circle_mask_min_r1, circle_mask_min_r2, circle_mask_max_r1, circle_mask_max_r2);
 			}
 			else if(m_command == USER_COMMAND_SELECT_OBJECT_LINE)
 			{

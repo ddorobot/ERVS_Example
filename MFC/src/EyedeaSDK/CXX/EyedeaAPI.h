@@ -64,6 +64,7 @@ int ERVS_SetBase(int dep_id);
 //Circle Object
 int ERVS_SetObjectCircle(float x, float y, float r1, float r2);
 int ERVS_SetObjectCircle(const float x, const float y, const float r1, const float r2, const float min_r1, const float min_r2, const float max_r1, const float max_r2);
+int ERVS_GetObjectCircle(float *out_x, float *out_y, float *out_r1, float *out_r2, float *out_min_r1, float *out_min_r2, float *out_max_r1, float *out_max_r2);
 int ERVS_SetObjectCircleBaseDiameter(const int id, const int diameter);
 int ERVS_GetObjectCircleBaseDiameter(const int id);
 int ERVS_SetObjectCircleDiameterTolerance(const int id, const int min_value, const int max_value);
@@ -71,7 +72,6 @@ int ERVS_GetObjectCircleDiameterTolerance(const int id, int *out_min_value, int 
 int ERVS_SetObjectCircleDiameterInspection(const int id, const bool use);
 int ERVS_GetObjectCircleDiameterInspection(const int id);
 float ERVS_GetObjectCircleCalcDiameter(const int id);
-int ERVS_GetObjectCircle(float *out_x, float *out_y, float *out_r1, float *out_r2);
 
 //Line Object
 int ERVS_SetObjectLine(float x, float y, float w, float h);

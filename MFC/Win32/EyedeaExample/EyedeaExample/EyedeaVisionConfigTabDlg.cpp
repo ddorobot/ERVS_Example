@@ -1802,6 +1802,27 @@ void CEyedeaVisionConfigTabDlg::OnLButtonUp(UINT nFlags, CPoint point)
 				if (bCheck) bcheck = true;
 
 				ERVS_SetMaskArea(m_select_rate_x, m_select_rate_y, m_select_rate_w, m_select_rate_h, bcheck);
+
+				int nMask = 0;
+				float *out_mask_x = NULL;
+				float *out_mask_y = NULL;
+				float *out_mask_w = NULL;
+				float *out_mask_h = NULL;
+				bool *out_mask_inv = NULL;
+
+				ERVS_GetMaskArea(&nMask, &out_mask_x, &out_mask_y, &out_mask_w, &out_mask_h, &out_mask_inv);
+
+				printf("#%d Mask Set\n", nMask);
+				for( int i=0 ; i<nMask ; i++ )
+				{
+					printf(" - [%d]Mask Info = Rect(%d, %d, %d, %d), inv=%d\n", i, (int)out_mask_x[i], (int)out_mask_y[i], (int)out_mask_w[i], (int)out_mask_h[i], (int)out_mask_inv[i]);
+				}
+
+				if (out_mask_x != NULL) free(out_mask_x);
+				if (out_mask_y != NULL) free(out_mask_y);
+				if (out_mask_w != NULL) free(out_mask_w);
+				if (out_mask_h != NULL) free(out_mask_h);
+				if (out_mask_inv != NULL) free(out_mask_inv);
 			}
 			else if (m_command == USER_COMMAND_SELECT_OBJECT_CIRCLE)
 			{

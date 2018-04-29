@@ -32,6 +32,7 @@ public:
 	int SetMaskArea(float x, float y, float w, float h, bool inverse);
 	int UndoMaskArea(void);
 	int DelMaskArea(void);
+	int GetMaskArea(int *out_count, float **out_x, float **out_y, float **out_w, float **out_h, bool **out_inverse);
 	int SetObjectCircle(float x, float y, float r1, float r2);
 	int SetObjectCircle(const float x, const float y, const float r1, const float r2, const float min_r1, const float min_r2, const float max_r1, const float max_r2);
 	int SetObjectCircleBaseDiameter(const int id, const int diameter);

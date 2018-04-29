@@ -57,6 +57,11 @@ int ERVS_DelMaskArea(void)
 	return g_cls_interface.DelMaskArea();
 }
 
+int ERVS_GetMaskArea(int *out_count, float **out_x, float **out_y, float **out_w, float **out_h, bool **out_inverse)
+{
+	return g_cls_interface.GetMaskArea(out_count, out_x, out_y, out_w, out_h, out_inverse);
+}
+
 int ERVS_ResetZoomArea(void)
 {
 	//printf("ERVS_SetSelectBaseObject\n");

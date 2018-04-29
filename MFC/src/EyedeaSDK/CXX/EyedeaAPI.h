@@ -53,6 +53,7 @@ int ERVS_ResetZoomArea(void);
 int ERVS_SetMaskArea(float x, float y, float w, float h, bool inverse);
 int ERVS_UndoMaskArea(void);
 int ERVS_DelMaskArea(void);
+int ERVS_GetMaskArea(int *out_count, float **out_x, float **out_y, float **out_w, float **out_h, bool **out_inverse);
 
 //Vision Config Option
 int ERVS_SetVisionConfigOption(int option, float value);

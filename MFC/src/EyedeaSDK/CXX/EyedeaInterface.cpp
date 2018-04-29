@@ -1177,6 +1177,142 @@ int CEyedeaInterface::DelMaskArea(void)
 	return ret;
 }
 
+int CEyedeaInterface::GetMaskArea(int *out_count, float **out_x, float **out_y, float **out_w, float **out_h, bool **out_inverse)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	//printf("SetMasterArea - %d %d %d %d\n", x, y, w, h);
+
+	char command = COMMAND_GET_MASK_AREA;
+	int len = 0;
+	unsigned char* data = NULL;
+
+	unsigned int scale_factor = 1;
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+	if (ret == EYEDEA_ERROR_INVALID_MEMORY)
+	{
+		int sec = 0;
+		while (1)
+		{
+			ret = m_cls_eth_client->Open(m_ip, m_port);
+			if (ret == 0) {
+				ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+				break;
+			}
+			else
+			{
+				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
+				sec++;
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
+					return ret;
+				}
+				continue;
+			}
+		}
+	}
+
+	int i_x = 0;
+	int i_y = 0;
+	int i_w = 0;
+	int i_h = 0;
+	int i_inverse = 0;
+
+	int nObject = 0;
+	//int index = 0;
+	int index = 0;
+
+	//printf("len = %d\n", len);
+
+	if (len >= 4)
+	{
+		//nObject
+		nObject = ((int)data[index++] << 24) & 0xFF000000;
+		nObject |= ((int)data[index++] << 16) & 0x00FF0000;
+		nObject |= ((int)data[index++] << 8) & 0x0000FF00;
+		nObject |= ((int)data[index++]) & 0x000000FF;
+
+		//printf("nObject = %d\n", nObject);
+
+		if (nObject > 0 && len >= 4 + ((5 * 4)* nObject))
+		{
+#ifndef EYEDEA_JAVA_API
+			(*out_x) = (float *)malloc(sizeof(float)*nObject);
+			(*out_y) = (float *)malloc(sizeof(float)*nObject);
+			(*out_w) = (float *)malloc(sizeof(float)*nObject);
+			(*out_h) = (float *)malloc(sizeof(float)*nObject);
+			(*out_inverse) = (bool *)malloc(sizeof(bool)*nObject);
+#endif
+
+			for (int i = 0; i < nObject; i++)
+			{
+				//i_id
+				i_x = ((int)data[index++] << 24) & 0xFF000000;
+				i_x |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_x |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_x |= ((int)data[index++]) & 0x000000FF;
+
+				//i_camera_x
+				i_y = ((int)data[index++] << 24) & 0xFF000000;
+				i_y |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_y |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_y |= ((int)data[index++]) & 0x000000FF;
+
+				//i_camera_y
+				i_w = ((int)data[index++] << 24) & 0xFF000000;
+				i_w |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_w |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_w |= ((int)data[index++]) & 0x000000FF;
+
+				//i_robot_x
+				i_h = ((int)data[index++] << 24) & 0xFF000000;
+				i_h |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_h |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_h |= ((int)data[index++]) & 0x000000FF;
+
+				//i_robot_y
+				i_inverse = ((int)data[index++] << 24) & 0xFF000000;
+				i_inverse |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_inverse |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_inverse |= ((int)data[index++]) & 0x000000FF;
+
+				(*out_x)[i] = (float)i_x / (float)scale_factor;
+				(*out_y)[i] = (float)i_y / (float)scale_factor;
+				(*out_w)[i] = (float)i_w / (float)scale_factor;
+				(*out_h)[i] = (float)i_h / (float)scale_factor;
+				(*out_inverse)[i] = (bool)i_inverse;
+			}
+		}
+	}
+
+
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+
+	ret = nObject;
+	if (out_count != NULL)
+	{
+		(*out_count) = nObject;
+	}
+
+	return ret;
+}
+
 int CEyedeaInterface::ResetZoomArea(void)
 {
 	boost::unique_lock<boost::mutex> scoped_lock(mutex);

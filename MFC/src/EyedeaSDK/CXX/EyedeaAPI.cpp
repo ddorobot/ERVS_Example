@@ -94,6 +94,11 @@ int ERVS_SetObjectLine(float x1, float y1, float x2, float y2, float x3, float y
 	return g_cls_interface.SetObjectLine(x1, y1, x2, y2, x3, y3, x4, y4);
 }
 
+int ERVS_GetObjectLine(int *out_count, float **out_x1, float **out_y1, float **out_x2, float **out_y2, float **out_x3, float **out_y3, float **out_x4, float **out_y4, float **out_line1_x, float **out_line1_y, float **out_line2_x, float **out_line2_y)
+{
+	return g_cls_interface.GetObjectLine(out_count, out_x1, out_y1, out_x2, out_y2, out_x3, out_y3, out_x4, out_y4, out_line1_x, out_line1_y, out_line2_x, out_line2_y);
+}
+
 int ERVS_DelObjectLine(void)
 {
 	return g_cls_interface.DeleteObjectLine();

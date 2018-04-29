@@ -1901,6 +1901,206 @@ int CEyedeaInterface::SetObjectLine(float x1, float y1, float x2, float y2, floa
 	return ret;
 }
 
+int CEyedeaInterface::GetObjectLine(int *out_count, float **out_x1, float **out_y1, float **out_x2, float **out_y2, float **out_x3, float **out_y3, float **out_x4, float **out_y4, float **out_line1_x, float **out_line1_y, float **out_line2_x, float **out_line2_y)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	//printf("SetMasterArea - %d %d %d %d\n", x, y, w, h);
+
+	char command = COMMAND_GET_OBJECT_LINE;
+	int len = 0;
+	unsigned char* data = NULL;
+
+	unsigned int scale_factor = 1;
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+	if (ret == EYEDEA_ERROR_INVALID_MEMORY)
+	{
+		int sec = 0;
+		while (1)
+		{
+			ret = m_cls_eth_client->Open(m_ip, m_port);
+			if (ret == 0) {
+				ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+				break;
+			}
+			else
+			{
+				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
+				sec++;
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
+					return ret;
+				}
+				continue;
+			}
+		}
+	}
+
+	int i_x1 = 0;
+	int i_y1 = 0;
+	int i_x2 = 0;
+	int i_y2 = 0;
+	int i_x3 = 0;
+	int i_y3 = 0;
+	int i_x4 = 0;
+	int i_y4 = 0;
+	int i_line1_x = 0;
+	int i_line1_y = 0;
+	int i_line2_x = 0;
+	int i_line2_y = 0;
+
+	int nObject = 0;
+	//int index = 0;
+	int index = 0;
+
+	//printf("len = %d\n", len);
+
+	if (len >= 4)
+	{
+		//nObject
+		nObject = ((int)data[index++] << 24) & 0xFF000000;
+		nObject |= ((int)data[index++] << 16) & 0x00FF0000;
+		nObject |= ((int)data[index++] << 8) & 0x0000FF00;
+		nObject |= ((int)data[index++]) & 0x000000FF;
+
+		//printf("nObject = %d\n", nObject);
+
+		if (nObject > 0 && len >= 4 + ((12 * 4)* nObject))
+		{
+#ifndef EYEDEA_JAVA_API
+			(*out_x1) = (float *)malloc(sizeof(float)*nObject);
+			(*out_y1) = (float *)malloc(sizeof(float)*nObject);
+			(*out_x2) = (float *)malloc(sizeof(float)*nObject);
+			(*out_y2) = (float *)malloc(sizeof(float)*nObject);
+			(*out_x3) = (float *)malloc(sizeof(float)*nObject);
+			(*out_y3) = (float *)malloc(sizeof(float)*nObject);
+			(*out_x4) = (float *)malloc(sizeof(float)*nObject);
+			(*out_y4) = (float *)malloc(sizeof(float)*nObject);
+			(*out_line1_x) = (float *)malloc(sizeof(float)*nObject);
+			(*out_line1_y) = (float *)malloc(sizeof(float)*nObject);
+			(*out_line2_x) = (float *)malloc(sizeof(float)*nObject);
+			(*out_line2_y) = (float *)malloc(sizeof(float)*nObject);
+#endif
+
+			for (int i = 0; i < nObject; i++)
+			{
+				//x
+				i_x1 = ((int)data[index++] << 24) & 0xFF000000;
+				i_x1 |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_x1 |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_x1 |= ((int)data[index++]) & 0x000000FF;
+
+				//y
+				i_y1 = ((int)data[index++] << 24) & 0xFF000000;
+				i_y1 |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_y1 |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_y1 |= ((int)data[index++]) & 0x000000FF;
+
+				//x
+				i_x2 = ((int)data[index++] << 24) & 0xFF000000;
+				i_x2 |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_x2 |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_x2 |= ((int)data[index++]) & 0x000000FF;
+
+				//y
+				i_y2 = ((int)data[index++] << 24) & 0xFF000000;
+				i_y2 |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_y2 |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_y2 |= ((int)data[index++]) & 0x000000FF;
+
+				//x
+				i_x3 = ((int)data[index++] << 24) & 0xFF000000;
+				i_x3 |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_x3 |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_x3 |= ((int)data[index++]) & 0x000000FF;
+
+				//y
+				i_y3 = ((int)data[index++] << 24) & 0xFF000000;
+				i_y3 |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_y3 |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_y3 |= ((int)data[index++]) & 0x000000FF;
+
+				//x
+				i_x4 = ((int)data[index++] << 24) & 0xFF000000;
+				i_x4 |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_x4 |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_x4 |= ((int)data[index++]) & 0x000000FF;
+
+				//y
+				i_y4 = ((int)data[index++] << 24) & 0xFF000000;
+				i_y4 |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_y4 |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_y4 |= ((int)data[index++]) & 0x000000FF;
+
+				//line1_x
+				i_line1_x = ((int)data[index++] << 24) & 0xFF000000;
+				i_line1_x |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_line1_x |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_line1_x |= ((int)data[index++]) & 0x000000FF;
+
+				//line1_y
+				i_line1_y = ((int)data[index++] << 24) & 0xFF000000;
+				i_line1_y |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_line1_y |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_line1_y |= ((int)data[index++]) & 0x000000FF;
+
+				//line2_x
+				i_line2_x = ((int)data[index++] << 24) & 0xFF000000;
+				i_line2_x |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_line2_x |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_line2_x |= ((int)data[index++]) & 0x000000FF;
+
+				//line2_y
+				i_line2_y = ((int)data[index++] << 24) & 0xFF000000;
+				i_line2_y |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_line2_y |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_line2_y |= ((int)data[index++]) & 0x000000FF;
+				
+
+				(*out_x1)[i] = (float)i_x1 / (float)scale_factor;
+				(*out_y1)[i] = (float)i_y1 / (float)scale_factor;
+				(*out_x2)[i] = (float)i_x2 / (float)scale_factor;
+				(*out_y2)[i] = (float)i_y2 / (float)scale_factor;
+				(*out_x3)[i] = (float)i_x3 / (float)scale_factor;
+				(*out_y3)[i] = (float)i_y3 / (float)scale_factor;
+				(*out_x4)[i] = (float)i_x4 / (float)scale_factor;
+				(*out_y4)[i] = (float)i_y4 / (float)scale_factor;
+				(*out_line1_x)[i] = (float)i_line1_x / (float)scale_factor;
+				(*out_line1_y)[i] = (float)i_line1_y / (float)scale_factor;
+				(*out_line2_x)[i] = (float)i_line2_x / (float)scale_factor;
+				(*out_line2_y)[i] = (float)i_line2_y / (float)scale_factor;
+			}
+		}
+	}
+
+
+	if (data != NULL)
+	{
+		delete [] data;
+		data = NULL;
+	}
+
+	ret = nObject;
+	if (out_count != NULL)
+	{
+		(*out_count) = nObject;
+	}
+
+	return ret;
+}
+
 int CEyedeaInterface::DeleteObjectLine(void)
 {
 	boost::unique_lock<boost::mutex> scoped_lock(mutex);

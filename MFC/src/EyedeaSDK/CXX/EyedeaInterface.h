@@ -43,9 +43,9 @@ public:
 	int SetObjectCircleDiameterInspection(const int id, const bool use);
 	int GetObjectCircleDiameterInspection(const int id);
 	float GetObjectCircleCalcDiameter(const int id);
-	int GetObjectCircle(float *out_x, float *out_y, float *out_r1, float *out_r2);
 	int SetObjectLine(float x, float y, float w, float h);
 	int SetObjectLine(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4);
+	int GetObjectLine(int *out_count, float **out_x1, float **out_y1, float **out_x2, float **out_y2, float **out_x3, float **out_y3, float **out_x4, float **out_y4, float **out_line1_x, float **out_line1_y, float **out_line2_x, float **out_line2_y);
 	int DeleteObjectLine(void);
 	int ClearObjectLine(void);
 	int SetObjectTwoLine(const int id, float x1, float y1, float w1, float h1, float x2, float y2, float w2, float h2);

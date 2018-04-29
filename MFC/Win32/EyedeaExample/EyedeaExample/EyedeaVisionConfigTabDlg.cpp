@@ -1844,6 +1844,48 @@ void CEyedeaVisionConfigTabDlg::OnLButtonUp(UINT nFlags, CPoint point)
 			else if(m_command == USER_COMMAND_SELECT_OBJECT_LINE)
 			{
 				ERVS_SetObjectLine(m_select_rate_x, m_select_rate_y, m_select_rate_w, m_select_rate_h);
+
+				int nLine = 0;
+				float *out_x1 = NULL;
+				float *out_y1 = NULL;
+				float *out_x2 = NULL;
+				float *out_y2 = NULL;
+				float *out_x3 = NULL;
+				float *out_y3 = NULL;
+				float *out_x4 = NULL;
+				float *out_y4 = NULL;
+				float *out_line1_x = NULL;
+				float *out_line1_y = NULL;
+				float *out_line2_x = NULL;
+				float *out_line2_y = NULL;
+
+				ERVS_GetObjectLine(&nLine, &out_x1, &out_y1, &out_x2, &out_y2, &out_x3, &out_y3, &out_x4, &out_y4, &out_line1_x, &out_line1_y, &out_line2_x, &out_line2_y);
+
+				printf("#%d Line Set\n", nLine);
+				for (int i = 0; i<nLine; i++)
+				{
+					printf(" - [%d]Line Info = Point1(%.2f, %.2f), Point2(%.2f, %.2f), Point3(%.2f, %.2f), Point4(%.2f, %.2f) -> Line1(%.2f, %.2f), Line2(%.2f, %.2f)\n",
+						i, 
+						out_x1[i], out_y1[i], 
+						out_x2[i], out_y2[i], 
+						out_x3[i], out_y3[i], 
+						out_x4[i], out_y4[i],
+						out_line1_x[i], out_line1_y[i],
+						out_line2_x[i], out_line2_y[i]);
+				}
+
+				if (out_x1 != NULL) free(out_x1);
+				if (out_x2 != NULL) free(out_x2);
+				if (out_x3 != NULL) free(out_x3);
+				if (out_x4 != NULL) free(out_x4);
+				if (out_y1 != NULL) free(out_y1);
+				if (out_y2 != NULL) free(out_y2);
+				if (out_y3 != NULL) free(out_y3);
+				if (out_y4 != NULL) free(out_y4);
+				if (out_line1_x != NULL) free(out_line1_x);
+				if (out_line1_y != NULL) free(out_line1_y);
+				if (out_line2_x != NULL) free(out_line2_x);
+				if (out_line2_y != NULL) free(out_line2_y);
 			}
 			else if (m_command == USER_COMMAND_SET_ZOOM_IMAGE)
 			{

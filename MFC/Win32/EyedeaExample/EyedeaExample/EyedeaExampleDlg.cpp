@@ -86,6 +86,7 @@ BEGIN_MESSAGE_MAP(CEyedeaExampleDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_LIST_SAVE, &CEyedeaExampleDlg::OnBnClickedButtonListSave)
 	//ON_BN_CLICKED(IDC_CHECK_LOG, &CEyedeaExampleDlg::OnBnClickedCheckLog)
 	ON_BN_CLICKED(IDC_BUTTON_LIST_LOAD, &CEyedeaExampleDlg::OnBnClickedButtonListLoad)
+	ON_BN_CLICKED(IDC_BUTTON_DISCONNECT, &CEyedeaExampleDlg::OnBnClickedButtonDisconnect)
 END_MESSAGE_MAP()
 
 
@@ -1305,4 +1306,11 @@ BOOL CEyedeaExampleDlg::PreTranslateMessage(MSG* pMsg)
 	}
 
 	return CDialogEx::PreTranslateMessage(pMsg);
+}
+
+
+void CEyedeaExampleDlg::OnBnClickedButtonDisconnect()
+{
+	// TODO: Add your control notification handler code here
+	ERVS_Disconnect();
 }

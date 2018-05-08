@@ -589,6 +589,15 @@ int ERVS_SetCameraConfig_Load()
 	return g_cls_interface.SetCameraConfig_Load();
 }
 
+int ERVS_SetCameraConfig_Save_With_ID(int ConfigID)
+{
+	return g_cls_interface.SetCameraConfig_Save_With_ID(ConfigID);
+}
+int ERVS_SetCameraConfig_Load_With_ID(int ConfigID)
+{
+	return g_cls_interface.SetCameraConfig_Load_With_ID(ConfigID);
+}
+
 //Background Learning
 int ERVS_BackgroundLearning(void)
 {

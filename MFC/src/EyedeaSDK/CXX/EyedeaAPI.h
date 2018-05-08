@@ -167,6 +167,9 @@ int ERVS_SetCameraConfig_Default();
 int ERVS_SetCameraConfig_Save();
 int ERVS_SetCameraConfig_Load();
 
+int ERVS_SetCameraConfig_Save_With_ID(int ConfigID);
+int ERVS_SetCameraConfig_Load_With_ID(int ConfigID);
+
 //Background Learning
 int ERVS_BackgroundLearning(void);
 

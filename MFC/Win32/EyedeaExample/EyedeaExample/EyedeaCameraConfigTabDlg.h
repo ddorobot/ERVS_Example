@@ -43,4 +43,6 @@ public:
 	afx_msg void OnBnClickedButtonCameraSaveParam();
 	afx_msg void OnBnClickedButtonCameraLoadParam();
 	afx_msg void OnShowWindow(BOOL bShow, UINT nStatus);
+	afx_msg void OnBnClickedButtonCameraSaveParamWithId();
+	afx_msg void OnBnClickedButtonCameraLoadParamWithId();
 };

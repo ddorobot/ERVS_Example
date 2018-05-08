@@ -8354,6 +8354,130 @@ int CEyedeaInterface::SetCameraConfig_Load()
 	return ret;
 }
 
+
+int CEyedeaInterface::SetCameraConfig_Save_With_ID(int ConfigID)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_CAMERA_CONFIG_SAVE_WITH_ID;
+
+	int len = 4;
+	unsigned char* data = new unsigned char[len];
+
+	//index
+	data[0] = (ConfigID & 0xFF000000) >> 24;
+	data[1] = (ConfigID & 0x00FF0000) >> 16;
+	data[2] = (ConfigID & 0x0000FF00) >> 8;
+	data[3] = (ConfigID & 0x000000FF);
+
+	unsigned int scale_factor = 1;
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+	if (ret == EYEDEA_ERROR_INVALID_MEMORY)
+	{
+		int sec = 0;
+		while (1)
+		{
+			ret = m_cls_eth_client->Open(m_ip, m_port);
+			if (ret == 0) {
+				ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+				break;
+			}
+			else
+			{
+				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
+				sec++;
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
+					return ret;
+				}
+				continue;
+			}
+		}
+	}
+
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+
+	return ret;
+}
+
+int CEyedeaInterface::SetCameraConfig_Load_With_ID(int ConfigID)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_CAMERA_CONFIG_LOAD_WITH_ID;
+	int len = 4;
+	unsigned char* data = new unsigned char[len];
+
+	//index
+	data[0] = (ConfigID & 0xFF000000) >> 24;
+	data[1] = (ConfigID & 0x00FF0000) >> 16;
+	data[2] = (ConfigID & 0x0000FF00) >> 8;
+	data[3] = (ConfigID & 0x000000FF);
+
+	unsigned int scale_factor = 1;
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+	if (ret == EYEDEA_ERROR_INVALID_MEMORY)
+	{
+		int sec = 0;
+		while (1)
+		{
+			ret = m_cls_eth_client->Open(m_ip, m_port);
+			if (ret == 0) {
+				ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+				break;
+			}
+			else
+			{
+				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
+				sec++;
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
+
+					return ret;
+				}
+				continue;
+			}
+		}
+	}
+
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+
+	return ret;
+}
+
+
 int CEyedeaInterface::GetCameraConfig(int type)
 {
 	boost::unique_lock<boost::mutex> scoped_lock(mutex);

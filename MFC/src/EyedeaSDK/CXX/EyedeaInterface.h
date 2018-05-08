@@ -159,6 +159,9 @@ public:
 	int SetCameraConfig_Save();
 	int SetCameraConfig_Load();
 
+	int SetCameraConfig_Save_With_ID(int ConfigID);
+	int SetCameraConfig_Load_With_ID(int ConfigID);
+
 	int BackgroundLearning(void);
 
 	//Geometry

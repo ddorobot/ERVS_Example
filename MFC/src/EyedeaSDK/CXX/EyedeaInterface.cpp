@@ -2776,6 +2776,122 @@ int CEyedeaInterface::Calibration_StandAlone_Set_Matrix(float matrix[12])
 	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
 
 }
+int CEyedeaInterface::Calibration_StandAlone_Calc_Calib_Matrix(float cposA[3], float cposB[3], float cposC[3], float cposD[3],
+	float rposA[3], float rposB[3], float rposC[3], float rposD[3],
+	float ret_Matrix[12])
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_CALIB_STANDALONE_CALC_CALIB_MAT;
+
+	int len = 4 * 24;
+	unsigned char* data = new unsigned char[len];
+
+	int data_index = 0;
+	unsigned int scale_factor = 10000;
+	float cpos[12], rpos[12];
+	memcpy(&cpos[0], cposA, sizeof(float) * 3);
+	memcpy(&cpos[3], cposB, sizeof(float) * 3);
+	memcpy(&cpos[6], cposC, sizeof(float) * 3);
+	memcpy(&cpos[9], cposD, sizeof(float) * 3);
+
+	memcpy(&rpos[0], rposA, sizeof(float) * 3);
+	memcpy(&rpos[3], rposB, sizeof(float) * 3);
+	memcpy(&rpos[6], rposC, sizeof(float) * 3);
+	memcpy(&rpos[9], rposD, sizeof(float) * 3);
+
+	for (int i = 0; i < 12; i++)
+	{
+		int matval = (float)cpos[i] * (float)scale_factor;
+		data[data_index++] = (matval & 0xFF000000) >> 24;
+		data[data_index++] = (matval & 0x00FF0000) >> 16;
+		data[data_index++] = (matval & 0x0000FF00) >> 8;
+		data[data_index++] = (matval & 0x000000FF);
+	}
+
+	for (int i = 0; i < 12; i++)
+	{
+		int matval = (float)rpos[i] * (float)scale_factor;
+		data[data_index++] = (matval & 0xFF000000) >> 24;
+		data[data_index++] = (matval & 0x00FF0000) >> 16;
+		data[data_index++] = (matval & 0x0000FF00) >> 8;
+		data[data_index++] = (matval & 0x000000FF);
+	}
+	
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+
+	if (ret == EYEDEA_ERROR_INVALID_MEMORY)
+	{
+		int sec = 0;
+		while (1)
+		{
+			ret = m_cls_eth_client->Open(m_ip, m_port);
+			if (ret == 0) {
+				ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+				break;
+			}
+			else
+			{
+				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
+				sec++;
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
+					return ret;
+				}
+				continue;
+			}
+		}
+	}
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
+
+	int i_robot_x = 0;
+	int i_robot_y = 0;
+
+	if (len >= (4 * 12))
+	{
+		int posAll[12];
+		int data_index = 0;
+		for (int i = 0; i < 12; i++)
+		{
+			int matval = 0;
+			matval = ((int)data[data_index++] << 24) & 0xFF000000;
+			matval |= ((int)data[data_index++] << 16) & 0x00FF0000;
+			matval |= ((int)data[data_index++] << 8) & 0x0000FF00;
+			matval |= ((int)data[data_index++]) & 0x000000FF;
+			ret_Matrix[i] = (float)matval / (float)scale_factor;
+		}
+		//i_robot_x
+
+	}
+
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+
+	return ret;
+}
 int CEyedeaInterface::Calibration_StandAlone_Get_Matrix(float matrix[12])
 {
 	boost::unique_lock<boost::mutex> scoped_lock(mutex);

@@ -408,6 +408,13 @@ int ERVS_Calibration_StandAlone_Get_Matrix(float matrix[12])
 	return g_cls_interface.Calibration_StandAlone_Get_Matrix(matrix);
 }
 
+int ERVS_Calibration_StandAlone_Calc_Calib_Matrix(float cposA[3], float cposB[3], float cposC[3], float cposD[3],
+	float rposA[3], float rposB[3], float rposC[3], float rposD[3],
+	float ret_Matrix[12])
+{
+	return g_cls_interface.Calibration_StandAlone_Calc_Calib_Matrix(cposA, cposB, cposC, cposD, rposA, rposB, rposC, rposD, ret_Matrix);
+}
+
 int ERVS_Calibration_GetPoint(const float in_px, const float in_py, float* out_rx, float* out_ry)
 {
 	return g_cls_interface.Calibration_GetPoint(in_px, in_py, out_rx, out_ry);

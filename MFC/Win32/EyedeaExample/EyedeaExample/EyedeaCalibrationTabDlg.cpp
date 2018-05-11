@@ -48,6 +48,7 @@ BEGIN_MESSAGE_MAP(CEyedeaCalibrationTabDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_STANDALONE_CALIB_SET_MATRIX, &CEyedeaCalibrationTabDlg::OnBnClickedButtonStandaloneCalibSetMatrix)
 	ON_BN_CLICKED(IDC_BUTTON_STANDALONE_CALIB_GET_MATRIX, &CEyedeaCalibrationTabDlg::OnBnClickedButtonStandaloneCalibGetMatrix)
 	ON_BN_CLICKED(IDC_BUTTON_STANDALONE_CALIB_CALC_MATRIX, &CEyedeaCalibrationTabDlg::OnBnClickedButtonStandaloneCalibCalcMatrix)
+	ON_BN_CLICKED(IDC_BUTTON_STANDALONE_CALIB_INIT, &CEyedeaCalibrationTabDlg::OnBnClickedButtonStandaloneCalibInit)
 END_MESSAGE_MAP()
 
 
@@ -588,4 +589,10 @@ void CEyedeaCalibrationTabDlg::OnBnClickedButtonStandaloneCalibCalcMatrix()
 	{
 		printf(" matrix[%d] = %f\n",i, matrix[i]);
 	}
+}
+
+
+void CEyedeaCalibrationTabDlg::OnBnClickedButtonStandaloneCalibInit()
+{
+	ERVS_Calibration_StandAlone_Init();
 }

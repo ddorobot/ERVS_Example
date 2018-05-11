@@ -2745,6 +2745,72 @@ int CEyedeaInterface::Calibration_StandAlone_Run(void)
 
 	return ret;
 }
+
+
+int CEyedeaInterface::Calibration_StandAlone_Init(void)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_CALIB_STANDALONE_INIT;
+
+	int len = 0;
+	unsigned char* data = NULL;
+
+	unsigned int scale_factor = 1;
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+	if (ret == EYEDEA_ERROR_INVALID_MEMORY)
+	{
+		int sec = 0;
+		while (1)
+		{
+			ret = m_cls_eth_client->Open(m_ip, m_port);
+			if (ret == 0) {
+				ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+				break;
+			}
+			else
+			{
+				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
+				sec++;
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
+					return ret;
+				}
+				continue;
+			}
+		}
+	}
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
+
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+
+	return ret;
+}
+
 int CEyedeaInterface::Calibration_StandAlone_Set_Matrix(float matrix[12])
 {
 	boost::unique_lock<boost::mutex> scoped_lock(mutex);
@@ -6362,7 +6428,7 @@ int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, int op
 
 int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, int option, 
 	float** out_id,
-	float** out_cx, float** out_cy, float** out_rx, float** out_ry,
+	float** out_cx, float** out_cy, float** out_rx, float** out_ry, float** out_rz,
 	float** out_bound_cx, float** out_bound_cy, float** out_bound_rx, float** out_bound_ry,
 	float** out_mass_cx, float** out_mass_cy, float** out_mass_rx, float** out_mass_ry,
 	float** out_circle_rx, float** out_circle_ry, float ** out_circle_diameter, float** out_circle_pass,
@@ -6448,6 +6514,7 @@ int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, int op
 	int i_camera_y = 0;
 	int i_robot_x = 0;
 	int i_robot_y = 0;
+	int i_robot_z = 0;	
 	int i_camera_bound_x = 0;
 	int i_camera_bound_y = 0;
 	int i_robot_bound_x = 0;
@@ -6483,7 +6550,7 @@ int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, int op
 		nObject |= ((int)data[index++] << 8) & 0x0000FF00;
 		nObject |= ((int)data[index++]) & 0x000000FF;
 
-		if (nObject > 0 && len >= 4 + ((27 * 4)* nObject))
+		if (nObject > 0 && len >= 4 + ((28 * 4)* nObject))
 		{
 #ifndef EYEDEA_JAVA_API
 			if ((*out_id) != NULL)	free((*out_id));
@@ -6491,6 +6558,7 @@ int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, int op
 			if ((*out_cy) != NULL)	free((*out_cy));
 			if ((*out_rx) != NULL)	free((*out_rx));
 			if ((*out_ry) != NULL)	free((*out_ry));
+			if ((*out_rz) != NULL)	free((*out_rz));
 			if ((*out_bound_cx) != NULL)	free((*out_bound_cx));
 			if ((*out_bound_cy) != NULL)	free((*out_bound_cy));
 			if ((*out_bound_rx) != NULL)	free((*out_bound_rx));
@@ -6519,6 +6587,7 @@ int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, int op
 			(*out_cy) = (float *)malloc(sizeof(float)*nObject);
 			(*out_rx) = (float *)malloc(sizeof(float)*nObject);
 			(*out_ry) = (float *)malloc(sizeof(float)*nObject);
+			(*out_rz) = (float *)malloc(sizeof(float)*nObject);			
 			(*out_bound_cx) = (float *)malloc(sizeof(float)*nObject);
 			(*out_bound_cy) = (float *)malloc(sizeof(float)*nObject);
 			(*out_bound_rx) = (float *)malloc(sizeof(float)*nObject);
@@ -6574,6 +6643,12 @@ int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, int op
 				i_robot_y |= ((int)data[index++] << 16) & 0x00FF0000;
 				i_robot_y |= ((int)data[index++] << 8) & 0x0000FF00;
 				i_robot_y |= ((int)data[index++]) & 0x000000FF;
+
+				//i_robot_z
+				i_robot_z = ((int)data[index++] << 24) & 0xFF000000;
+				i_robot_z |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_robot_z |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_robot_z |= ((int)data[index++]) & 0x000000FF;
 
 				//bound center
 				//i_camera_x
@@ -6714,6 +6789,7 @@ int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, int op
 				(*out_cy)[i] = (float)i_camera_y / (float)scale_factor;
 				(*out_rx)[i] = (float)i_robot_x / (float)scale_factor;
 				(*out_ry)[i] = (float)i_robot_y / (float)scale_factor;
+				(*out_rz)[i] = (float)i_robot_z / (float)scale_factor;				
 				(*out_bound_cx)[i] = (float)i_camera_bound_x / (float)scale_factor;
 				(*out_bound_cy)[i] = (float)i_camera_bound_y / (float)scale_factor;
 				(*out_bound_rx)[i] = (float)i_robot_bound_x / (float)scale_factor;

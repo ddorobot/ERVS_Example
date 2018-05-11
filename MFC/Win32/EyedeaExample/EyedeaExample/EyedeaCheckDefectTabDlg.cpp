@@ -846,6 +846,7 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindGetInfo2()
 			float *p_camera_center_y = NULL;
 			float *p_robot_center_x = NULL;
 			float *p_robot_center_y = NULL;
+			float *p_robot_center_z = NULL;			
 
 			float *p_camera_bound_center_x = NULL;
 			float *p_camera_bound_center_y = NULL;
@@ -922,7 +923,7 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindGetInfo2()
 #else
 				nObject = ERVS_DetectWithGrab(user_index, nMaxObjects, 
 					&p_id,
-					&p_camera_center_x, &p_camera_center_y, &p_robot_center_x, &p_robot_center_y,
+					&p_camera_center_x, &p_camera_center_y, &p_robot_center_x, &p_robot_center_y, &p_robot_center_z,
 					&p_camera_bound_center_x, &p_camera_bound_center_y, &p_robot_bound_center_x, &p_robot_bound_center_y,
 					&p_camera_mass_center_x, &p_camera_mass_center_y, &p_robot_mass_center_x, &p_robot_mass_center_y,
 					&p_circle_rx, &p_circle_ry, 
@@ -957,9 +958,9 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindGetInfo2()
 				//printf("%s", str);
 				if ((int)p_id[i] % 1000 == 0)
 				{
-					str.Format(_T(" - [%d] : id=%04d/type=%d/cpos=(%.2f,%.2f)/rpos=(%.2f,%.2f)/cbpos=(%.2f,%.2f)/rbpos=(%.2f,%.2f)/cmpos=(%.2f,%.2f)/rmpos=(%.2f,%.2f)/angle=%d/score=%.2f\n"),
+					str.Format(_T(" - [%d] : id=%04d/type=%d/cpos=(%.2f,%.2f)/rpos=(%.2f,%.2f,%.2f)/cbpos=(%.2f,%.2f)/rbpos=(%.2f,%.2f)/cmpos=(%.2f,%.2f)/rmpos=(%.2f,%.2f)/angle=%d/score=%.2f\n"),
 						index, (int)p_id[i], (int)p_type[i],
-						p_camera_center_x[i], p_camera_center_y[i], p_robot_center_x[i], p_robot_center_y[i],
+						p_camera_center_x[i], p_camera_center_y[i], p_robot_center_x[i], p_robot_center_y[i], p_robot_center_z[i],
 						p_camera_bound_center_x[i], p_camera_bound_center_y[i], p_robot_bound_center_x[i], p_robot_bound_center_y[i],
 						p_camera_mass_center_x[i], p_camera_mass_center_y[i], p_robot_mass_center_x[i], p_robot_mass_center_y[i],
 						(int)p_angle[i], p_score[i]);
@@ -1050,6 +1051,7 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonFindGetInfo2()
 			if (p_camera_center_y != NULL) free(p_camera_center_y);
 			if (p_robot_center_x != NULL) free(p_robot_center_x);
 			if (p_robot_center_y != NULL) free(p_robot_center_y);
+			if (p_robot_center_z != NULL) free(p_robot_center_z);			
 
 			if (p_camera_bound_center_x != NULL) free(p_camera_bound_center_x);
 			if (p_camera_bound_center_y != NULL) free(p_camera_bound_center_y);

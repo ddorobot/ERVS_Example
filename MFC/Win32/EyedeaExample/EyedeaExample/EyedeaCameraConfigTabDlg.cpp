@@ -80,8 +80,6 @@ BEGIN_MESSAGE_MAP(CEyedeaCameraConfigTabDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_CAMERA_SAVE_PARAM, &CEyedeaCameraConfigTabDlg::OnBnClickedButtonCameraSaveParam)
 	ON_BN_CLICKED(IDC_BUTTON_CAMERA_LOAD_PARAM, &CEyedeaCameraConfigTabDlg::OnBnClickedButtonCameraLoadParam)
 	ON_WM_SHOWWINDOW()
-	ON_BN_CLICKED(IDC_BUTTON_CAMERA_SAVE_PARAM_WITH_ID, &CEyedeaCameraConfigTabDlg::OnBnClickedButtonCameraSaveParamWithId)
-	ON_BN_CLICKED(IDC_BUTTON_CAMERA_LOAD_PARAM_WITH_ID, &CEyedeaCameraConfigTabDlg::OnBnClickedButtonCameraLoadParamWithId)
 END_MESSAGE_MAP()
 
 void CEyedeaCameraConfigTabDlg::OnBnClickedCheckOptionCameraExposure()
@@ -241,12 +239,6 @@ void CEyedeaCameraConfigTabDlg::SetCameraConfigUI()
 
 
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-	
-	if (exposure_min != -1 && exposure_max != -1)
-	{
-		m_Slider_Camera_Exposure.SetRange(exposure_min, exposure_max, TRUE);
-		m_Slider_Camera_GAIN.SetRange(gain_min, gain_max, TRUE);
-	}
 
 	if (isManualExposure == 0) // 0 = auto
 	{
@@ -276,6 +268,14 @@ void CEyedeaCameraConfigTabDlg::SetCameraConfigUI()
 
 		str.Format(_T("%d"), gain);
 		GetDlgItem(IDC_EDIT_CAMERA_VAL_GAIN)->SetWindowText(str);
+
+		if (exposure_min != -1 && exposure_max != -1)
+		{
+			m_Slider_Camera_Exposure.SetRange(exposure_min, exposure_max, TRUE);
+
+			m_Slider_Camera_GAIN.SetRange(gain_min, gain_max, TRUE);
+		}
+		
 
 	}
 	m_Slider_Camera_LED_Brightness.SetPos(ledbright);
@@ -310,25 +310,4 @@ void CEyedeaCameraConfigTabDlg::OnShowWindow(BOOL bShow, UINT nStatus)
 	CDialogEx::OnShowWindow(bShow, nStatus);
 	SetCameraConfigUI();
 	// TODO: 여기에 메시지 처리기 코드를 추가합니다.
-}
-
-
-void CEyedeaCameraConfigTabDlg::OnBnClickedButtonCameraSaveParamWithId()
-{
-	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-	CString str;
-	GetDlgItem(IDC_EDIT_CAMERA_CONFIG_ID)->GetWindowText(str);
-	int ConfigID = (int)_ttof(str);
-	ERVS_SetCameraConfig_Save_With_ID(ConfigID);
-}
-
-
-void CEyedeaCameraConfigTabDlg::OnBnClickedButtonCameraLoadParamWithId()
-{
-	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-	CString str;
-	GetDlgItem(IDC_EDIT_CAMERA_CONFIG_ID)->GetWindowText(str);
-	int ConfigID = (int)_ttof(str);
-	ERVS_SetCameraConfig_Load_With_ID(ConfigID);
-	SetCameraConfigUI();
 }

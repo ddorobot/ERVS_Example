@@ -2745,72 +2745,6 @@ int CEyedeaInterface::Calibration_StandAlone_Run(void)
 
 	return ret;
 }
-
-
-int CEyedeaInterface::Calibration_StandAlone_Init(void)
-{
-	boost::unique_lock<boost::mutex> scoped_lock(mutex);
-
-	if (m_cls_eth_client == NULL)
-	{
-		printf("Before accessing the ERVS\n");
-		return EYEDEA_ERROR_INVALID_MEMORY;
-	}
-
-	char command = COMMAND_CALIB_STANDALONE_INIT;
-
-	int len = 0;
-	unsigned char* data = NULL;
-
-	unsigned int scale_factor = 1;
-	int ret = 0;
-	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
-	if (ret == EYEDEA_ERROR_INVALID_MEMORY)
-	{
-		int sec = 0;
-		while (1)
-		{
-			ret = m_cls_eth_client->Open(m_ip, m_port);
-			if (ret == 0) {
-				ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
-				break;
-			}
-			else
-			{
-				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
-				sec++;
-				if (sec >= 60)
-				{
-					if (data != NULL)
-					{
-						delete data;
-						data = NULL;
-					}
-					return ret;
-				}
-				continue;
-			}
-		}
-	}
-	if (ret != 0)
-	{
-		if (data != NULL)
-		{
-			delete data;
-			data = NULL;
-		}
-		return ret;
-	}
-
-	if (data != NULL)
-	{
-		delete data;
-		data = NULL;
-	}
-
-	return ret;
-}
-
 int CEyedeaInterface::Calibration_StandAlone_Set_Matrix(float matrix[12])
 {
 	boost::unique_lock<boost::mutex> scoped_lock(mutex);
@@ -2841,122 +2775,6 @@ int CEyedeaInterface::Calibration_StandAlone_Set_Matrix(float matrix[12])
 	int ret = 0;
 	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
 
-}
-int CEyedeaInterface::Calibration_StandAlone_Calc_Calib_Matrix(float cposA[3], float cposB[3], float cposC[3], float cposD[3],
-	float rposA[3], float rposB[3], float rposC[3], float rposD[3],
-	float ret_Matrix[12])
-{
-	boost::unique_lock<boost::mutex> scoped_lock(mutex);
-
-	if (m_cls_eth_client == NULL)
-	{
-		printf("Before accessing the ERVS\n");
-		return EYEDEA_ERROR_INVALID_MEMORY;
-	}
-
-	char command = COMMAND_CALIB_STANDALONE_CALC_CALIB_MAT;
-
-	int len = 4 * 24;
-	unsigned char* data = new unsigned char[len];
-
-	int data_index = 0;
-	unsigned int scale_factor = 10000;
-	float cpos[12], rpos[12];
-	memcpy(&cpos[0], cposA, sizeof(float) * 3);
-	memcpy(&cpos[3], cposB, sizeof(float) * 3);
-	memcpy(&cpos[6], cposC, sizeof(float) * 3);
-	memcpy(&cpos[9], cposD, sizeof(float) * 3);
-
-	memcpy(&rpos[0], rposA, sizeof(float) * 3);
-	memcpy(&rpos[3], rposB, sizeof(float) * 3);
-	memcpy(&rpos[6], rposC, sizeof(float) * 3);
-	memcpy(&rpos[9], rposD, sizeof(float) * 3);
-
-	for (int i = 0; i < 12; i++)
-	{
-		int matval = (float)cpos[i] * (float)scale_factor;
-		data[data_index++] = (matval & 0xFF000000) >> 24;
-		data[data_index++] = (matval & 0x00FF0000) >> 16;
-		data[data_index++] = (matval & 0x0000FF00) >> 8;
-		data[data_index++] = (matval & 0x000000FF);
-	}
-
-	for (int i = 0; i < 12; i++)
-	{
-		int matval = (float)rpos[i] * (float)scale_factor;
-		data[data_index++] = (matval & 0xFF000000) >> 24;
-		data[data_index++] = (matval & 0x00FF0000) >> 16;
-		data[data_index++] = (matval & 0x0000FF00) >> 8;
-		data[data_index++] = (matval & 0x000000FF);
-	}
-	
-	int ret = 0;
-	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
-
-	if (ret == EYEDEA_ERROR_INVALID_MEMORY)
-	{
-		int sec = 0;
-		while (1)
-		{
-			ret = m_cls_eth_client->Open(m_ip, m_port);
-			if (ret == 0) {
-				ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
-				break;
-			}
-			else
-			{
-				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
-				sec++;
-				if (sec >= 60)
-				{
-					if (data != NULL)
-					{
-						delete data;
-						data = NULL;
-					}
-					return ret;
-				}
-				continue;
-			}
-		}
-	}
-	if (ret != 0)
-	{
-		if (data != NULL)
-		{
-			delete data;
-			data = NULL;
-		}
-		return ret;
-	}
-
-	int i_robot_x = 0;
-	int i_robot_y = 0;
-
-	if (len >= (4 * 12))
-	{
-		int posAll[12];
-		int data_index = 0;
-		for (int i = 0; i < 12; i++)
-		{
-			int matval = 0;
-			matval = ((int)data[data_index++] << 24) & 0xFF000000;
-			matval |= ((int)data[data_index++] << 16) & 0x00FF0000;
-			matval |= ((int)data[data_index++] << 8) & 0x0000FF00;
-			matval |= ((int)data[data_index++]) & 0x000000FF;
-			ret_Matrix[i] = (float)matval / (float)scale_factor;
-		}
-		//i_robot_x
-
-	}
-
-	if (data != NULL)
-	{
-		delete data;
-		data = NULL;
-	}
-
-	return ret;
 }
 int CEyedeaInterface::Calibration_StandAlone_Get_Matrix(float matrix[12])
 {
@@ -6428,7 +6246,7 @@ int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, int op
 
 int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, int option, 
 	float** out_id,
-	float** out_cx, float** out_cy, float** out_rx, float** out_ry, float** out_rz,
+	float** out_cx, float** out_cy, float** out_rx, float** out_ry,
 	float** out_bound_cx, float** out_bound_cy, float** out_bound_rx, float** out_bound_ry,
 	float** out_mass_cx, float** out_mass_cy, float** out_mass_rx, float** out_mass_ry,
 	float** out_circle_rx, float** out_circle_ry, float ** out_circle_diameter, float** out_circle_pass,
@@ -6514,7 +6332,6 @@ int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, int op
 	int i_camera_y = 0;
 	int i_robot_x = 0;
 	int i_robot_y = 0;
-	int i_robot_z = 0;	
 	int i_camera_bound_x = 0;
 	int i_camera_bound_y = 0;
 	int i_robot_bound_x = 0;
@@ -6550,7 +6367,7 @@ int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, int op
 		nObject |= ((int)data[index++] << 8) & 0x0000FF00;
 		nObject |= ((int)data[index++]) & 0x000000FF;
 
-		if (nObject > 0 && len >= 4 + ((28 * 4)* nObject))
+		if (nObject > 0 && len >= 4 + ((27 * 4)* nObject))
 		{
 #ifndef EYEDEA_JAVA_API
 			if ((*out_id) != NULL)	free((*out_id));
@@ -6558,7 +6375,6 @@ int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, int op
 			if ((*out_cy) != NULL)	free((*out_cy));
 			if ((*out_rx) != NULL)	free((*out_rx));
 			if ((*out_ry) != NULL)	free((*out_ry));
-			if ((*out_rz) != NULL)	free((*out_rz));
 			if ((*out_bound_cx) != NULL)	free((*out_bound_cx));
 			if ((*out_bound_cy) != NULL)	free((*out_bound_cy));
 			if ((*out_bound_rx) != NULL)	free((*out_bound_rx));
@@ -6587,7 +6403,6 @@ int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, int op
 			(*out_cy) = (float *)malloc(sizeof(float)*nObject);
 			(*out_rx) = (float *)malloc(sizeof(float)*nObject);
 			(*out_ry) = (float *)malloc(sizeof(float)*nObject);
-			(*out_rz) = (float *)malloc(sizeof(float)*nObject);			
 			(*out_bound_cx) = (float *)malloc(sizeof(float)*nObject);
 			(*out_bound_cy) = (float *)malloc(sizeof(float)*nObject);
 			(*out_bound_rx) = (float *)malloc(sizeof(float)*nObject);
@@ -6643,12 +6458,6 @@ int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, int op
 				i_robot_y |= ((int)data[index++] << 16) & 0x00FF0000;
 				i_robot_y |= ((int)data[index++] << 8) & 0x0000FF00;
 				i_robot_y |= ((int)data[index++]) & 0x000000FF;
-
-				//i_robot_z
-				i_robot_z = ((int)data[index++] << 24) & 0xFF000000;
-				i_robot_z |= ((int)data[index++] << 16) & 0x00FF0000;
-				i_robot_z |= ((int)data[index++] << 8) & 0x0000FF00;
-				i_robot_z |= ((int)data[index++]) & 0x000000FF;
 
 				//bound center
 				//i_camera_x
@@ -6789,7 +6598,6 @@ int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, int op
 				(*out_cy)[i] = (float)i_camera_y / (float)scale_factor;
 				(*out_rx)[i] = (float)i_robot_x / (float)scale_factor;
 				(*out_ry)[i] = (float)i_robot_y / (float)scale_factor;
-				(*out_rz)[i] = (float)i_robot_z / (float)scale_factor;				
 				(*out_bound_cx)[i] = (float)i_camera_bound_x / (float)scale_factor;
 				(*out_bound_cy)[i] = (float)i_camera_bound_y / (float)scale_factor;
 				(*out_bound_rx)[i] = (float)i_robot_bound_x / (float)scale_factor;
@@ -8545,130 +8353,6 @@ int CEyedeaInterface::SetCameraConfig_Load()
 
 	return ret;
 }
-
-
-int CEyedeaInterface::SetCameraConfig_Save_With_ID(int ConfigID)
-{
-	boost::unique_lock<boost::mutex> scoped_lock(mutex);
-
-	if (m_cls_eth_client == NULL)
-	{
-		printf("Before accessing the ERVS\n");
-		return EYEDEA_ERROR_INVALID_MEMORY;
-	}
-
-	char command = COMMAND_CAMERA_CONFIG_SAVE_WITH_ID;
-
-	int len = 4;
-	unsigned char* data = new unsigned char[len];
-
-	//index
-	data[0] = (ConfigID & 0xFF000000) >> 24;
-	data[1] = (ConfigID & 0x00FF0000) >> 16;
-	data[2] = (ConfigID & 0x0000FF00) >> 8;
-	data[3] = (ConfigID & 0x000000FF);
-
-	unsigned int scale_factor = 1;
-	int ret = 0;
-	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
-	if (ret == EYEDEA_ERROR_INVALID_MEMORY)
-	{
-		int sec = 0;
-		while (1)
-		{
-			ret = m_cls_eth_client->Open(m_ip, m_port);
-			if (ret == 0) {
-				ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
-				break;
-			}
-			else
-			{
-				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
-				sec++;
-				if (sec >= 60)
-				{
-					if (data != NULL)
-					{
-						delete data;
-						data = NULL;
-					}
-					return ret;
-				}
-				continue;
-			}
-		}
-	}
-
-	if (data != NULL)
-	{
-		delete data;
-		data = NULL;
-	}
-
-	return ret;
-}
-
-int CEyedeaInterface::SetCameraConfig_Load_With_ID(int ConfigID)
-{
-	boost::unique_lock<boost::mutex> scoped_lock(mutex);
-
-	if (m_cls_eth_client == NULL)
-	{
-		printf("Before accessing the ERVS\n");
-		return EYEDEA_ERROR_INVALID_MEMORY;
-	}
-
-	char command = COMMAND_CAMERA_CONFIG_LOAD_WITH_ID;
-	int len = 4;
-	unsigned char* data = new unsigned char[len];
-
-	//index
-	data[0] = (ConfigID & 0xFF000000) >> 24;
-	data[1] = (ConfigID & 0x00FF0000) >> 16;
-	data[2] = (ConfigID & 0x0000FF00) >> 8;
-	data[3] = (ConfigID & 0x000000FF);
-
-	unsigned int scale_factor = 1;
-	int ret = 0;
-	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
-	if (ret == EYEDEA_ERROR_INVALID_MEMORY)
-	{
-		int sec = 0;
-		while (1)
-		{
-			ret = m_cls_eth_client->Open(m_ip, m_port);
-			if (ret == 0) {
-				ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
-				break;
-			}
-			else
-			{
-				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
-				sec++;
-				if (sec >= 60)
-				{
-					if (data != NULL)
-					{
-						delete data;
-						data = NULL;
-					}
-
-					return ret;
-				}
-				continue;
-			}
-		}
-	}
-
-	if (data != NULL)
-	{
-		delete data;
-		data = NULL;
-	}
-
-	return ret;
-}
-
 
 int CEyedeaInterface::GetCameraConfig(int type)
 {

@@ -131,4 +131,5 @@ public:
 	afx_msg void OnBnClickedButtonSetFocusRate();
 	afx_msg void OnBnClickedButtonGetContrasetRate();
 	afx_msg void OnBnClickedButtonSetContrastRate();
+	afx_msg void OnBnClickedButtonSetBaseTemp();
 };

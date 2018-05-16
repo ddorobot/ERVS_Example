@@ -103,6 +103,7 @@ BEGIN_MESSAGE_MAP(CEyedeaVisionConfigTabDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_SET_FOCUS_RATE, &CEyedeaVisionConfigTabDlg::OnBnClickedButtonSetFocusRate)
 	ON_BN_CLICKED(IDC_BUTTON_GET_CONTRASET_RATE, &CEyedeaVisionConfigTabDlg::OnBnClickedButtonGetContrasetRate)
 	ON_BN_CLICKED(IDC_BUTTON_SET_CONTRAST_RATE, &CEyedeaVisionConfigTabDlg::OnBnClickedButtonSetContrastRate)
+	ON_BN_CLICKED(IDC_BUTTON_SET_BASE_TEMP, &CEyedeaVisionConfigTabDlg::OnBnClickedButtonSetBaseTemp)
 END_MESSAGE_MAP()
 
 
@@ -2315,4 +2316,13 @@ void CEyedeaVisionConfigTabDlg::OnBnClickedButtonSetContrastRate()
 	ERVS_SetContrastRate(select_id, contrast_rate);
 
 	OnBnClickedButtonGetContrasetRate();
+}
+
+
+void CEyedeaVisionConfigTabDlg::OnBnClickedButtonSetBaseTemp()
+{
+	// TODO: Add your control notification handler code here
+	ERVS_SetBaseTemp();
+
+	m_combo_get_image_option_base.SetCurSel(4);		
 }

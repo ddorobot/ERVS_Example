@@ -328,6 +328,7 @@ BOOL CEyedeaVisionConfigTabDlg::OnInitDialog()
 	m_combo_get_image_option_base.AddString(_T("GET_IMAGE_INPUT"));
 	m_combo_get_image_option_base.AddString(_T("GET_IMAGE_BASE_ROI"));
 	m_combo_get_image_option_base.AddString(_T("GET_IMAGE_HISTOGRAM_MASK"));
+	m_combo_get_image_option_base.AddString(_T("GET_IMAGE_BASE_TEMP"));
 	m_combo_get_image_option_base.SetCurSel(0);
 
 	m_combo_tool_type.AddString(_T("Tool Type"));
@@ -469,6 +470,10 @@ void CEyedeaVisionConfigTabDlg::ThreadFunctionDraw()
 		else if (get_base_image_option == 3)
 		{
 			ERVS_GetImage(GET_IMAGE_BASE_HISTORY_MASK, 0, (char**)&base_image.data, &len);
+		}
+		else if (get_base_image_option == 4)
+		{
+			ERVS_GetImage(GET_IMAGE_BASE_TEMP, 0, (char**)&base_image.data, &len);
 		}
 
 		//---------------------------------------------------------------------------------

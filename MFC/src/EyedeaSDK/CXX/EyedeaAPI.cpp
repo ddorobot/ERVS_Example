@@ -249,6 +249,11 @@ int ERVS_SetBase(int dep_id)
 	return g_cls_interface.SetBase(dep_id);
 }
 
+int ERVS_SetBaseTemp(void)
+{
+	return g_cls_interface.SetBaseTemp();
+}
+
 int ERVS_SetNextImage(void)
 {
 	return g_cls_interface.SetNextImage();

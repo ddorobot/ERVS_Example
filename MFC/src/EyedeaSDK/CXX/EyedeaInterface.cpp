@@ -4994,6 +4994,59 @@ int CEyedeaInterface::SetBase(int dep_id)
     return ret;
 }
 
+int CEyedeaInterface::SetBaseTemp(void)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_SET_BASE_TEMP;
+	int len = 0;
+	unsigned char* data = NULL;
+
+	unsigned int scale_factor = 1;
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+	if (ret == EYEDEA_ERROR_INVALID_MEMORY)
+	{
+		int sec = 0;
+		while (1)
+		{
+			ret = m_cls_eth_client->Open(m_ip, m_port);
+			if (ret == 0) {
+				ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+				break;
+			}
+			else
+			{
+				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
+				sec++;
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
+					return ret;
+				}
+				continue;
+			}
+		}
+	}
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+
+	return ret;
+}
+
 int CEyedeaInterface::CreateSocket(char* ip, int port)
 {
 	m_ip = new char[strlen(ip)];

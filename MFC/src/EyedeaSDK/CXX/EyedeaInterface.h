@@ -68,6 +68,7 @@ public:
 	int GetObjectTwoLineBaseAngle(const int id);
 
 	int SetBase(int dep_id);
+	int SetBaseTemp(void);
 	int SetNextImage(void);
 	int OptionFixSearchAreaOn(void);
 	int OptionFixSearchAreaOff(void);

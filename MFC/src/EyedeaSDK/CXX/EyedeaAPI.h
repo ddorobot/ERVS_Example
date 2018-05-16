@@ -61,6 +61,7 @@ float ERVS_GetVisionConfigOption(int option);
 
 //Set Job
 int ERVS_SetBase(int dep_id);
+int ERVS_SetBaseTemp(void);
 //Circle Object
 int ERVS_SetObjectCircle(float x, float y, float r1, float r2);
 int ERVS_SetObjectCircle(const float x, const float y, const float r1, const float r2, const float min_r1, const float min_r2, const float max_r1, const float max_r2);

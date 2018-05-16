@@ -102,7 +102,7 @@ public:
 	
 	int GetFindObjectInfo(int index, int max_objects_count, int option, float** out_id, float** out_cx, float** out_cy, float** out_rx, float** out_ry, float** out_bound_cx, float** out_bound_cy, float** out_bound_rx, float** out_bound_ry, float** out_mass_cx, float** out_mass_cy, float** out_mass_rx, float** out_mass_ry, float** out_circle_rx, float** out_circle_ry, float** out_line1_x, float** out_line1_y, float** out_line2_x, float** out_line2_y, float** out_angle, float** out_type, float** out_score, float** out_pass);
 	int GetFindObjectInfo(int index, int max_objects_count, int option, float** out_id,
-							float** out_cx, float** out_cy, float** out_rx, float** out_ry,
+							float** out_cx, float** out_cy, float** out_rx, float** out_ry, float** out_rz,
 							float** out_bound_cx, float** out_bound_cy, float** out_bound_rx, float** out_bound_ry,
 							float** out_mass_cx, float** out_mass_cy, float** out_mass_rx, float** out_mass_ry,
 							float** out_circle_rx, float** out_circle_ry, float ** out_circle_diameter, float** out_circle_pass,
@@ -139,10 +139,14 @@ public:
 	int Calibration_Del(int index);
 	int Calibration_Clear(void);
 	int Calibration_Run(void);
+	int Calibration_StandAlone_Init(void);
 	int Calibration_StandAlone_Run(void);
 	int Calibration_StandAlone_Get_Feature_Pos(int index,float posA[3], float posB[3], float posC[3], float posD[3]);
 	int Calibration_StandAlone_Set_Matrix(float matrix[12]);
 	int Calibration_StandAlone_Get_Matrix(float matrix[12]);
+	int Calibration_StandAlone_Calc_Calib_Matrix(float cposA[3], float cposB[3], float cposC[3], float cposD[3],
+		float rposA[3], float rposB[3], float rposC[3], float rposD[3],
+		float ret_Matrix[12]);
 	int Calibration_GetPoint(const float in_px, const float in_py, float* out_rx, float* out_ry);
 	int Calibration_GetChessPoint(const int index, float* out_rx, float* out_ry);
 	int Calibration_isOK(void);
@@ -158,6 +162,9 @@ public:
 	int SetCameraConfig_Default();
 	int SetCameraConfig_Save();
 	int SetCameraConfig_Load();
+
+	int SetCameraConfig_Save_With_ID(int ConfigID);
+	int SetCameraConfig_Load_With_ID(int ConfigID);
 
 	int BackgroundLearning(void);
 

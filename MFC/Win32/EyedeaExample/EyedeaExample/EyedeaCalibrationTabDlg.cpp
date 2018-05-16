@@ -47,6 +47,8 @@ BEGIN_MESSAGE_MAP(CEyedeaCalibrationTabDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_STANDALONE_CALIB_GET_FEATURE_POS, &CEyedeaCalibrationTabDlg::OnBnClickedButtonStandaloneCalibGetFeaturePos)
 	ON_BN_CLICKED(IDC_BUTTON_STANDALONE_CALIB_SET_MATRIX, &CEyedeaCalibrationTabDlg::OnBnClickedButtonStandaloneCalibSetMatrix)
 	ON_BN_CLICKED(IDC_BUTTON_STANDALONE_CALIB_GET_MATRIX, &CEyedeaCalibrationTabDlg::OnBnClickedButtonStandaloneCalibGetMatrix)
+	ON_BN_CLICKED(IDC_BUTTON_STANDALONE_CALIB_CALC_MATRIX, &CEyedeaCalibrationTabDlg::OnBnClickedButtonStandaloneCalibCalcMatrix)
+	ON_BN_CLICKED(IDC_BUTTON_STANDALONE_CALIB_INIT, &CEyedeaCalibrationTabDlg::OnBnClickedButtonStandaloneCalibInit)
 END_MESSAGE_MAP()
 
 
@@ -568,4 +570,29 @@ void CEyedeaCalibrationTabDlg::OnBnClickedButtonStandaloneCalibGetMatrix()
 	{
 		printf("matval[%d] : %f\n", i, matrix[i]);
 	}
+}
+
+
+void CEyedeaCalibrationTabDlg::OnBnClickedButtonStandaloneCalibCalcMatrix()
+{
+	float cposA[3] = { 0,0,0 };
+	float cposB[3] = { 200,0,0 };
+	float cposC[3] = { 0,100,0 };
+	float cposD[3] = { 200,100,0 };
+	float rposA[3] = { 1000,2000,3000 };
+	float rposB[3] = { 1193.97,2040.14,2972.35 };
+	float rposC[3] = { 982.9, 2096.46, 3020.07 };
+	float rposD[3] = { 1176.87, 2136.60, 2992.42 };
+	float matrix[12];
+	ERVS_Calibration_StandAlone_Calc_Calib_Matrix(cposA, cposB, cposC, cposD, rposA, rposB, rposC, rposD, matrix);
+	for (int i = 0; i < 12; i++)
+	{
+		printf(" matrix[%d] = %f\n",i, matrix[i]);
+	}
+}
+
+
+void CEyedeaCalibrationTabDlg::OnBnClickedButtonStandaloneCalibInit()
+{
+	ERVS_Calibration_StandAlone_Init();
 }

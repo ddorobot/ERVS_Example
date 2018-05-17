@@ -516,7 +516,7 @@ int ERVS_DetectWithGrab(int index, int max_objects_count, float** out_id,
 }
 
 int ERVS_GetDetectData(const int id, float** out_id,
-	float** out_cx, float** out_cy, float** out_rx, float** out_ry,
+	float** out_cx, float** out_cy, float** out_rx, float** out_ry, float** out_rz,
 	float** out_bound_cx, float** out_bound_cy, float** out_bound_rx, float** out_bound_ry,
 	float** out_mass_cx, float** out_mass_cy, float** out_mass_rx, float** out_mass_ry,
 	float** out_circle_rx, float** out_circle_ry, float ** out_circle_diameter, float** out_circle_pass,
@@ -525,11 +525,11 @@ int ERVS_GetDetectData(const int id, float** out_id,
 	float** out_histogram, float** out_histogram_pass,
 	float** out_angle, float** out_type, float** out_score, float** out_tool_type)
 {
-	return g_cls_interface.GetDetectData(id, out_id, out_cx, out_cy, out_rx, out_ry, out_bound_cx, out_bound_cy, out_bound_rx, out_bound_ry, out_mass_cx, out_mass_cy, out_mass_rx, out_mass_ry, out_circle_rx, out_circle_ry, out_circle_diameter, out_circle_pass, out_line_distance, out_line_distance_pass, out_line_angle, out_line_angle_pass, out_histogram, out_histogram_pass, out_angle, out_type, out_score, out_tool_type);
+	return g_cls_interface.GetDetectData(id, out_id, out_cx, out_cy, out_rx, out_ry, out_rz, out_bound_cx, out_bound_cy, out_bound_rx, out_bound_ry, out_mass_cx, out_mass_cy, out_mass_rx, out_mass_ry, out_circle_rx, out_circle_ry, out_circle_diameter, out_circle_pass, out_line_distance, out_line_distance_pass, out_line_angle, out_line_angle_pass, out_histogram, out_histogram_pass, out_angle, out_type, out_score, out_tool_type);
 }
 
 int ERVS_GetDetectData_Init(const int id, float** out_id,
-	float** out_cx, float** out_cy, float** out_rx, float** out_ry,
+	float** out_cx, float** out_cy, float** out_rx, float** out_ry, float** out_rz,
 	float** out_bound_cx, float** out_bound_cy, float** out_bound_rx, float** out_bound_ry,
 	float** out_mass_cx, float** out_mass_cy, float** out_mass_rx, float** out_mass_ry,
 	float** out_circle_rx, float** out_circle_ry, float ** out_circle_diameter, float** out_circle_pass,
@@ -538,7 +538,7 @@ int ERVS_GetDetectData_Init(const int id, float** out_id,
 	float** out_histogram, float** out_histogram_pass,
 	float** out_angle, float** out_type, float** out_score, float** out_tool_type)
 {
-	return g_cls_interface.GetDetectData_Init(id, out_id, out_cx, out_cy, out_rx, out_ry, out_bound_cx, out_bound_cy, out_bound_rx, out_bound_ry, out_mass_cx, out_mass_cy, out_mass_rx, out_mass_ry, out_circle_rx, out_circle_ry, out_circle_diameter, out_circle_pass, out_line_distance, out_line_distance_pass, out_line_angle, out_line_angle_pass, out_histogram, out_histogram_pass, out_angle, out_type, out_score, out_tool_type);
+	return g_cls_interface.GetDetectData_Init(id, out_id, out_cx, out_cy, out_rx, out_ry, out_rz, out_bound_cx, out_bound_cy, out_bound_rx, out_bound_ry, out_mass_cx, out_mass_cy, out_mass_rx, out_mass_ry, out_circle_rx, out_circle_ry, out_circle_diameter, out_circle_pass, out_line_distance, out_line_distance_pass, out_line_angle, out_line_angle_pass, out_histogram, out_histogram_pass, out_angle, out_type, out_score, out_tool_type);
 }
 
 int ERVS_SetDetectData_Init(const int id)

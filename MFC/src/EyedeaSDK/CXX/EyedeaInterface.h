@@ -112,7 +112,7 @@ public:
 							float** out_histogram, float** out_histogram_pass,
 							float** out_angle, float** out_type, float** out_score, float** out_tool_type);
 	int GetDetectData(const int id, float** out_id,
-							float** out_cx, float** out_cy, float** out_rx, float** out_ry,
+							float** out_cx, float** out_cy, float** out_rx, float** out_ry, float** out_rz,
 							float** out_bound_cx, float** out_bound_cy, float** out_bound_rx, float** out_bound_ry,
 							float** out_mass_cx, float** out_mass_cy, float** out_mass_rx, float** out_mass_ry,
 							float** out_circle_rx, float** out_circle_ry, float ** out_circle_diameter, float** out_circle_pass,
@@ -121,7 +121,7 @@ public:
 							float** out_histogram, float** out_histogram_pass,
 							float** out_angle, float** out_type, float** out_score, float** out_tool_type);
 	int GetDetectData_Init(const int id, float** out_id,
-		float** out_cx, float** out_cy, float** out_rx, float** out_ry,
+		float** out_cx, float** out_cy, float** out_rx, float** out_ry, float** out_rz,
 		float** out_bound_cx, float** out_bound_cy, float** out_bound_rx, float** out_bound_ry,
 		float** out_mass_cx, float** out_mass_cy, float** out_mass_rx, float** out_mass_ry,
 		float** out_circle_rx, float** out_circle_ry, float ** out_circle_diameter, float** out_circle_pass,

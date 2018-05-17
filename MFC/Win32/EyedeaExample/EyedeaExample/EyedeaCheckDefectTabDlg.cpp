@@ -2431,6 +2431,7 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonGetDetectData()
 	float *p_camera_center_y = NULL;
 	float *p_robot_center_x = NULL;
 	float *p_robot_center_y = NULL;
+	float *p_robot_center_z = NULL;
 
 	float *p_camera_bound_center_x = NULL;
 	float *p_camera_bound_center_y = NULL;
@@ -2470,7 +2471,7 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonGetDetectData()
 
 	int nObject = ERVS_GetDetectData(user_id, 
 				&p_id,
-				&p_camera_center_x, &p_camera_center_y, &p_robot_center_x, &p_robot_center_y,
+				&p_camera_center_x, &p_camera_center_y, &p_robot_center_x, &p_robot_center_y, &p_robot_center_z,
 				&p_camera_bound_center_x, &p_camera_bound_center_y, &p_robot_bound_center_x, &p_robot_bound_center_y,
 				&p_camera_mass_center_x, &p_camera_mass_center_y, &p_robot_mass_center_x, &p_robot_mass_center_y,
 				&p_circle_rx, &p_circle_ry,
@@ -2493,9 +2494,9 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonGetDetectData()
 		//printf("%s", str);
 		if ((int)p_id[i] % 1000 == 0)
 		{
-			str.Format(_T(" - [%d] : id=%04d/type=%d/cpos=(%.2f,%.2f)/rpos=(%.2f,%.2f)/cbpos=(%.2f,%.2f)/rbpos=(%.2f,%.2f)/cmpos=(%.2f,%.2f)/rmpos=(%.2f,%.2f)/angle=%d/score=%.2f\n"),
+			str.Format(_T(" - [%d] : id=%04d/type=%d/cpos=(%.2f,%.2f)/rpos=(%.2f,%.2f,%.2f)/cbpos=(%.2f,%.2f)/rbpos=(%.2f,%.2f)/cmpos=(%.2f,%.2f)/rmpos=(%.2f,%.2f)/angle=%d/score=%.2f\n"),
 				i, (int)p_id[i], (int)p_type[i],
-				p_camera_center_x[i], p_camera_center_y[i], p_robot_center_x[i], p_robot_center_y[i],
+				p_camera_center_x[i], p_camera_center_y[i], p_robot_center_x[i], p_robot_center_y[i], p_robot_center_z[i],
 				p_camera_bound_center_x[i], p_camera_bound_center_y[i], p_robot_bound_center_x[i], p_robot_bound_center_y[i],
 				p_camera_mass_center_x[i], p_camera_mass_center_y[i], p_robot_mass_center_x[i], p_robot_mass_center_y[i],
 				(int)p_angle[i], p_score[i]);
@@ -2513,9 +2514,9 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonGetDetectData()
 					p_circle_rx[i], p_circle_ry[i],
 					p_score[i]);
 #else
-				str.Format(_T("       : (CIRCLE) id=%04d/type=%d/cpos=(%.2f,%.2f)/rpos=(%.2f,%.2f)/radiusx=(%.2f)/radiusy=(%.2f)/score=%.2f/diameter=%.2f(%d)\n"),
+				str.Format(_T("       : (CIRCLE) id=%04d/type=%d/cpos=(%.2f,%.2f)/rpos=(%.2f,%.2f,%.2f)/radiusx=(%.2f)/radiusy=(%.2f)/score=%.2f/diameter=%.2f(%d)\n"),
 					(int)p_id[i], (int)p_type[i],
-					p_camera_center_x[i], p_camera_center_y[i], p_robot_center_x[i], p_robot_center_y[i],
+					p_camera_center_x[i], p_camera_center_y[i], p_robot_center_x[i], p_robot_center_y[i], p_robot_center_z[i],
 					p_circle_rx[i], p_circle_ry[i],
 					p_score[i],
 					p_circle_diameter[i],
@@ -2531,9 +2532,9 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonGetDetectData()
 					p_line1_x[i], p_line1_y[i], p_line2_x[i], p_line2_y[i],
 					(int)p_angle[i], p_score[i]);
 #else
-				str.Format(_T("       : (LINE) id=%04d/type=%d/cpos=(%.2f,%.2f)/rpos=(%.2f,%.2f)/angle=%d/score=%.2f/line_distance=%.2f(%d)/line_angle=%.2f(%d)\n"),
+				str.Format(_T("       : (LINE) id=%04d/type=%d/cpos=(%.2f,%.2f)/rpos=(%.2f,%.2f,%.2f)/angle=%d/score=%.2f/line_distance=%.2f(%d)/line_angle=%.2f(%d)\n"),
 					(int)p_id[i], (int)p_type[i],
-					p_camera_center_x[i], p_camera_center_y[i], p_robot_center_x[i], p_robot_center_y[i],
+					p_camera_center_x[i], p_camera_center_y[i], p_robot_center_x[i], p_robot_center_y[i], p_robot_center_z[i],
 					(int)p_angle[i], p_score[i],
 					p_line_distance[i],
 					(int)p_line_distance_pass[i],
@@ -2543,9 +2544,9 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonGetDetectData()
 			}
 			else
 			{
-				str.Format(_T("       : (REGION) id=%04d/type=%d/cpos=(%.2f,%.2f)/rpos=(%.2f,%.2f)/cbpos=(%.2f,%.2f)/rbpos=(%.2f,%.2f)/cmpos=(%.2f,%.2f)/rmpos=(%.2f,%.2f)/angle=%d/score=%.2f\n"),
+				str.Format(_T("       : (REGION) id=%04d/type=%d/cpos=(%.2f,%.2f)/rpos=(%.2f,%.2f,%.2f)/cbpos=(%.2f,%.2f)/rbpos=(%.2f,%.2f)/cmpos=(%.2f,%.2f)/rmpos=(%.2f,%.2f)/angle=%d/score=%.2f\n"),
 					(int)p_id[i], (int)p_type[i],
-					p_camera_center_x[i], p_camera_center_y[i], p_robot_center_x[i], p_robot_center_y[i],
+					p_camera_center_x[i], p_camera_center_y[i], p_robot_center_x[i], p_robot_center_y[i], p_robot_center_z[i],
 					p_camera_bound_center_x[i], p_camera_bound_center_y[i], p_robot_bound_center_x[i], p_robot_bound_center_y[i],
 					p_camera_mass_center_x[i], p_camera_mass_center_y[i], p_robot_mass_center_x[i], p_robot_mass_center_y[i],
 					(int)p_angle[i], p_score[i]);
@@ -2561,6 +2562,7 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonGetDetectData()
 	if (p_camera_center_y != NULL ) free(p_camera_center_y) ;
 	if (p_robot_center_x != NULL ) free(p_robot_center_x) ;
 	if (p_robot_center_y != NULL ) free(p_robot_center_y) ;
+	if (p_robot_center_z != NULL) free(p_robot_center_z);
 
 	if (p_camera_bound_center_x != NULL ) free(p_camera_bound_center_x) ;
 	if (p_camera_bound_center_y != NULL ) free(p_camera_bound_center_y) ;
@@ -2624,6 +2626,7 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonGetDetectDataInit()
 	float *p_camera_center_y = NULL;
 	float *p_robot_center_x = NULL;
 	float *p_robot_center_y = NULL;
+	float *p_robot_center_z = NULL;
 
 	float *p_camera_bound_center_x = NULL;
 	float *p_camera_bound_center_y = NULL;
@@ -2663,7 +2666,7 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonGetDetectDataInit()
 
 	int nObject = ERVS_GetDetectData_Init(user_id,
 		&p_id,
-		&p_camera_center_x, &p_camera_center_y, &p_robot_center_x, &p_robot_center_y,
+		&p_camera_center_x, &p_camera_center_y, &p_robot_center_x, &p_robot_center_y, &p_robot_center_z,
 		&p_camera_bound_center_x, &p_camera_bound_center_y, &p_robot_bound_center_x, &p_robot_bound_center_y,
 		&p_camera_mass_center_x, &p_camera_mass_center_y, &p_robot_mass_center_x, &p_robot_mass_center_y,
 		&p_circle_rx, &p_circle_ry,
@@ -2686,9 +2689,9 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonGetDetectDataInit()
 		//printf("%s", str);
 		if ((int)p_id[i] % 1000 == 0)
 		{
-			str.Format(_T(" - [%d] : id=%04d/type=%d/cpos=(%.2f,%.2f)/rpos=(%.2f,%.2f)/cbpos=(%.2f,%.2f)/rbpos=(%.2f,%.2f)/cmpos=(%.2f,%.2f)/rmpos=(%.2f,%.2f)/angle=%d/score=%.2f\n"),
+			str.Format(_T(" - [%d] : id=%04d/type=%d/cpos=(%.2f,%.2f)/rpos=(%.2f,%.2f,%.2f)/cbpos=(%.2f,%.2f)/rbpos=(%.2f,%.2f)/cmpos=(%.2f,%.2f)/rmpos=(%.2f,%.2f)/angle=%d/score=%.2f\n"),
 				i, (int)p_id[i], (int)p_type[i],
-				p_camera_center_x[i], p_camera_center_y[i], p_robot_center_x[i], p_robot_center_y[i],
+				p_camera_center_x[i], p_camera_center_y[i], p_robot_center_x[i], p_robot_center_y[i], p_robot_center_z[i],
 				p_camera_bound_center_x[i], p_camera_bound_center_y[i], p_robot_bound_center_x[i], p_robot_bound_center_y[i],
 				p_camera_mass_center_x[i], p_camera_mass_center_y[i], p_robot_mass_center_x[i], p_robot_mass_center_y[i],
 				(int)p_angle[i], p_score[i]);
@@ -2706,9 +2709,9 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonGetDetectDataInit()
 					p_circle_rx[i], p_circle_ry[i],
 					p_score[i]);
 #else
-				str.Format(_T("       : (CIRCLE) id=%04d/type=%d/cpos=(%.2f,%.2f)/rpos=(%.2f,%.2f)/radiusx=(%.2f)/radiusy=(%.2f)/score=%.2f/diameter=%.2f(%d)\n"),
+				str.Format(_T("       : (CIRCLE) id=%04d/type=%d/cpos=(%.2f,%.2f)/rpos=(%.2f,%.2f,%.2f)/radiusx=(%.2f)/radiusy=(%.2f)/score=%.2f/diameter=%.2f(%d)\n"),
 					(int)p_id[i], (int)p_type[i],
-					p_camera_center_x[i], p_camera_center_y[i], p_robot_center_x[i], p_robot_center_y[i],
+					p_camera_center_x[i], p_camera_center_y[i], p_robot_center_x[i], p_robot_center_y[i], p_robot_center_z[i],
 					p_circle_rx[i], p_circle_ry[i],
 					p_score[i],
 					p_circle_diameter[i],
@@ -2724,9 +2727,9 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonGetDetectDataInit()
 					p_line1_x[i], p_line1_y[i], p_line2_x[i], p_line2_y[i],
 					(int)p_angle[i], p_score[i]);
 #else
-				str.Format(_T("       : (LINE) id=%04d/type=%d/cpos=(%.2f,%.2f)/rpos=(%.2f,%.2f)/angle=%d/score=%.2f/line_distance=%.2f(%d)/line_angle=%.2f(%d)\n"),
+				str.Format(_T("       : (LINE) id=%04d/type=%d/cpos=(%.2f,%.2f)/rpos=(%.2f,%.2f,%.2f)/angle=%d/score=%.2f/line_distance=%.2f(%d)/line_angle=%.2f(%d)\n"),
 					(int)p_id[i], (int)p_type[i],
-					p_camera_center_x[i], p_camera_center_y[i], p_robot_center_x[i], p_robot_center_y[i],
+					p_camera_center_x[i], p_camera_center_y[i], p_robot_center_x[i], p_robot_center_y[i], p_robot_center_z[i],
 					(int)p_angle[i], p_score[i],
 					p_line_distance[i],
 					(int)p_line_distance_pass[i],
@@ -2736,9 +2739,9 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonGetDetectDataInit()
 			}
 			else
 			{
-				str.Format(_T("       : (REGION) id=%04d/type=%d/cpos=(%.2f,%.2f)/rpos=(%.2f,%.2f)/cbpos=(%.2f,%.2f)/rbpos=(%.2f,%.2f)/cmpos=(%.2f,%.2f)/rmpos=(%.2f,%.2f)/angle=%d/score=%.2f\n"),
+				str.Format(_T("       : (REGION) id=%04d/type=%d/cpos=(%.2f,%.2f)/rpos=(%.2f,%.2f,%.2f)/cbpos=(%.2f,%.2f)/rbpos=(%.2f,%.2f)/cmpos=(%.2f,%.2f)/rmpos=(%.2f,%.2f)/angle=%d/score=%.2f\n"),
 					(int)p_id[i], (int)p_type[i],
-					p_camera_center_x[i], p_camera_center_y[i], p_robot_center_x[i], p_robot_center_y[i],
+					p_camera_center_x[i], p_camera_center_y[i], p_robot_center_x[i], p_robot_center_y[i], p_robot_center_z[i],
 					p_camera_bound_center_x[i], p_camera_bound_center_y[i], p_robot_bound_center_x[i], p_robot_bound_center_y[i],
 					p_camera_mass_center_x[i], p_camera_mass_center_y[i], p_robot_mass_center_x[i], p_robot_mass_center_y[i],
 					(int)p_angle[i], p_score[i]);
@@ -2754,6 +2757,7 @@ void CEyedeaCheckDefectTabDlg::OnBnClickedButtonGetDetectDataInit()
 	if (p_camera_center_y != NULL) free(p_camera_center_y);
 	if (p_robot_center_x != NULL) free(p_robot_center_x);
 	if (p_robot_center_y != NULL) free(p_robot_center_y);
+	if (p_robot_center_z != NULL) free(p_robot_center_z);
 
 	if (p_camera_bound_center_x != NULL) free(p_camera_bound_center_x);
 	if (p_camera_bound_center_y != NULL) free(p_camera_bound_center_y);

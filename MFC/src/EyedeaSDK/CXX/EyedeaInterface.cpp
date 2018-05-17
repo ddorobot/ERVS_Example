@@ -6883,7 +6883,7 @@ int CEyedeaInterface::GetFindObjectInfo(int index, int max_objects_count, int op
 
 int CEyedeaInterface::GetDetectData(const int id, 
 	float** out_id,
-	float** out_cx, float** out_cy, float** out_rx, float** out_ry,
+	float** out_cx, float** out_cy, float** out_rx, float** out_ry, float** out_rz,
 	float** out_bound_cx, float** out_bound_cy, float** out_bound_rx, float** out_bound_ry,
 	float** out_mass_cx, float** out_mass_cy, float** out_mass_rx, float** out_mass_ry,
 	float** out_circle_rx, float** out_circle_ry, float ** out_circle_diameter, float** out_circle_pass,
@@ -6957,6 +6957,7 @@ int CEyedeaInterface::GetDetectData(const int id,
 	int i_camera_y = 0;
 	int i_robot_x = 0;
 	int i_robot_y = 0;
+	int i_robot_z = 0;
 	int i_camera_bound_x = 0;
 	int i_camera_bound_y = 0;
 	int i_robot_bound_x = 0;
@@ -6992,7 +6993,7 @@ int CEyedeaInterface::GetDetectData(const int id,
 		nObject |= ((int)data[index++] << 8) & 0x0000FF00;
 		nObject |= ((int)data[index++]) & 0x000000FF;
 
-		if (nObject > 0 && len >= 4 + ((27 * 4)* nObject))
+		if (nObject > 0 && len >= 4 + ((28 * 4)* nObject))
 		{
 #ifndef EYEDEA_JAVA_API
 			if ((*out_id) != NULL)	free((*out_id));
@@ -7000,6 +7001,7 @@ int CEyedeaInterface::GetDetectData(const int id,
 			if ((*out_cy) != NULL)	free((*out_cy));
 			if ((*out_rx) != NULL)	free((*out_rx));
 			if ((*out_ry) != NULL)	free((*out_ry));
+			if ((*out_rz) != NULL)	free((*out_rz));
 			if ((*out_bound_cx) != NULL)	free((*out_bound_cx));
 			if ((*out_bound_cy) != NULL)	free((*out_bound_cy));
 			if ((*out_bound_rx) != NULL)	free((*out_bound_rx));
@@ -7028,6 +7030,7 @@ int CEyedeaInterface::GetDetectData(const int id,
 			(*out_cy) = (float *)malloc(sizeof(float)*nObject);
 			(*out_rx) = (float *)malloc(sizeof(float)*nObject);
 			(*out_ry) = (float *)malloc(sizeof(float)*nObject);
+			(*out_rz) = (float *)malloc(sizeof(float)*nObject);
 			(*out_bound_cx) = (float *)malloc(sizeof(float)*nObject);
 			(*out_bound_cy) = (float *)malloc(sizeof(float)*nObject);
 			(*out_bound_rx) = (float *)malloc(sizeof(float)*nObject);
@@ -7083,6 +7086,12 @@ int CEyedeaInterface::GetDetectData(const int id,
 				i_robot_y |= ((int)data[index++] << 16) & 0x00FF0000;
 				i_robot_y |= ((int)data[index++] << 8) & 0x0000FF00;
 				i_robot_y |= ((int)data[index++]) & 0x000000FF;
+
+				//i_robot_z
+				i_robot_z = ((int)data[index++] << 24) & 0xFF000000;
+				i_robot_z |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_robot_z |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_robot_z |= ((int)data[index++]) & 0x000000FF;
 
 				//bound center
 				//i_camera_x
@@ -7223,6 +7232,7 @@ int CEyedeaInterface::GetDetectData(const int id,
 				(*out_cy)[i] = (float)i_camera_y / (float)scale_factor;
 				(*out_rx)[i] = (float)i_robot_x / (float)scale_factor;
 				(*out_ry)[i] = (float)i_robot_y / (float)scale_factor;
+				(*out_rz)[i] = (float)i_robot_z / (float)scale_factor;
 				(*out_bound_cx)[i] = (float)i_camera_bound_x / (float)scale_factor;
 				(*out_bound_cy)[i] = (float)i_camera_bound_y / (float)scale_factor;
 				(*out_bound_rx)[i] = (float)i_robot_bound_x / (float)scale_factor;
@@ -7263,7 +7273,7 @@ int CEyedeaInterface::GetDetectData(const int id,
 
 int CEyedeaInterface::GetDetectData_Init(const int id,
 	float** out_id,
-	float** out_cx, float** out_cy, float** out_rx, float** out_ry,
+	float** out_cx, float** out_cy, float** out_rx, float** out_ry, float** out_rz,
 	float** out_bound_cx, float** out_bound_cy, float** out_bound_rx, float** out_bound_ry,
 	float** out_mass_cx, float** out_mass_cy, float** out_mass_rx, float** out_mass_ry,
 	float** out_circle_rx, float** out_circle_ry, float ** out_circle_diameter, float** out_circle_pass,
@@ -7337,6 +7347,7 @@ int CEyedeaInterface::GetDetectData_Init(const int id,
 	int i_camera_y = 0;
 	int i_robot_x = 0;
 	int i_robot_y = 0;
+	int i_robot_z = 0;
 	int i_camera_bound_x = 0;
 	int i_camera_bound_y = 0;
 	int i_robot_bound_x = 0;
@@ -7372,7 +7383,7 @@ int CEyedeaInterface::GetDetectData_Init(const int id,
 		nObject |= ((int)data[index++] << 8) & 0x0000FF00;
 		nObject |= ((int)data[index++]) & 0x000000FF;
 
-		if (nObject > 0 && len >= 4 + ((27 * 4)* nObject))
+		if (nObject > 0 && len >= 4 + ((28 * 4)* nObject))
 		{
 #ifndef EYEDEA_JAVA_API
 			if ((*out_id) != NULL)	free((*out_id));
@@ -7380,6 +7391,7 @@ int CEyedeaInterface::GetDetectData_Init(const int id,
 			if ((*out_cy) != NULL)	free((*out_cy));
 			if ((*out_rx) != NULL)	free((*out_rx));
 			if ((*out_ry) != NULL)	free((*out_ry));
+			if ((*out_rz) != NULL)	free((*out_rz));
 			if ((*out_bound_cx) != NULL)	free((*out_bound_cx));
 			if ((*out_bound_cy) != NULL)	free((*out_bound_cy));
 			if ((*out_bound_rx) != NULL)	free((*out_bound_rx));
@@ -7408,6 +7420,7 @@ int CEyedeaInterface::GetDetectData_Init(const int id,
 			(*out_cy) = (float *)malloc(sizeof(float)*nObject);
 			(*out_rx) = (float *)malloc(sizeof(float)*nObject);
 			(*out_ry) = (float *)malloc(sizeof(float)*nObject);
+			(*out_rz) = (float *)malloc(sizeof(float)*nObject);
 			(*out_bound_cx) = (float *)malloc(sizeof(float)*nObject);
 			(*out_bound_cy) = (float *)malloc(sizeof(float)*nObject);
 			(*out_bound_rx) = (float *)malloc(sizeof(float)*nObject);
@@ -7463,6 +7476,12 @@ int CEyedeaInterface::GetDetectData_Init(const int id,
 				i_robot_y |= ((int)data[index++] << 16) & 0x00FF0000;
 				i_robot_y |= ((int)data[index++] << 8) & 0x0000FF00;
 				i_robot_y |= ((int)data[index++]) & 0x000000FF;
+
+				//i_robot_z
+				i_robot_z = ((int)data[index++] << 24) & 0xFF000000;
+				i_robot_z |= ((int)data[index++] << 16) & 0x00FF0000;
+				i_robot_z |= ((int)data[index++] << 8) & 0x0000FF00;
+				i_robot_z |= ((int)data[index++]) & 0x000000FF;
 
 				//bound center
 				//i_camera_x
@@ -7603,6 +7622,7 @@ int CEyedeaInterface::GetDetectData_Init(const int id,
 				(*out_cy)[i] = (float)i_camera_y / (float)scale_factor;
 				(*out_rx)[i] = (float)i_robot_x / (float)scale_factor;
 				(*out_ry)[i] = (float)i_robot_y / (float)scale_factor;
+				(*out_rz)[i] = (float)i_robot_z / (float)scale_factor;
 				(*out_bound_cx)[i] = (float)i_camera_bound_x / (float)scale_factor;
 				(*out_bound_cy)[i] = (float)i_camera_bound_y / (float)scale_factor;
 				(*out_bound_rx)[i] = (float)i_robot_bound_x / (float)scale_factor;

@@ -1849,7 +1849,16 @@ void CEyedeaVisionConfigTabDlg::OnLButtonUp(UINT nFlags, CPoint point)
 			}
 			else if(m_command == USER_COMMAND_SELECT_OBJECT_LINE)
 			{
-				ERVS_SetObjectLine(m_select_rate_x, m_select_rate_y, m_select_rate_w, m_select_rate_h);
+				printf("Set line = (%f,%f), (%f,%f), (%f,%f), (%f,%f)\n", m_select_rate_x, m_select_rate_y,
+					m_select_rate_x + m_select_rate_w, m_select_rate_y,
+					m_select_rate_x + m_select_rate_w, m_select_rate_y + m_select_rate_h,
+					m_select_rate_x, m_select_rate_y + m_select_rate_h);
+
+				//ERVS_SetObjectLine(m_select_rate_x, m_select_rate_y, m_select_rate_w, m_select_rate_h);
+				ERVS_SetObjectLine(m_select_rate_x, m_select_rate_y, 
+					m_select_rate_x + m_select_rate_w, m_select_rate_y,
+					m_select_rate_x + m_select_rate_w, m_select_rate_y + m_select_rate_h,
+					m_select_rate_x, m_select_rate_y + m_select_rate_h);
 
 				int nLine = 0;
 				float *out_x1 = NULL;

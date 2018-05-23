@@ -211,6 +211,9 @@ BOOL CEyedeaExampleDlg::OnInitDialog()
 	str.Format(_T("./ERVS_DB"), szPath);
 	GetDlgItem(IDC_EDIT_DB_PATH)->SetWindowText(str);
 
+	str.Format(_T("0"));
+	GetDlgItem(IDC_EDIT_DB_ID)->SetWindowText(str);
+
 	//Initialize list
 	m_list_information.DeleteAllItems();
 	// 리스트 스타일 설정

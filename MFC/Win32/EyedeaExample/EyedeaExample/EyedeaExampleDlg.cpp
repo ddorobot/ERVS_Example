@@ -281,11 +281,11 @@ void CEyedeaExampleDlg::OnBnClickedButtonConnect()
 {
 	// TODO: Add your control notification handler code here
 	//GetDlgItem(IDC_IPADDRESS_CONNECT)->GetAddress()
-	BYTE IP_a, IP_b, IP_c, IP_d; 
+	BYTE IP_a, IP_b, IP_c, IP_d;
 
-	m_ip_addr.GetAddress(IP_a, IP_b, IP_c, IP_d);
-
-	if (IP_a == NULL || IP_b == NULL || IP_c == NULL || IP_d == NULL)
+	int ip_cnt = m_ip_addr.GetAddress(IP_a, IP_b, IP_c, IP_d);
+	
+	if (ip_cnt != 4 || IP_d == NULL)
 	{
 		MessageBox(_T("Wrong IP address"), MB_OK);
 	}

@@ -1263,7 +1263,11 @@ void CEyedeaExampleDlg::OnBnClickedButtonListSave()
 	//std::string str_path((LPCTSTR)strDBPath);
 	std::string str_path = std::string(CT2CA(strDBPath.operator LPCWSTR()));
 
-	ERVS_FileSaveObjectDBList(str_path);
+	CString strDBID;
+	GetDlgItem(IDC_EDIT_DB_ID)->GetWindowText(strDBID);
+	int db_id = _ttoi(strDBID);
+
+	ERVS_FileSaveObjectDBList(str_path, db_id);
 }
 
 #if 0
@@ -1293,7 +1297,11 @@ void CEyedeaExampleDlg::OnBnClickedButtonListLoad()
 	//std::string str_path((LPCTSTR)strDBPath);
 	std::string str_path = std::string(CT2CA(strDBPath.operator LPCWSTR()));
 
-	ERVS_FileLoadObjectDBList(str_path);
+	CString strDBID;
+	GetDlgItem(IDC_EDIT_DB_ID)->GetWindowText(strDBID);
+	int db_id = _ttoi(strDBID);
+
+	ERVS_FileLoadObjectDBList(str_path, db_id);
 }
 
 

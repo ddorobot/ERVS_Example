@@ -4770,7 +4770,7 @@ int CEyedeaInterface::GetOptionFixSearchArea(void)
 
 }
 
-int CEyedeaInterface::FileLoadObjectListInfo(std::string path)
+int CEyedeaInterface::FileLoadObjectListInfo(std::string path, const int id)
 {
 	boost::unique_lock<boost::mutex> scoped_lock(mutex);
 
@@ -4782,19 +4782,20 @@ int CEyedeaInterface::FileLoadObjectListInfo(std::string path)
 
 	char command = COMMAND_OBJECT_LIST_FILELOAD;
 
-	int len = path.length() + 1;
+	int len = path.length() + 1 + 4;
 	unsigned char* data = new unsigned char[len];
 	memset(data, 0, len);
 
-	std::copy(path.begin(), path.end(), data);
-
 	//id
-#if 0
-	data[0] = (id & 0xFF000000) >> 24;
-	data[1] = (id & 0x00FF0000) >> 16;
-	data[2] = (id & 0x0000FF00) >> 8;
-	data[3] = (id & 0x000000FF);
+	int index = 0;
+#if 1
+	data[index++] = (id & 0xFF000000) >> 24;
+	data[index++] = (id & 0x00FF0000) >> 16;
+	data[index++] = (id & 0x0000FF00) >> 8;
+	data[index++] = (id & 0x000000FF);
 #endif
+	
+	std::copy(path.begin(), path.end(), data + index);
 
 	unsigned int scale_factor = 1;
 	int ret = 0;
@@ -4854,7 +4855,7 @@ int CEyedeaInterface::FileLoadObjectListInfo(std::string path)
 	return ret;
 }
 
-int CEyedeaInterface::FileSaveObjectListInfo(std::string path)
+int CEyedeaInterface::FileSaveObjectListInfo(std::string path, const int id)
 {
 	boost::unique_lock<boost::mutex> scoped_lock(mutex);
 
@@ -4866,19 +4867,20 @@ int CEyedeaInterface::FileSaveObjectListInfo(std::string path)
 
 	char command = COMMAND_OBJECT_LIST_FILESAVE;
 
-	int len = path.length()+1;
+	int len = path.length()+1 + 4;
 	unsigned char* data = new unsigned char[len];
 	memset(data, 0, len);
 
-	std::copy(path.begin(), path.end(), data);
-
 	//id
-#if 0
-	data[0] = (id & 0xFF000000) >> 24;
-	data[1] = (id & 0x00FF0000) >> 16;
-	data[2] = (id & 0x0000FF00) >> 8;
-	data[3] = (id & 0x000000FF);
+	int index = 0;
+#if 1
+	data[index++] = (id & 0xFF000000) >> 24;
+	data[index++] = (id & 0x00FF0000) >> 16;
+	data[index++] = (id & 0x0000FF00) >> 8;
+	data[index++] = (id & 0x000000FF);
 #endif
+
+	std::copy(path.begin(), path.end(), data + index);
 
 	unsigned int scale_factor = 1;
 	int ret = 0;

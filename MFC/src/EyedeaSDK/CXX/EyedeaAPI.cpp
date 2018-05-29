@@ -259,14 +259,14 @@ int ERVS_SetNextImage(void)
 	return g_cls_interface.SetNextImage();
 }
 
-int ERVS_FileSaveObjectDBList(std::string path)
+int ERVS_FileSaveObjectDBList(std::string path, const int id)
 {
-	return g_cls_interface.FileSaveObjectListInfo(path);
+	return g_cls_interface.FileSaveObjectListInfo(path, id);
 }
 
-int ERVS_FileLoadObjectDBList(std::string path)
+int ERVS_FileLoadObjectDBList(std::string path, const int id)
 {
-	return g_cls_interface.FileLoadObjectListInfo(path);
+	return g_cls_interface.FileLoadObjectListInfo(path, id);
 }
 
 int ERVS_SetVisionConfigOption(int option, float value)

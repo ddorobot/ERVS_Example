@@ -1821,7 +1821,7 @@ void CEyedeaVisionConfigTabDlg::OnLButtonUp(UINT nFlags, CPoint point)
 				printf("#%d Mask Set\n", nMask);
 				for( int i=0 ; i<nMask ; i++ )
 				{
-					printf(" - [%d]Mask Info = Rect(%d, %d, %d, %d), inv=%d\n", i, (int)out_mask_x[i], (int)out_mask_y[i], (int)out_mask_w[i], (int)out_mask_h[i], (int)out_mask_inv[i]);
+					printf(" - [%d]Mask Info = Rect(%f, %f, %f, %f), inv=%d\n", i, out_mask_x[i], out_mask_y[i], out_mask_w[i], out_mask_h[i], out_mask_inv[i]);
 				}
 
 				if (out_mask_x != NULL) free(out_mask_x);

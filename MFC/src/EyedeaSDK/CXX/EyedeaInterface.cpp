@@ -2840,7 +2840,50 @@ int CEyedeaInterface::Calibration_StandAlone_Set_Matrix(float matrix[12])
 
 	int ret = 0;
 	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+	if (ret == EYEDEA_ERROR_INVALID_MEMORY)
+	{
+		int sec = 0;
+		while (1)
+		{
+			ret = m_cls_eth_client->Open(m_ip, m_port);
+			if (ret == 0) {
+				ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+				break;
+			}
+			else
+			{
+				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
+				sec++;
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
+					return ret;
+				}
+				continue;
+			}
+		}
+	}
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
 
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+
+	return ret;
 }
 int CEyedeaInterface::Calibration_StandAlone_Calc_Calib_Matrix(float cposA[3], float cposB[3], float cposC[3], float cposD[3],
 	float rposA[3], float rposB[3], float rposC[3], float rposD[3],

@@ -524,8 +524,8 @@ void CEyedeaCalibrationTabDlg::OnBnClickedButtonStandaloneCalibGetFeaturePos()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	float posA[3], posB[3], posC[3], posD[3];
-	int nCalibrationInfo = ERVS_Calibration_GetCount();
-
+	int nCalibrationInfo = ERVS_Calibration_StandAlone_Get_Image_Count();
+	
 	CString PosStr;
 	for (int i = 0; i < nCalibrationInfo ; i++)
 	{

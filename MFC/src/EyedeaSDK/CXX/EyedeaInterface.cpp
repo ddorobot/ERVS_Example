@@ -2811,6 +2811,82 @@ int CEyedeaInterface::Calibration_StandAlone_Init(void)
 	return ret;
 }
 
+
+int CEyedeaInterface::Calibration_StandAlone_Get_Image_Count(void)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	//printf("SetSearchArea - %d %d %d %d\n", x, y, w, h);
+
+	char command = COMMAND_CALIB_STANDALONE_GET_IMAGE_COUNT;
+	int len = 0;
+	unsigned char* data = NULL;
+
+	unsigned int scale_factor = 1;
+	int size = 0;
+	size = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+	if (size == EYEDEA_ERROR_INVALID_MEMORY)
+	{
+		int sec = 0;
+		while (1)
+		{
+			size = m_cls_eth_client->Open(m_ip, m_port);
+			if (size == 0) {
+				size = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+				break;
+			}
+			else
+			{
+				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
+				sec++;
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
+
+					return size;
+				}
+				continue;
+			}
+		}
+	}
+	if (size != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return size;
+	}
+
+	size = 0;
+
+	if (len >= 4)
+	{
+		//w
+		size = ((int)data[0] << 24) & 0xFF000000;
+		size |= ((int)data[1] << 16) & 0x00FF0000;
+		size |= ((int)data[2] << 8) & 0x0000FF00;
+		size |= ((int)data[3]) & 0x000000FF;
+
+	}
+
+	delete (data);
+	data = NULL;
+
+	return size;
+}
+
 int CEyedeaInterface::Calibration_StandAlone_Set_Matrix(float matrix[12])
 {
 	boost::unique_lock<boost::mutex> scoped_lock(mutex);

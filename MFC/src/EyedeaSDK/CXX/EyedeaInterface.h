@@ -142,6 +142,7 @@ public:
 	int Calibration_Run(void);
 	int Calibration_StandAlone_Init(void);
 	int Calibration_StandAlone_Run(void);
+	int Calibration_StandAlone_Get_Image_Count(void);
 	int Calibration_StandAlone_Get_Feature_Pos(int index,float posA[3], float posB[3], float posC[3], float posD[3]);
 	int Calibration_StandAlone_Set_Matrix(float matrix[12]);
 	int Calibration_StandAlone_Get_Matrix(float matrix[12]);

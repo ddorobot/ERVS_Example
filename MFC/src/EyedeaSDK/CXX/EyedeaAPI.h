@@ -151,6 +151,7 @@ int ERVS_Calibration_Clear(void);
 int ERVS_Calibration_Run(void);
 int ERVS_Calibration_StandAlone_Init(void);
 int ERVS_Calibration_StandAlone_Run(void);
+int ERVS_Calibration_StandAlone_Get_Image_Count(void);
 int ERVS_Calibration_StandAlone_Get_Feature_Pos(int index,float posA[3], float posB[3], float posC[3], float posD[3]);
 int ERVS_Calibration_StandAlone_Set_Matrix(float matrix[12]);
 int ERVS_Calibration_StandAlone_Get_Matrix(float matrix[12]);

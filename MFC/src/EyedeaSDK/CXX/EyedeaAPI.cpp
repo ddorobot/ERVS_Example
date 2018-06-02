@@ -399,6 +399,11 @@ int ERVS_Calibration_StandAlone_Run(void)
 	return g_cls_interface.Calibration_StandAlone_Run();
 }
 
+int ERVS_Calibration_StandAlone_Get_Image_Count(void)
+{
+	return g_cls_interface.Calibration_StandAlone_Get_Image_Count();
+}
+
 int ERVS_Calibration_StandAlone_Init(void)
 {
 	return g_cls_interface.Calibration_StandAlone_Init();

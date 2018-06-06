@@ -79,9 +79,9 @@ int ERVS_SetObjectCircle(const float x, const float y, const float r1, const flo
 	return g_cls_interface.SetObjectCircle(x, y, r1, r2, min_r1, min_r2, max_r1, max_r2);
 }
 
-int ERVS_GetObjectCircle(float *out_x, float *out_y, float *out_r1, float *out_r2, float *out_min_r1, float *out_min_r2, float *out_max_r1, float *out_max_r2)
+int ERVS_GetObjectCircle(float *out_x, float *out_y, float *out_r1, float *out_r2, float *out_min_r1, float *out_min_r2, float *out_max_r1, float *out_max_r2, float *out_user_x, float *out_user_y, float *out_user_r1, float *out_user_r2)
 {
-	return g_cls_interface.GetObjectCircle(out_x, out_y, out_r1, out_r2, out_min_r1, out_min_r2, out_max_r1, out_max_r2);
+	return g_cls_interface.GetObjectCircle(out_x, out_y, out_r1, out_r2, out_min_r1, out_min_r2, out_max_r1, out_max_r2, out_user_x, out_user_y, out_user_r1, out_user_r2);
 }
 
 int ERVS_SetObjectLine(float x, float y, float w, float h)

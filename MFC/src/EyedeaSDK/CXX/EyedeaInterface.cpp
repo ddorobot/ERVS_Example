@@ -1569,7 +1569,7 @@ int CEyedeaInterface::SetObjectCircle(const float x, const float y, const float 
 	return ret;
 }
 
-int CEyedeaInterface::GetObjectCircle(float *out_x, float *out_y, float *out_r1, float *out_r2, float *out_min_r1, float *out_min_r2, float *out_max_r1, float *out_max_r2)
+int CEyedeaInterface::GetObjectCircle(float *out_x, float *out_y, float *out_r1, float *out_r2, float *out_min_r1, float *out_min_r2, float *out_max_r1, float *out_max_r2, float *out_user_x, float *out_user_y, float *out_user_r1, float *out_user_r2)
 {
 	//printf("test = %f, %f, %f, %f\n", x, y, r1, r2);
 
@@ -1627,12 +1627,16 @@ int CEyedeaInterface::GetObjectCircle(float *out_x, float *out_y, float *out_r1,
 	int i_min_r2 = 0;
 	int i_max_r1 = 0;
 	int i_max_r2 = 0;
+	int i_user_x = 0;
+	int i_user_y = 0;
+	int i_user_r1 = 0;
+	int i_user_r2 = 0;
 
 	int index = 0;
 
 	//printf("len = %d\n", len);
 
-	if (len >= 4 * 8)
+	if (len >= 4 * 12)
 	{
 		i_x = ((int)data[index++] << 24) & 0xFF000000;
 		i_x |= ((int)data[index++] << 16) & 0x00FF0000;
@@ -1674,6 +1678,26 @@ int CEyedeaInterface::GetObjectCircle(float *out_x, float *out_y, float *out_r1,
 		i_max_r2 |= ((int)data[index++] << 8) & 0x0000FF00;
 		i_max_r2 |= ((int)data[index++]) & 0x000000FF;
 
+		i_user_x = ((int)data[index++] << 24) & 0xFF000000;
+		i_user_x |= ((int)data[index++] << 16) & 0x00FF0000;
+		i_user_x |= ((int)data[index++] << 8) & 0x0000FF00;
+		i_user_x |= ((int)data[index++]) & 0x000000FF;
+
+		i_user_y = ((int)data[index++] << 24) & 0xFF000000;
+		i_user_y |= ((int)data[index++] << 16) & 0x00FF0000;
+		i_user_y |= ((int)data[index++] << 8) & 0x0000FF00;
+		i_user_y |= ((int)data[index++]) & 0x000000FF;
+
+		i_user_r1 = ((int)data[index++] << 24) & 0xFF000000;
+		i_user_r1 |= ((int)data[index++] << 16) & 0x00FF0000;
+		i_user_r1 |= ((int)data[index++] << 8) & 0x0000FF00;
+		i_user_r1 |= ((int)data[index++]) & 0x000000FF;
+
+		i_user_r2 = ((int)data[index++] << 24) & 0xFF000000;
+		i_user_r2 |= ((int)data[index++] << 16) & 0x00FF0000;
+		i_user_r2 |= ((int)data[index++] << 8) & 0x0000FF00;
+		i_user_r2 |= ((int)data[index++]) & 0x000000FF;
+
 		float f_x = (float)i_x / (float)scale_factor;
 		float f_y = (float)i_y / (float)scale_factor;
 		float f_r1 = (float)i_r1 / (float)scale_factor;
@@ -1682,6 +1706,10 @@ int CEyedeaInterface::GetObjectCircle(float *out_x, float *out_y, float *out_r1,
 		float f_min_r2 = (float)i_min_r2 / (float)scale_factor;
 		float f_max_r1 = (float)i_max_r1 / (float)scale_factor;
 		float f_max_r2 = (float)i_max_r2 / (float)scale_factor;
+		float f_user_x = (float)i_user_x / (float)scale_factor;
+		float f_user_y = (float)i_user_y / (float)scale_factor;
+		float f_user_r1 = (float)i_user_r1 / (float)scale_factor;
+		float f_user_r2 = (float)i_user_r2 / (float)scale_factor;
 
 		if (out_x != NULL) (*out_x) = f_x;
 		if (out_y != NULL) (*out_y) = f_y;
@@ -1691,6 +1719,10 @@ int CEyedeaInterface::GetObjectCircle(float *out_x, float *out_y, float *out_r1,
 		if (out_min_r2 != NULL) (*out_min_r2) = f_min_r2;
 		if (out_max_r1 != NULL) (*out_max_r1) = f_max_r1;
 		if (out_max_r2 != NULL) (*out_max_r2) = f_max_r2;
+		if (out_user_x != NULL) (*out_user_x) = f_user_x;
+		if (out_user_y != NULL) (*out_user_y) = f_user_y;
+		if (out_user_r1 != NULL) (*out_user_r1) = f_user_r1;
+		if (out_user_r2 != NULL) (*out_user_r2) = f_user_r2;
 	}
 
 	if (data != NULL)

@@ -35,7 +35,7 @@ public:
 	int GetMaskArea(int *out_count, float **out_x, float **out_y, float **out_w, float **out_h, bool **out_inverse);
 	int SetObjectCircle(float x, float y, float r1, float r2);
 	int SetObjectCircle(const float x, const float y, const float r1, const float r2, const float min_r1, const float min_r2, const float max_r1, const float max_r2);
-	int GetObjectCircle(float *out_x, float *out_y, float *out_r1, float *out_r2, float *out_min_r1, float *out_min_r2, float *out_max_r1, float *out_max_r2);
+	int GetObjectCircle(float *out_x, float *out_y, float *out_r1, float *out_r2, float *out_min_r1, float *out_min_r2, float *out_max_r1, float *out_max_r2, float *out_user_x, float *out_user_y, float *out_user_r1, float *out_user_r2);
 	int SetObjectCircleBaseDiameter(const int id, const int diameter);
 	int GetObjectCircleBaseDiameter(const int id);
 	int SetObjectCircleDiameterTolerance(const int id, const int min_value, const int max_value);

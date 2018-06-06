@@ -65,7 +65,7 @@ int ERVS_SetBaseTemp(void);
 //Circle Object
 int ERVS_SetObjectCircle(float x, float y, float r1, float r2);
 int ERVS_SetObjectCircle(const float x, const float y, const float r1, const float r2, const float min_r1, const float min_r2, const float max_r1, const float max_r2);
-int ERVS_GetObjectCircle(float *out_x, float *out_y, float *out_r1, float *out_r2, float *out_min_r1, float *out_min_r2, float *out_max_r1, float *out_max_r2);
+int ERVS_GetObjectCircle(float *out_x, float *out_y, float *out_r1, float *out_r2, float *out_min_r1, float *out_min_r2, float *out_max_r1, float *out_max_r2, float *out_user_x, float *out_user_y, float *out_user_r1, float *out_user_r2);
 int ERVS_SetObjectCircleBaseDiameter(const int id, const int diameter);
 int ERVS_GetObjectCircleBaseDiameter(const int id);
 int ERVS_SetObjectCircleDiameterTolerance(const int id, const int min_value, const int max_value);

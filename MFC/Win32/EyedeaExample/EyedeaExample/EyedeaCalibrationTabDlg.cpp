@@ -515,7 +515,7 @@ void CEyedeaCalibrationTabDlg::OnBnClickedButtonStandaloneCalibRun()
 	// TODO: Add your control notification handler code here
 	ERVS_Calibration_StandAlone_Run();
 
-//	UpdateDataCalibrationRun();
+	UpdateDataCalibrationRun();
 }
 
 
@@ -557,7 +557,10 @@ void CEyedeaCalibrationTabDlg::OnBnClickedButtonStandaloneCalibGetFeaturePos()
 void CEyedeaCalibrationTabDlg::OnBnClickedButtonStandaloneCalibSetMatrix()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-	float matrix[12] = { 1.1,2.2,3.3,4.4,5.5,6.6,7.7,8.8,9.9,10.0,11.1,12.1};
+	//float matrix[12] = { 1.1,2.2,3.3,4.4,5.5,6.6,7.7,8.8,9.9,10.0,11.1,12.1};
+	float matrix[12] = { 1,0,0,0,
+						0,1,0,0,
+						0,0,1,0 };
 	ERVS_Calibration_StandAlone_Set_Matrix(matrix);
 }
 

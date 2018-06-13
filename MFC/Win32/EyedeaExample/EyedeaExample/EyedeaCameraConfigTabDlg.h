@@ -46,4 +46,5 @@ public:
 	afx_msg void OnBnClickedButtonCameraSaveParamWithId();
 	afx_msg void OnBnClickedButtonCameraLoadParamWithId();
 	afx_msg void OnBnClickedCheckOptionCameraAutofocus();
+	afx_msg void OnBnClickedButtonCameraFocusGetEnv();
 };

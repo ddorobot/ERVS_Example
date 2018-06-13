@@ -76,6 +76,7 @@ BEGIN_MESSAGE_MAP(CEyedeaCameraConfigTabDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_CAMERA_SAVE_PARAM_WITH_ID, &CEyedeaCameraConfigTabDlg::OnBnClickedButtonCameraSaveParamWithId)
 	ON_BN_CLICKED(IDC_BUTTON_CAMERA_LOAD_PARAM_WITH_ID, &CEyedeaCameraConfigTabDlg::OnBnClickedButtonCameraLoadParamWithId)
 	ON_BN_CLICKED(IDC_CHECK_OPTION_CAMERA_AUTOFOCUS, &CEyedeaCameraConfigTabDlg::OnBnClickedCheckOptionCameraAutofocus)
+	ON_BN_CLICKED(IDC_BUTTON_CAMERA_FOCUS_GET_ENV, &CEyedeaCameraConfigTabDlg::OnBnClickedButtonCameraFocusGetEnv)
 END_MESSAGE_MAP()
 
 void CEyedeaCameraConfigTabDlg::OnBnClickedCheckOptionCameraExposure()
@@ -262,6 +263,8 @@ void CEyedeaCameraConfigTabDlg::SetCameraConfigUI()
 	CString str;
 	str.Format(_T("%d"), ledbright);
 	GetDlgItem(IDC_EDIT_CAMERA_VAL_LED_BRIGHTNESS)->SetWindowText(str);
+
+	OnBnClickedButtonCameraFocusGetEnv();
 }
 
 void CEyedeaCameraConfigTabDlg::OnBnClickedButtonCameraSetDefault()
@@ -323,4 +326,38 @@ void CEyedeaCameraConfigTabDlg::OnBnClickedCheckOptionCameraAutofocus()
 	{
 		ERVS_SetCameraConfig(SET_CAMERA_FOCUS_AUTO, 0, 0);
 	}
+}
+
+
+void CEyedeaCameraConfigTabDlg::OnBnClickedButtonCameraFocusGetEnv()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	int use_auto_focus = ERVS_GetCameraConfig(GET_CAMERA_FOCUS_AUTO);
+	int camera_focus_value = ERVS_GetCameraConfig(GET_CAMERA_FOCUS_VALUE);
+
+	BOOL bCheck = IsDlgButtonChecked(IDC_CHECK_OPTION_CAMERA_AUTOFOCUS);
+
+	CString focus;
+	if (use_auto_focus == 1)
+	{
+		focus = "USE AUTO FOCUS\r\n";
+		if (bCheck == false)
+		{
+			((CButton*)GetDlgItem(IDC_CHECK_OPTION_CAMERA_AUTOFOCUS))->SetCheck(1);
+		}
+	}
+	else
+	{
+		focus = "MANUAL FOCUS\r\n";
+		if (bCheck == true)
+		{
+			((CButton*)GetDlgItem(IDC_CHECK_OPTION_CAMERA_AUTOFOCUS))->SetCheck(0);
+		}
+	}
+	m_Slider_Camera_Focus.SetPos(camera_focus_value);
+
+	CString str;
+	str.Format(_T("FOCUS VAL:%d"), camera_focus_value);
+
+	GetDlgItem(IDC_EDIT_CAMERA_FOCUS_ENV)->SetWindowText(focus+str);
 }

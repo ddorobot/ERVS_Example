@@ -34,24 +34,18 @@ BOOL CEyedeaCameraConfigTabDlg::OnInitDialog()
 
 	m_Slider_Camera_GAIN.SetRange(0, 1 << 9, TRUE);
 	m_Slider_Camera_GAIN.SetPos((1 << 9) / 2);
-
-	m_Slider_Camera_AE_Range_High.SetRange(0, 1 << 14, TRUE);
-	m_Slider_Camera_AE_Range_High.SetPos((1 << 14) / 2);
-
-	m_Slider_Camera_AE_Range_Low.SetRange(0, 1 << 14, TRUE);
-	m_Slider_Camera_AE_Range_Low.SetPos((1 << 14) / 2);
-
+	
 	m_Slider_Camera_Exposure.EnableWindow(FALSE);
 	m_Slider_Camera_GAIN.EnableWindow(FALSE);
-
-	m_Slider_Camera_AE_Range_High.EnableWindow(TRUE);
-	m_Slider_Camera_AE_Range_Low.EnableWindow(TRUE);
-
+	
 	m_Slider_Camera_LED_Brightness.SetRange(10, 1000, TRUE);
 	m_Slider_Camera_LED_Brightness.SetPos((500) / 2);
 
 	m_Slider_Camera_LED_Brightness_Timer.SetRange(10, 1000, TRUE);
 	m_Slider_Camera_LED_Brightness_Timer.SetPos((500) / 2);
+
+	m_Slider_Camera_Focus.SetRange(0, 386, TRUE);
+	m_Slider_Camera_Focus.SetPos(0);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // EXCEPTION: OCX Property Pages should return FALSE
@@ -62,11 +56,10 @@ void CEyedeaCameraConfigTabDlg::DoDataExchange(CDataExchange* pDX)
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_SLIDER_CAMERA_Exposure, m_Slider_Camera_Exposure);
 	DDX_Control(pDX, IDC_SLIDER_CAMERA_GAIN, m_Slider_Camera_GAIN);
-	DDX_Control(pDX, IDC_SLIDER_CAMERA_RANGE_HIGH, m_Slider_Camera_AE_Range_High);
-	DDX_Control(pDX, IDC_SLIDER_CAMERA_RANGE_LOW, m_Slider_Camera_AE_Range_Low);
 	DDX_Control(pDX, IDC_SLIDER_CAMERA_LED_BRIGHTNESS, m_Slider_Camera_LED_Brightness);
 	DDX_Control(pDX, IDC_SLIDER_CAMERA_LED_BRIGHTNESS_TIMER, m_Slider_Camera_LED_Brightness_Timer);
 	DDX_Control(pDX, IDC_CHECK_OPTION_CAMERA_EXPOSURE, m_CheckManualExposure);
+	DDX_Control(pDX, IDC_SLIDER_CAMERA_FOCUS_VAL, m_Slider_Camera_Focus);
 }
 
 
@@ -82,6 +75,7 @@ BEGIN_MESSAGE_MAP(CEyedeaCameraConfigTabDlg, CDialogEx)
 	ON_WM_SHOWWINDOW()
 	ON_BN_CLICKED(IDC_BUTTON_CAMERA_SAVE_PARAM_WITH_ID, &CEyedeaCameraConfigTabDlg::OnBnClickedButtonCameraSaveParamWithId)
 	ON_BN_CLICKED(IDC_BUTTON_CAMERA_LOAD_PARAM_WITH_ID, &CEyedeaCameraConfigTabDlg::OnBnClickedButtonCameraLoadParamWithId)
+	ON_BN_CLICKED(IDC_CHECK_OPTION_CAMERA_AUTOFOCUS, &CEyedeaCameraConfigTabDlg::OnBnClickedCheckOptionCameraAutofocus)
 END_MESSAGE_MAP()
 
 void CEyedeaCameraConfigTabDlg::OnBnClickedCheckOptionCameraExposure()
@@ -93,9 +87,6 @@ void CEyedeaCameraConfigTabDlg::OnBnClickedCheckOptionCameraExposure()
 		m_Slider_Camera_Exposure.EnableWindow(TRUE);
 		m_Slider_Camera_GAIN.EnableWindow(TRUE);
 
-		m_Slider_Camera_AE_Range_High.EnableWindow(FALSE);
-		m_Slider_Camera_AE_Range_Low.EnableWindow(FALSE);
-
 		ERVS_SetCameraConfig(SET_CAMERA_MANUAL_EXPOSURE, 0, 0);
 	}
 	else
@@ -103,8 +94,6 @@ void CEyedeaCameraConfigTabDlg::OnBnClickedCheckOptionCameraExposure()
 		m_Slider_Camera_Exposure.EnableWindow(FALSE);
 		m_Slider_Camera_GAIN.EnableWindow(FALSE);
 
-		m_Slider_Camera_AE_Range_High.EnableWindow(TRUE);
-		m_Slider_Camera_AE_Range_Low.EnableWindow(TRUE);
 		ERVS_SetCameraConfig(SET_CAMERA_AUTO_EXPOSURE, 0, 0);
 	}
 }
@@ -129,22 +118,6 @@ void CEyedeaCameraConfigTabDlg::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* p
 		//		printf("%d\n", value);
 		ERVS_SetCameraConfig(SET_CAMERA_MANUAL_EXPOSURE_GAIN, value, 0);
 	}
-	else if (pScrollBar == (CScrollBar *)&m_Slider_Camera_AE_Range_High) {
-		int value = m_Slider_Camera_AE_Range_High.GetPos();
-		CString str;
-		str.Format(_T("%d"), value);
-		GetDlgItem(IDC_EDIT_CAMERA_VAL_RANGE_HIGH_LIMIT)->SetWindowText(str);
-		//		printf("%d\n", value);
-		ERVS_SetCameraConfig(SET_CAMERA_AUTO_EXPOSURE_RANGE_GO_OUT, value, 0);
-	}
-	else if (pScrollBar == (CScrollBar *)&m_Slider_Camera_AE_Range_Low) {
-		int value = m_Slider_Camera_AE_Range_Low.GetPos();
-		CString str;
-		str.Format(_T("%d"), value);
-		GetDlgItem(IDC_EDIT_CAMERA_VAL_RANGE_LOW_LIMIT)->SetWindowText(str);
-		//		printf("%d\n", value);
-		ERVS_SetCameraConfig(SET_CAMERA_AUTO_EXPOSURE_RANGE_ENTER, value, 0);
-	}
 	else if (pScrollBar == (CScrollBar *)&m_Slider_Camera_LED_Brightness) {
 		int value = m_Slider_Camera_LED_Brightness.GetPos();
 		CString str;
@@ -159,6 +132,21 @@ void CEyedeaCameraConfigTabDlg::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* p
 		str.Format(_T("%d"), value);
 		GetDlgItem(IDC_EDIT_CAMERA_VAL_LED_BRIGHTNESS_TIMER)->SetWindowText(str);
 		//		printf("%d\n", value);
+	}
+	else if (pScrollBar == (CScrollBar *)&m_Slider_Camera_Focus) {
+
+		BOOL bCheck = IsDlgButtonChecked(IDC_CHECK_OPTION_CAMERA_AUTOFOCUS);
+		if (bCheck == true)
+		{
+			((CButton*)GetDlgItem(IDC_CHECK_OPTION_CAMERA_AUTOFOCUS))->SetCheck(0);
+		}
+
+		int value = m_Slider_Camera_Focus.GetPos();
+		CString str;
+		str.Format(_T("%d"), value);
+		GetDlgItem(IDC_EDIT_CAMERA_VAL_FOCUSVAL)->SetWindowText(str);
+		//		printf("%d\n", value);
+		ERVS_SetCameraConfig(SET_CAMERA_FOCUS_VALUE, value, 0);
 	}
 	else {
 		CDialog::OnHScroll(nSBCode, nPos, pScrollBar);
@@ -253,14 +241,6 @@ void CEyedeaCameraConfigTabDlg::SetCameraConfigUI()
 		m_CheckManualExposure.SetCheck(false);
 		OnBnClickedCheckOptionCameraExposure();
 		//GetDlgItem(IDC_CHECK_OPTION_CAMERA_EXPOSURE)->SetCheck(1);
-		m_Slider_Camera_AE_Range_Low.SetPos(aex_enter);
-		CString str;
-		str.Format(_T("%d"), aex_enter);
-		GetDlgItem(IDC_EDIT_CAMERA_VAL_RANGE_LOW_LIMIT)->SetWindowText(str);
-
-		m_Slider_Camera_AE_Range_High.SetPos(aex_goout);
-		str.Format(_T("%d"), aex_goout);
-		GetDlgItem(IDC_EDIT_CAMERA_VAL_RANGE_HIGH_LIMIT)->SetWindowText(str);
 	}
 	else
 	{
@@ -331,4 +311,16 @@ void CEyedeaCameraConfigTabDlg::OnBnClickedButtonCameraLoadParamWithId()
 	int ConfigID = (int)_ttof(str);
 	ERVS_SetCameraConfig_Load_With_ID(ConfigID);
 	SetCameraConfigUI();
+}
+
+
+void CEyedeaCameraConfigTabDlg::OnBnClickedCheckOptionCameraAutofocus()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	BOOL bCheck = IsDlgButtonChecked(IDC_CHECK_OPTION_CAMERA_AUTOFOCUS);
+
+	if (bCheck == true)
+	{
+		ERVS_SetCameraConfig(SET_CAMERA_FOCUS_AUTO, 0, 0);
+	}
 }

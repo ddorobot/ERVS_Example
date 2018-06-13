@@ -1,5 +1,6 @@
 #pragma once
 #include "afxwin.h"
+#include "afxcmn.h"
 
 
 // CEyedeaCameraConfigTabDlg 대화 상자입니다.
@@ -26,10 +27,9 @@ public:
 
 	CSliderCtrl m_Slider_Camera_Exposure;
 	CSliderCtrl m_Slider_Camera_GAIN;
-	CSliderCtrl m_Slider_Camera_AE_Range_High;
-	CSliderCtrl m_Slider_Camera_AE_Range_Low;
 	CSliderCtrl m_Slider_Camera_LED_Brightness;
 	CSliderCtrl m_Slider_Camera_LED_Brightness_Timer;
+	CSliderCtrl m_Slider_Camera_Focus;
 
 	afx_msg void OnBnClickedCheckOptionCameraExposure();
 	afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
@@ -45,4 +45,5 @@ public:
 	afx_msg void OnShowWindow(BOOL bShow, UINT nStatus);
 	afx_msg void OnBnClickedButtonCameraSaveParamWithId();
 	afx_msg void OnBnClickedButtonCameraLoadParamWithId();
+	afx_msg void OnBnClickedCheckOptionCameraAutofocus();
 };

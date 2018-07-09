@@ -553,7 +553,7 @@ int CEyedeaInterface::SetObject(int id)
     return ret;
 }
 
-int CEyedeaInterface::DB_Get_SaveList(int **out_arr_id_list, std::string **out_arr_jobname_list, std::string **out_arr_toolname_list)
+int CEyedeaInterface::DB_Get_SaveList(std::string path, int **out_arr_id_list, std::string **out_arr_jobname_list, std::string **out_arr_toolname_list)
 {
 	boost::unique_lock<boost::mutex> scoped_lock(mutex);
 
@@ -565,8 +565,11 @@ int CEyedeaInterface::DB_Get_SaveList(int **out_arr_id_list, std::string **out_a
 
 	char command = COMMAND_GET_SAVE_DB_INFO_LIST;
 
-	int len = 0;
-	unsigned char* data = NULL;
+	int len = path.length() + 1;
+	unsigned char* data = new unsigned char[len];
+	memset(data, 0, len);
+
+	std::copy(path.begin(), path.end(), data);
 
 	unsigned int scale_factor = 1;
 	m_cls_eth_client->Send(command, &scale_factor, &data, &len);
@@ -582,14 +585,14 @@ int CEyedeaInterface::DB_Get_SaveList(int **out_arr_id_list, std::string **out_a
 	}
 
 #ifndef EYEDEA_JAVA_API
-	if ((*out_arr_id_list) != NULL)	free((*out_arr_id_list));
-	(*out_arr_id_list) = (int *)malloc(sizeof(int)*list_size);
+	if ((*out_arr_id_list) != NULL)	delete ((*out_arr_id_list));
+	(*out_arr_id_list) = new int[list_size]; // (int *)malloc(sizeof(int)*list_size);
 
-	if ((*out_arr_jobname_list) != NULL)	free((*out_arr_jobname_list));
-	(*out_arr_jobname_list) = (std::string *)malloc(sizeof(std::string)*list_size);
+	if ((*out_arr_jobname_list) != NULL)	delete ((*out_arr_jobname_list));
+	(*out_arr_jobname_list) = new std::string[list_size]; // (std::string *)malloc(sizeof(std::string)*list_size);
 
-	if ((*out_arr_jobname_list) != NULL)	free((*out_arr_jobname_list));
-	(*out_arr_jobname_list) = (std::string  *)malloc(sizeof(std::string)*list_size);
+	if ((*out_arr_toolname_list) != NULL)	delete ((*out_arr_toolname_list));
+	(*out_arr_toolname_list) = new std::string[list_size]; //(std::string  *)malloc(sizeof(std::string)*list_size);
 #endif
 	
 	//get info
@@ -635,11 +638,13 @@ int CEyedeaInterface::DB_Get_SaveList(int **out_arr_id_list, std::string **out_a
 
 		if ((*out_arr_jobname_list))
 		{
+			//(*out_arr_jobname_list)[i].reserve(job_name.size());
 			(*out_arr_jobname_list)[i] = job_name;
 		}
 
 		if ((*out_arr_toolname_list))
 		{
+			//(*out_arr_toolname_list)[i].reserve(tool_name.size());
 			(*out_arr_toolname_list)[i] = tool_name;
 		}
 	}
@@ -649,6 +654,8 @@ int CEyedeaInterface::DB_Get_SaveList(int **out_arr_id_list, std::string **out_a
 		delete data;
 		data = NULL;
 	}
+
+	return list_size;
 }
 
 int CEyedeaInterface::GetImage(int option, int option2, char** out_data, int* len)

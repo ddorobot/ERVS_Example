@@ -87,6 +87,7 @@ BEGIN_MESSAGE_MAP(CEyedeaExampleDlg, CDialogEx)
 	//ON_BN_CLICKED(IDC_CHECK_LOG, &CEyedeaExampleDlg::OnBnClickedCheckLog)
 	ON_BN_CLICKED(IDC_BUTTON_LIST_LOAD, &CEyedeaExampleDlg::OnBnClickedButtonListLoad)
 	ON_BN_CLICKED(IDC_BUTTON_DISCONNECT, &CEyedeaExampleDlg::OnBnClickedButtonDisconnect)
+	ON_BN_CLICKED(IDC_BUTTON_CHECK_DB_SAVE_LIST, &CEyedeaExampleDlg::OnBnClickedButtonCheckDbSaveList)
 END_MESSAGE_MAP()
 
 
@@ -1324,4 +1325,46 @@ void CEyedeaExampleDlg::OnBnClickedButtonDisconnect()
 {
 	// TODO: Add your control notification handler code here
 	ERVS_Disconnect();
+}
+
+
+void CEyedeaExampleDlg::OnBnClickedButtonCheckDbSaveList()
+{
+	// TODO: Add your control notification handler code here
+	CString strDBPath;
+	GetDlgItem(IDC_EDIT_DB_PATH)->GetWindowText(strDBPath);
+
+	//std::string str_path((LPCTSTR)strDBPath);
+	std::string str_path = std::string(CT2CA(strDBPath.operator LPCWSTR()));
+
+	int *arr_id_list = NULL;
+	std::string *arr_jobname_list = NULL;
+	std::string *arr_toolname_list = NULL;
+
+	int ret = ERVS_DB_Get_SaveList(str_path, &arr_id_list, &arr_jobname_list, &arr_toolname_list);
+
+	printf("==== DB File List Info.\n");
+	for (int i = 0; i < ret; i++)
+	{
+		printf("[%d] id=%d, jobname=%s, toolname=%s\n", i, arr_id_list[i], arr_jobname_list[i].c_str(), arr_toolname_list[i].c_str());
+	}
+	printf("==== EYEDEA Inc.\n");
+
+	if (arr_id_list)
+	{
+		delete [] (arr_id_list);
+		arr_id_list = NULL;
+	}
+
+	if (arr_jobname_list)
+	{
+		delete [] (arr_jobname_list);
+		arr_jobname_list = NULL;
+	}
+
+	if (arr_toolname_list)
+	{
+		delete [] (arr_toolname_list);
+		arr_toolname_list = NULL;
+	}
 }

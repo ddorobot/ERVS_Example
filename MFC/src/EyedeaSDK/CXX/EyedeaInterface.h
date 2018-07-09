@@ -86,7 +86,7 @@ public:
 	int GetDB_Info_Id(int index);
 	int GetDB_Select_ID(void);
 	int SetObject(int id=-1);
-	int DB_Get_SaveList(int **out_arr_id_list, std::string **out_arr_jobname_list, std::string **out_arr_toolname_list);
+	int DB_Get_SaveList(std::string path, int **out_arr_id_list, std::string **out_arr_jobname_list, std::string **out_arr_toolname_list);
 	int DB_Del_ID(int id = -1);
 	char* DB_Get_Mode(int id);
 

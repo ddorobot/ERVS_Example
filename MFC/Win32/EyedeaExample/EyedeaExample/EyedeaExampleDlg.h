@@ -129,4 +129,5 @@ public:
 	afx_msg void OnBnClickedButtonListLoad();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	afx_msg void OnBnClickedButtonDisconnect();
+	afx_msg void OnBnClickedButtonCheckDbSaveList();
 };

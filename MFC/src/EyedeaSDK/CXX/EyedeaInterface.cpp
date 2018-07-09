@@ -553,6 +553,104 @@ int CEyedeaInterface::SetObject(int id)
     return ret;
 }
 
+int CEyedeaInterface::DB_Get_SaveList(int **out_arr_id_list, std::string **out_arr_jobname_list, std::string **out_arr_toolname_list)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return NULL;
+	}
+
+	char command = COMMAND_GET_SAVE_DB_INFO_LIST;
+
+	int len = 0;
+	unsigned char* data = NULL;
+
+	unsigned int scale_factor = 1;
+	m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+
+	int index = 0;
+	int list_size = 0;
+	if (len >= 4 )
+	{
+		list_size = ((int)data[index++] << 24) & 0xFF000000;
+		list_size |= ((int)data[index++] << 16) & 0x00FF0000;
+		list_size |= ((int)data[index++] << 8) & 0x0000FF00;
+		list_size |= ((int)data[index++]) & 0x000000FF;
+	}
+
+#ifndef EYEDEA_JAVA_API
+	if ((*out_arr_id_list) != NULL)	free((*out_arr_id_list));
+	(*out_arr_id_list) = (int *)malloc(sizeof(int)*list_size);
+
+	if ((*out_arr_jobname_list) != NULL)	free((*out_arr_jobname_list));
+	(*out_arr_jobname_list) = (std::string *)malloc(sizeof(std::string)*list_size);
+
+	if ((*out_arr_jobname_list) != NULL)	free((*out_arr_jobname_list));
+	(*out_arr_jobname_list) = (std::string  *)malloc(sizeof(std::string)*list_size);
+#endif
+	
+	//get info
+	for (int i = 0; i < list_size; i++)
+	{
+		//id
+		int id = 0;
+		id = ((int)data[index++] << 24) & 0xFF000000;
+		id |= ((int)data[index++] << 16) & 0x00FF0000;
+		id |= ((int)data[index++] << 8) & 0x0000FF00;
+		id |= ((int)data[index++]) & 0x000000FF;
+
+		//job name size
+		int job_name_size = 0;
+		job_name_size = ((int)data[index++] << 24) & 0xFF000000;
+		job_name_size |= ((int)data[index++] << 16) & 0x00FF0000;
+		job_name_size |= ((int)data[index++] << 8) & 0x0000FF00;
+		job_name_size |= ((int)data[index++]) & 0x000000FF;
+
+		std::string job_name;
+		for (int j = 0; j < job_name_size; j++)
+		{
+			job_name.push_back(data[index++]);
+		}
+
+		//tool name size
+		int tool_name_size = 0;
+		tool_name_size = ((int)data[index++] << 24) & 0xFF000000;
+		tool_name_size |= ((int)data[index++] << 16) & 0x00FF0000;
+		tool_name_size |= ((int)data[index++] << 8) & 0x0000FF00;
+		tool_name_size |= ((int)data[index++]) & 0x000000FF;
+
+		std::string tool_name;
+		for (int j = 0; j < tool_name_size ; j++)
+		{
+			tool_name.push_back(data[index++]);
+		}
+
+		if ((*out_arr_id_list))
+		{
+			(*out_arr_id_list)[i] = id;
+		}
+
+		if ((*out_arr_jobname_list))
+		{
+			(*out_arr_jobname_list)[i] = job_name;
+		}
+
+		if ((*out_arr_toolname_list))
+		{
+			(*out_arr_toolname_list)[i] = tool_name;
+		}
+	}
+
+	if (data != NULL)
+	{
+		delete data;
+		data = NULL;
+	}
+}
+
 int CEyedeaInterface::GetImage(int option, int option2, char** out_data, int* len)
 {
 	boost::unique_lock<boost::mutex> scoped_lock(mutex);

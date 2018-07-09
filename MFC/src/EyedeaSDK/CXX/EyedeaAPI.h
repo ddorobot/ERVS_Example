@@ -24,6 +24,7 @@ int ERVS_DB_Get_Select_ID(void);
 int ERVS_DB_Del_ID(int id);
 char* ERVS_DB_Get_Mode(int id);
 int ERVS_SetObject(int id = -1);
+int ERVS_DB_Get_SaveList(int **out_arr_id_list, std::string **out_arr_jobname_list, std::string **out_arr_toolname_list);
 
 int ERVS_SetJobName(const int id, const std::string name);
 std::string ERVS_GetJobName(const int id);

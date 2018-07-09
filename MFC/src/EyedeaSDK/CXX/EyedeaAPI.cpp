@@ -309,6 +309,11 @@ int ERVS_SetObject(int id)
 	return g_cls_interface.SetObject(id);
 }
 
+int ERVS_DB_Get_SaveList(int **out_arr_id_list, std::string **out_arr_jobname_list, std::string **out_arr_toolname_list)
+{
+	return g_cls_interface.DB_Get_SaveList(out_arr_id_list, out_arr_jobname_list, out_arr_toolname_list);
+}
+
 int ERVS_SetJobName(const int id, const std::string name)
 {
 	return g_cls_interface.SetJobName(id, name);

@@ -259,9 +259,9 @@ int ERVS_SetNextImage(void)
 	return g_cls_interface.SetNextImage();
 }
 
-int ERVS_FileSaveObjectDBList(std::string path, const int id)
+int ERVS_FileSaveObjectDBList(std::string path, const int id, const bool use_image_file)
 {
-	return g_cls_interface.FileSaveObjectListInfo(path, id);
+	return g_cls_interface.FileSaveObjectListInfo(path, id, use_image_file);
 }
 
 int ERVS_FileLoadObjectDBList(std::string path, const int id)

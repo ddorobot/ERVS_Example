@@ -5111,7 +5111,7 @@ int CEyedeaInterface::FileLoadObjectListInfo(std::string path, const int id)
 	return ret;
 }
 
-int CEyedeaInterface::FileSaveObjectListInfo(std::string path, const int id)
+int CEyedeaInterface::FileSaveObjectListInfo(std::string path, const int id, const bool use_image_file)
 {
 	boost::unique_lock<boost::mutex> scoped_lock(mutex);
 
@@ -5123,7 +5123,7 @@ int CEyedeaInterface::FileSaveObjectListInfo(std::string path, const int id)
 
 	char command = COMMAND_OBJECT_LIST_FILESAVE;
 
-	int len = path.length()+1 + 4;
+	int len = path.length()+1 + 4 + 4;
 	unsigned char* data = new unsigned char[len];
 	memset(data, 0, len);
 
@@ -5134,6 +5134,11 @@ int CEyedeaInterface::FileSaveObjectListInfo(std::string path, const int id)
 	data[index++] = (id & 0x00FF0000) >> 16;
 	data[index++] = (id & 0x0000FF00) >> 8;
 	data[index++] = (id & 0x000000FF);
+
+	data[index++] = (use_image_file & 0xFF000000) >> 24;
+	data[index++] = (use_image_file & 0x00FF0000) >> 16;
+	data[index++] = (use_image_file & 0x0000FF00) >> 8;
+	data[index++] = (use_image_file & 0x000000FF);
 #endif
 
 	std::copy(path.begin(), path.end(), data + index);

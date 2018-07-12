@@ -1268,7 +1268,7 @@ void CEyedeaExampleDlg::OnBnClickedButtonListSave()
 	GetDlgItem(IDC_EDIT_DB_ID)->GetWindowText(strDBID);
 	int db_id = _ttoi(strDBID);
 
-	ERVS_FileSaveObjectDBList(str_path, db_id);
+	ERVS_FileSaveObjectDBList(str_path, db_id, true);
 }
 
 #if 0

@@ -38,7 +38,7 @@ int ERVS_SetRobotPose(const int id, double* posj, int posj_size);
 double* ERVS_GetRobotPose(const int id, int* posj_size);
 
 //DB Save/Load
-int ERVS_FileSaveObjectDBList(std::string path, const int id);
+int ERVS_FileSaveObjectDBList(std::string path, const int id, const bool use_image_file);
 int ERVS_FileLoadObjectDBList(std::string path, const int id);
 
 //Option

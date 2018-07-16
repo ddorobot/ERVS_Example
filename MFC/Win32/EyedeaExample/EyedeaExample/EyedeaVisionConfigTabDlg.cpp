@@ -1099,7 +1099,9 @@ void CEyedeaVisionConfigTabDlg::OnBnClickedButtonVisionConfigGet2()
 	float edge_margin = ERVS_GetVisionConfigOption(VISION_CONFIG_EDGE_MATCHING_MARGIN);
 	float masking_option = ERVS_GetVisionConfigOption(VISION_CONFIG_FIND_OBJECT_MASKING_OPTION);
 	float masking_option_find_object_threshold = ERVS_GetVisionConfigOption(VISION_CONFIG_FIND_OBJECT_MASKING_OPTION_THRESHOLD);
-	float find_detect_retry = ERVS_GetVisionConfigOption(VISION_CONFIG_DETECT_RETRY); //IDC_EDIT_VISION_CONFIG_DETECT_RETRY
+
+	int id = ERVS_DB_Get_Select_ID();
+	float find_detect_retry = ERVS_GetMainJobDetectRetry(id); //IDC_EDIT_VISION_CONFIG_DETECT_RETRY
 
 	CString str;
 	str.Format(_T("%.2f"), image_morph_size);
@@ -1225,7 +1227,9 @@ void CEyedeaVisionConfigTabDlg::OnBnClickedButtonVisionConfigSet2()
 	ERVS_SetVisionConfigOption(VISION_CONFIG_EDGE_MATCHING_MARGIN, edge_margin);
 	ERVS_SetVisionConfigOption(VISION_CONFIG_FIND_OBJECT_MASKING_OPTION, masking_option);
 	ERVS_SetVisionConfigOption(VISION_CONFIG_FIND_OBJECT_MASKING_OPTION_THRESHOLD, masking_option_find_threshold);
-	ERVS_SetVisionConfigOption(VISION_CONFIG_DETECT_RETRY, find_detect_retry);
+
+	int id = ERVS_DB_Get_Select_ID();
+	ERVS_SetMainJobDetectRetry(id, find_detect_retry);
 	//
 	GetDlgItem(IDC_EDIT_FIND_OBJECT_DETECTION_LEVEL)->GetWindowText(str);
 	int level = _ttoi(str);

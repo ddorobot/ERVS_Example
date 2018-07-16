@@ -463,7 +463,7 @@ int ERVS_DetectWithGrab(int index, int max_objects_count, float** out_id, float*
 	int retry = 0;
 	if (base_id >= 1000)
 	{
-		retry = ERVS_GetDetectRetry(base_id);
+		retry = ERVS_GetMainJobDetectRetry(base_id);
 	}
 
 	int ret = 0;
@@ -502,7 +502,7 @@ int ERVS_DetectWithGrab(int index, int max_objects_count, float** out_id,
 	int retry = 0;
 	if (base_id >= 1000)
 	{
-		retry = ERVS_GetDetectRetry(base_id);
+		retry = ERVS_GetMainJobDetectRetry(base_id);
 	}
 
 	int ret = 0;
@@ -828,30 +828,12 @@ int ERVS_GetContrastRate(const int id)
 	return g_cls_interface.GetContrastRate(id);
 }
 
-int ERVS_SetDetectRetry(const int id, int nRetryCount)
+int ERVS_SetMainJobDetectRetry(const int id, int nRetryCount)
 {
-	int bak_id = ERVS_DB_Get_Select_ID();
-
-	ERVS_SetObject(id);
-
-	int ret = ERVS_SetVisionConfigOption(VISION_CONFIG_DETECT_RETRY, nRetryCount);
-
-	ERVS_SetObject(bak_id);
-
-	return 0;
+	return g_cls_interface.SetDetectRetry(id, nRetryCount);
 }
 
-int ERVS_GetDetectRetry(const int id)
+int ERVS_GetMainJobDetectRetry(const int id)
 {
-	int bak_id = ERVS_DB_Get_Select_ID();
-
-	ERVS_SetObject(id);
-
-	float value = ERVS_GetVisionConfigOption(VISION_CONFIG_DETECT_RETRY);
-
-	ERVS_SetObject(bak_id);
-
-	int retry = (int)value;
-
-	return retry;
+	return g_cls_interface.GetDetectRetry(id);
 }

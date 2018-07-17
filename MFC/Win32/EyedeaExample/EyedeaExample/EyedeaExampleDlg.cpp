@@ -88,6 +88,7 @@ BEGIN_MESSAGE_MAP(CEyedeaExampleDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_LIST_LOAD, &CEyedeaExampleDlg::OnBnClickedButtonListLoad)
 	ON_BN_CLICKED(IDC_BUTTON_DISCONNECT, &CEyedeaExampleDlg::OnBnClickedButtonDisconnect)
 	ON_BN_CLICKED(IDC_BUTTON_CHECK_DB_SAVE_LIST, &CEyedeaExampleDlg::OnBnClickedButtonCheckDbSaveList)
+	ON_BN_CLICKED(IDC_BUTTON_LIST_LOAD2, &CEyedeaExampleDlg::OnBnClickedButtonListLoad2)
 END_MESSAGE_MAP()
 
 
@@ -1367,4 +1368,10 @@ void CEyedeaExampleDlg::OnBnClickedButtonCheckDbSaveList()
 		delete [] (arr_toolname_list);
 		arr_toolname_list = NULL;
 	}
+}
+
+
+void CEyedeaExampleDlg::OnBnClickedButtonListLoad2()
+{
+	// TODO: Add your control notification handler code here
 }

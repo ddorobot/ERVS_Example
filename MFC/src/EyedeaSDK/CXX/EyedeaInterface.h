@@ -75,6 +75,7 @@ public:
 	int GetOptionFixSearchArea(void);
 	int FileSaveObjectListInfo(std::string path, const int id, const bool use_image_file);
 	int FileLoadObjectListInfo(std::string path, const int id);
+	int FileDeleteObjectListInfo(std::string path, const int id);
 	int SetVisionConfigOption(int option, float value);
 	float GetVisionConfigOption(int option);
 

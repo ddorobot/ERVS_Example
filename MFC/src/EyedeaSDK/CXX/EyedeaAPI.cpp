@@ -269,6 +269,11 @@ int ERVS_FileLoadObjectDBList(std::string path, const int id)
 	return g_cls_interface.FileLoadObjectListInfo(path, id);
 }
 
+int ERVS_FileDeleteObjectDBList(std::string path, const int id)
+{
+	return g_cls_interface.FileDeleteObjectListInfo(path, id);
+}
+
 int ERVS_SetVisionConfigOption(int option, float value)
 {
 	return g_cls_interface.SetVisionConfigOption(option, value);

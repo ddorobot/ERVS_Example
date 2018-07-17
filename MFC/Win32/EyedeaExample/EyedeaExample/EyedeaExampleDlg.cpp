@@ -1374,4 +1374,15 @@ void CEyedeaExampleDlg::OnBnClickedButtonCheckDbSaveList()
 void CEyedeaExampleDlg::OnBnClickedButtonListLoad2()
 {
 	// TODO: Add your control notification handler code here
+	CString strDBPath;
+	GetDlgItem(IDC_EDIT_DB_PATH)->GetWindowText(strDBPath);
+
+	//std::string str_path((LPCTSTR)strDBPath);
+	std::string str_path = std::string(CT2CA(strDBPath.operator LPCWSTR()));
+
+	CString strDBID;
+	GetDlgItem(IDC_EDIT_DB_ID)->GetWindowText(strDBID);
+	int db_id = _ttoi(strDBID);
+
+	ERVS_FileDeleteObjectDBList(str_path, db_id);
 }

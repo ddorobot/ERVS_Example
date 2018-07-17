@@ -5111,6 +5111,91 @@ int CEyedeaInterface::FileLoadObjectListInfo(std::string path, const int id)
 	return ret;
 }
 
+int CEyedeaInterface::FileDeleteObjectListInfo(std::string path, const int id)
+{
+	boost::unique_lock<boost::mutex> scoped_lock(mutex);
+
+	if (m_cls_eth_client == NULL)
+	{
+		printf("Before accessing the ERVS\n");
+		return EYEDEA_ERROR_INVALID_MEMORY;
+	}
+
+	char command = COMMAND_OBJECT_LIST_FILEDELETE;
+
+	int len = path.length() + 1 + 4;
+	unsigned char* data = new unsigned char[len];
+	memset(data, 0, len);
+
+	//id
+	int index = 0;
+#if 1
+	data[index++] = (id & 0xFF000000) >> 24;
+	data[index++] = (id & 0x00FF0000) >> 16;
+	data[index++] = (id & 0x0000FF00) >> 8;
+	data[index++] = (id & 0x000000FF);
+#endif
+
+	std::copy(path.begin(), path.end(), data + index);
+
+	unsigned int scale_factor = 1;
+	int ret = 0;
+	ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+	if (ret == EYEDEA_ERROR_INVALID_MEMORY)
+	{
+		int sec = 0;
+		while (1)
+		{
+			ret = m_cls_eth_client->Open(m_ip, m_port);
+			if (ret == 0) {
+				ret = m_cls_eth_client->Send(command, &scale_factor, &data, &len);
+				break;
+			}
+			else
+			{
+				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
+				sec++;
+				if (sec >= 60)
+				{
+					if (data != NULL)
+					{
+						delete data;
+						data = NULL;
+					}
+
+					return ret;
+				}
+				continue;
+			}
+		}
+	}
+	if (ret != 0)
+	{
+		if (data != NULL)
+		{
+			delete data;
+			data = NULL;
+		}
+		return ret;
+	}
+
+	ret = 0;
+
+	if (len >= 4)
+	{
+		//w
+		ret = ((int)data[0] << 24) & 0xFF000000;
+		ret |= ((int)data[1] << 16) & 0x00FF0000;
+		ret |= ((int)data[2] << 8) & 0x0000FF00;
+		ret |= ((int)data[3]) & 0x000000FF;
+	}
+
+	delete data;
+	data = NULL;
+
+	return ret;
+}
+
 int CEyedeaInterface::FileSaveObjectListInfo(std::string path, const int id, const bool use_image_file)
 {
 	boost::unique_lock<boost::mutex> scoped_lock(mutex);

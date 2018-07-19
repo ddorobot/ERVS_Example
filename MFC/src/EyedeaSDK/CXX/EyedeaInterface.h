@@ -152,6 +152,9 @@ public:
 	int Calibration_StandAlone_Calc_Calib_Matrix(float cposA[3], float cposB[3], float cposC[3], float cposD[3],
 		float rposA[3], float rposB[3], float rposC[3], float rposD[3],
 		float ret_Matrix[12]);
+
+	int Calibration_StandAlone_Y_Direction(int Direction);
+
 	int Calibration_GetPoint(const float in_px, const float in_py, float* out_rx, float* out_ry);
 	int Calibration_GetChessPoint(const int index, float* out_rx, float* out_ry);
 	int Calibration_isOK(void);

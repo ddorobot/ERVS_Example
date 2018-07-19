@@ -440,6 +440,11 @@ int ERVS_Calibration_StandAlone_Calc_Calib_Matrix(float cposA[3], float cposB[3]
 	return g_cls_interface.Calibration_StandAlone_Calc_Calib_Matrix(cposA, cposB, cposC, cposD, rposA, rposB, rposC, rposD, ret_Matrix);
 }
 
+int ERVS_Calibration_StandAlone_Y_Direction(int Direction)
+{
+	return g_cls_interface.Calibration_StandAlone_Y_Direction(Direction);
+}
+
 int ERVS_Calibration_GetPoint(const float in_px, const float in_py, float* out_rx, float* out_ry)
 {
 	return g_cls_interface.Calibration_GetPoint(in_px, in_py, out_rx, out_ry);

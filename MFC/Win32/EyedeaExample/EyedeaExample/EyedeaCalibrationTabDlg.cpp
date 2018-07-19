@@ -49,6 +49,8 @@ BEGIN_MESSAGE_MAP(CEyedeaCalibrationTabDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_STANDALONE_CALIB_GET_MATRIX, &CEyedeaCalibrationTabDlg::OnBnClickedButtonStandaloneCalibGetMatrix)
 	ON_BN_CLICKED(IDC_BUTTON_STANDALONE_CALIB_CALC_MATRIX, &CEyedeaCalibrationTabDlg::OnBnClickedButtonStandaloneCalibCalcMatrix)
 	ON_BN_CLICKED(IDC_BUTTON_STANDALONE_CALIB_INIT, &CEyedeaCalibrationTabDlg::OnBnClickedButtonStandaloneCalibInit)
+	ON_BN_CLICKED(IDC_BUTTON_STANDALONE_CALIB_SET_Y_DIRECTION, &CEyedeaCalibrationTabDlg::OnBnClickedButtonStandaloneCalibSetYDirection)
+	ON_BN_CLICKED(IDC_BUTTON_STANDALONE_CALIB_SET_Y_DIRECTION_INV, &CEyedeaCalibrationTabDlg::OnBnClickedButtonStandaloneCalibSetYDirectionInv)
 END_MESSAGE_MAP()
 
 
@@ -578,14 +580,31 @@ void CEyedeaCalibrationTabDlg::OnBnClickedButtonStandaloneCalibGetMatrix()
 
 void CEyedeaCalibrationTabDlg::OnBnClickedButtonStandaloneCalibCalcMatrix()
 {
-	float cposA[3] = { 0,0,0 };
+/*	float cposA[3] = { 0,0,0 };
 	float cposB[3] = { 200,0,0 };
 	float cposC[3] = { 0,100,0 };
 	float cposD[3] = { 200,100,0 };
 	float rposA[3] = { 1000,2000,3000 };
 	float rposB[3] = { 1193.97,2040.14,2972.35 };
 	float rposC[3] = { 982.9, 2096.46, 3020.07 };
-	float rposD[3] = { 1176.87, 2136.60, 2992.42 };
+	float rposD[3] = { 1176.87, 2136.60, 2992.42 };*/
+
+	float cposA[3], cposB[3], cposC[3], cposD[3];
+	int nCalibrationInfo = ERVS_Calibration_StandAlone_Get_Image_Count();
+	for (int i = 0; i < nCalibrationInfo; i++)
+	{
+		ERVS_Calibration_StandAlone_Get_Feature_Pos(i, cposA, cposB, cposC, cposD);
+	}
+
+	/*float cposA[3] = { 0,0,0 };
+	float cposB[3] = { 200,0,0 };
+	float cposC[3] = { 0,100,0 };
+	float cposD[3] = { 200,100,0 };*/
+	float rposA[3] = { 100,575,0 };
+	float rposB[3] = { 280,575, 0 };
+	float rposC[3] = { 100,500, 0 };
+	float rposD[3] = { 280,500, 0 };
+
 	float matrix[12];
 	ERVS_Calibration_StandAlone_Calc_Calib_Matrix(cposA, cposB, cposC, cposD, rposA, rposB, rposC, rposD, matrix);
 	for (int i = 0; i < 12; i++)
@@ -598,4 +617,17 @@ void CEyedeaCalibrationTabDlg::OnBnClickedButtonStandaloneCalibCalcMatrix()
 void CEyedeaCalibrationTabDlg::OnBnClickedButtonStandaloneCalibInit()
 {
 	ERVS_Calibration_StandAlone_Init();
+}
+
+
+void CEyedeaCalibrationTabDlg::OnBnClickedButtonStandaloneCalibSetYDirection()
+{
+	ERVS_Calibration_StandAlone_Y_Direction(1);
+}
+
+
+void CEyedeaCalibrationTabDlg::OnBnClickedButtonStandaloneCalibSetYDirectionInv()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	ERVS_Calibration_StandAlone_Y_Direction(0);
 }

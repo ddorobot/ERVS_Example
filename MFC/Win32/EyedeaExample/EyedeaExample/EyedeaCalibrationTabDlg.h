@@ -69,4 +69,6 @@ public:
 	afx_msg void OnBnClickedButtonStandaloneCalibGetMatrix();
 	afx_msg void OnBnClickedButtonStandaloneCalibCalcMatrix();
 	afx_msg void OnBnClickedButtonStandaloneCalibInit();
+	afx_msg void OnBnClickedButtonStandaloneCalibSetYDirection();
+	afx_msg void OnBnClickedButtonStandaloneCalibSetYDirectionInv();
 };

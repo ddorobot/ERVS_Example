@@ -564,6 +564,7 @@ void CEyedeaCalibrationTabDlg::OnBnClickedButtonStandaloneCalibSetMatrix()
 						0,1,0,0,
 						0,0,1,0 };
 	ERVS_Calibration_StandAlone_Set_Matrix(matrix);
+	UpdateDataCalibrationRun();
 }
 
 
@@ -600,10 +601,10 @@ void CEyedeaCalibrationTabDlg::OnBnClickedButtonStandaloneCalibCalcMatrix()
 	float cposB[3] = { 200,0,0 };
 	float cposC[3] = { 0,100,0 };
 	float cposD[3] = { 200,100,0 };*/
-	float rposA[3] = { 100,575,0 };
-	float rposB[3] = { 280,575, 0 };
-	float rposC[3] = { 100,500, 0 };
-	float rposD[3] = { 280,500, 0 };
+	float rposA[3] = { 0,75,0 };
+	float rposB[3] = { 180,75, 0 };
+	float rposC[3] = { 0,0, 0 };
+	float rposD[3] = { 180,0, 0 };
 
 	float matrix[12];
 	ERVS_Calibration_StandAlone_Calc_Calib_Matrix(cposA, cposB, cposC, cposD, rposA, rposB, rposC, rposD, matrix);
@@ -611,6 +612,7 @@ void CEyedeaCalibrationTabDlg::OnBnClickedButtonStandaloneCalibCalcMatrix()
 	{
 		printf(" matrix[%d] = %f\n",i, matrix[i]);
 	}
+	UpdateDataCalibrationRun();
 }
 
 

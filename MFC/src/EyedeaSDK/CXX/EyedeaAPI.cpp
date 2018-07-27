@@ -490,6 +490,10 @@ int ERVS_DetectWithGrab(int index, int max_objects_count, float** out_id, float*
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
 			}
+			else
+			{
+				break ;
+			}
 		}
 	} while (retry > run_count);
 
@@ -528,6 +532,10 @@ int ERVS_DetectWithGrab(int index, int max_objects_count, float** out_id,
 			if (ret == 0)
 			{
 				boost::this_thread::sleep(boost::posix_time::millisec(1000));  //1 msec sleep
+			}
+			else
+			{
+				break ;
 			}
 		}
 	} while (retry > run_count);

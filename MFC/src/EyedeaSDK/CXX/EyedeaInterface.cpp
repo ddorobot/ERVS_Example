@@ -8250,10 +8250,12 @@ std::string CEyedeaInterface::GetJobName(const int id)
 		data = NULL;
 	}
 
-	std::string str_name = name;
+	std::string str_name ;
 
 	if (name != NULL)
 	{
+		str_name = name;
+
 		delete name;
 		name = NULL;
 	}
@@ -8339,10 +8341,12 @@ std::string CEyedeaInterface::GetToolName(const int id)
 		data = NULL;
 	}
 
-	std::string str_name = name;
+	std::string str_name ;
 
 	if (name != NULL)
 	{
+		str_name = name;
+
 		delete name;
 		name = NULL;
 	}

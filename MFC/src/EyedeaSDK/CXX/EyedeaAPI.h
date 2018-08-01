@@ -107,7 +107,7 @@ int ERVS_GetObjectLine(int *out_count, float **out_x1, float **out_y1, float **o
 int ERVS_DelObjectLine(void);
 int ERVS_ClrObjectLine(void);
 int ERVS_SetObjectTwoLine(const int id, float x1, float y1, float w1, float h1, float x2, float y2, float w2, float h2);
-//Two Line Distance
+//Two Line Distance Inspection
 int ERVS_SetObjectTwoLineBaseDistance(const int id, const int dist);
 int ERVS_GetObjectTwoLineBaseDistance(const int id);
 float ERVS_GetObjectTwoLineCalcDistance(const int id);
@@ -117,7 +117,7 @@ int ERVS_SetObjectTwoLineDistanceType(const int id, const int type);
 int ERVS_GetObjectTwoLineDistanceType(const int id);
 int ERVS_SetObjectTwoLineDistanceInspection(const int id, const bool use);
 int ERVS_GetObjectTwoLineDistanceInspection(const int id);
-//Two Line Angle
+//Two Line Angle Inspection
 int ERVS_SetObjectTwoLineBaseAngle(const int id, const int angle);
 int ERVS_GetObjectTwoLineBaseAngle(const int id);
 float ERVS_GetObjectTwoLineCalcAngle(const int id);

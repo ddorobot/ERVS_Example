@@ -4,28 +4,35 @@
 #include "EyedeaDef.h"
 #include <string>
 
-//Server Connect
+//[0] Connect
 int ERVS_Connect(char* ip, int port);
 void ERVS_Disconnect(void);
 
-//System
+//[1] System
 char* ERVS_GetVersion(void);
 int ERVS_SetNextImage(void);
 
-//Get Image from ERVS to Client
+//[2] Get Image from ERVS to Client
 int ERVS_GetImage(int option, int option2, char** data, int* len);
 int ERVS_GetFindObjectResultImage(int option, int option2, char** data, int* len);
 
-//Job Management
+//[3] Job Management
 int ERVS_DBAddObject(void);
-int ERVS_DB_Get_Count(void);
-int ERVS_DB_Get_Info_Id(int index);
-int ERVS_DB_Get_Select_ID(void);
 int ERVS_DB_Del_ID(int id);
-char* ERVS_DB_Get_Mode(int id);
 int ERVS_SetObject(int id = -1);
+int ERVS_DB_Get_Count(void);
+int ERVS_DB_Get_Select_ID(void);
+int ERVS_DB_Get_Info_Id(int index);
+char* ERVS_DB_Get_Mode(int id);
+//DB File
 int ERVS_DB_Get_SaveList(std::string path, int **out_arr_id_list, std::string **out_arr_jobname_list, std::string **out_arr_toolname_list);
+int ERVS_FileSaveObjectDBList(std::string path, const int id, const bool use_image_file);
+int ERVS_FileLoadObjectDBList(std::string path, const int id);
+int ERVS_FileDeleteObjectDBList(std::string path, const int id);
 
+//[4] Job Setting
+int ERVS_SetBase(int dep_id);
+int ERVS_SetBaseTemp(void);
 int ERVS_SetJobName(const int id, const std::string name);
 std::string ERVS_GetJobName(const int id);
 int ERVS_SetToolName(const int id, const std::string name);
@@ -36,35 +43,25 @@ int ERVS_SetToolState(const int id, const int state);
 int ERVS_GetToolState(const int id);
 int ERVS_SetRobotPose(const int id, double* posj, int posj_size);
 double* ERVS_GetRobotPose(const int id, int* posj_size);
-
-//DB Save/Load
-int ERVS_FileSaveObjectDBList(std::string path, const int id, const bool use_image_file);
-int ERVS_FileLoadObjectDBList(std::string path, const int id);
-int ERVS_FileDeleteObjectDBList(std::string path, const int id);
-
-//Option
+//[4] Job Setting : Vision Config Option
+int ERVS_SetVisionConfigOption(int option, float value);
+float ERVS_GetVisionConfigOption(int option);
+//[4] Job Setting : Zoom
+int ERVS_SetZoomArea(float x, float y, float w, float h);
+int ERVS_ResetZoomArea(void);
+//[4] Job Setting : Fix Area Option
 int ERVS_OptionFixAreaOn(void);
 int ERVS_OptionFixAreaOff(void);
 int ERVS_GetOptionFixArea(void);
-
-//Zoom
-int ERVS_SetZoomArea(float x, float y, float w, float h);
-int ERVS_ResetZoomArea(void);
-
-//Mask Area
+//[4] Job Setting : Mask Area
 int ERVS_SetMaskArea(float x, float y, float w, float h, bool inverse);
 int ERVS_UndoMaskArea(void);
 int ERVS_DelMaskArea(void);
 int ERVS_GetMaskArea(int *out_count, float **out_x, float **out_y, float **out_w, float **out_h, bool **out_inverse);
-
-//Vision Config Option
-int ERVS_SetVisionConfigOption(int option, float value);
-float ERVS_GetVisionConfigOption(int option);
-
-//Set Job
-int ERVS_SetBase(int dep_id);
-int ERVS_SetBaseTemp(void);
-//Circle Object
+//[4] Job Setting : Object Setting : Object(Region)
+int ERVS_SetSelectBaseObject(float x, float y, float w, float h);
+int ERVS_GetSelectBaseObject(float *out_x, float *out_y, float *out_w, float *out_h, float *out_roi_center_x, float *out_roi_center_y, float *out_bound_center_x, float *out_bound_center_y, float *out_mass_center_x, float *out_mass_center_y);
+//[4] Job Setting : Object Setting : Object(Circle)
 int ERVS_SetObjectCircle(float x, float y, float r1, float r2);
 int ERVS_SetObjectCircle(const float x, const float y, const float r1, const float r2, const float min_r1, const float min_r2, const float max_r1, const float max_r2);
 int ERVS_GetObjectCircle(float *out_x, float *out_y, float *out_r1, float *out_r2, float *out_min_r1, float *out_min_r2, float *out_max_r1, float *out_max_r2, float *out_user_x, float *out_user_y, float *out_user_r1, float *out_user_r2);
@@ -75,15 +72,14 @@ int ERVS_GetObjectCircleDiameterTolerance(const int id, int *out_min_value, int 
 int ERVS_SetObjectCircleDiameterInspection(const int id, const bool use);
 int ERVS_GetObjectCircleDiameterInspection(const int id);
 float ERVS_GetObjectCircleCalcDiameter(const int id);
-
-//Line Object
+//[4] Job Setting : Object Setting : Object(Line)
 int ERVS_SetObjectLine(float x, float y, float w, float h);
 int ERVS_SetObjectLine(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4);
 int ERVS_GetObjectLine(int *out_count, float **out_x1, float **out_y1, float **out_x2, float **out_y2, float **out_x3, float **out_y3, float **out_x4, float **out_y4, float **out_line1_x, float **out_line1_y, float **out_line2_x, float **out_line2_y);
 int ERVS_DelObjectLine(void);
 int ERVS_ClrObjectLine(void);
 int ERVS_SetObjectTwoLine(const int id, float x1, float y1, float w1, float h1, float x2, float y2, float w2, float h2);
-//Two Line Distance
+//Two Line Distance Inspection
 int ERVS_SetObjectTwoLineBaseDistance(const int id, const int dist);
 int ERVS_GetObjectTwoLineBaseDistance(const int id);
 float ERVS_GetObjectTwoLineCalcDistance(const int id);
@@ -93,7 +89,7 @@ int ERVS_SetObjectTwoLineDistanceType(const int id, const int type);
 int ERVS_GetObjectTwoLineDistanceType(const int id);
 int ERVS_SetObjectTwoLineDistanceInspection(const int id, const bool use);
 int ERVS_GetObjectTwoLineDistanceInspection(const int id);
-//Two Line Angle
+//Two Line Angle Inspection
 int ERVS_SetObjectTwoLineBaseAngle(const int id, const int angle);
 int ERVS_GetObjectTwoLineBaseAngle(const int id);
 float ERVS_GetObjectTwoLineCalcAngle(const int id);
@@ -102,9 +98,6 @@ int ERVS_GetObjectTwoLineAngleTolerance(const int id, int *out_min_value, int *o
 int ERVS_SetObjectTwoLineAngleInspection(const int id, const bool use);
 int ERVS_GetObjectTwoLineAngleInspection(const int id);
 
-//Region Object
-int ERVS_SetSelectBaseObject(float x, float y, float w, float h);
-int ERVS_GetSelectBaseObject(float *out_x, float *out_y, float *out_w, float *out_h, float *out_roi_center_x, float *out_roi_center_y, float *out_bound_center_x, float *out_bound_center_y, float *out_mass_center_x, float *out_mass_center_y);
 
 //Detect 
 int ERVS_SetMainJobDetectRetry(const int id, int nRetryCount);

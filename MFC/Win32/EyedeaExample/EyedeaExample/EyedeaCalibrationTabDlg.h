@@ -71,4 +71,5 @@ public:
 	afx_msg void OnBnClickedButtonStandaloneCalibInit();
 	afx_msg void OnBnClickedButtonStandaloneCalibSetYDirection();
 	afx_msg void OnBnClickedButtonStandaloneCalibSetYDirectionInv();
+	afx_msg void OnBnClickedButtonCalibSetCustomCenter();
 };

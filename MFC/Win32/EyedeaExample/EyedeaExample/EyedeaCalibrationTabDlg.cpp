@@ -51,6 +51,7 @@ BEGIN_MESSAGE_MAP(CEyedeaCalibrationTabDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_STANDALONE_CALIB_INIT, &CEyedeaCalibrationTabDlg::OnBnClickedButtonStandaloneCalibInit)
 	ON_BN_CLICKED(IDC_BUTTON_STANDALONE_CALIB_SET_Y_DIRECTION, &CEyedeaCalibrationTabDlg::OnBnClickedButtonStandaloneCalibSetYDirection)
 	ON_BN_CLICKED(IDC_BUTTON_STANDALONE_CALIB_SET_Y_DIRECTION_INV, &CEyedeaCalibrationTabDlg::OnBnClickedButtonStandaloneCalibSetYDirectionInv)
+	ON_BN_CLICKED(IDC_BUTTON_CALIB_SET_CUSTOM_CENTER, &CEyedeaCalibrationTabDlg::OnBnClickedButtonCalibSetCustomCenter)
 END_MESSAGE_MAP()
 
 
@@ -632,4 +633,14 @@ void CEyedeaCalibrationTabDlg::OnBnClickedButtonStandaloneCalibSetYDirectionInv(
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	ERVS_Calibration_StandAlone_Y_Direction(0);
+}
+
+
+void CEyedeaCalibrationTabDlg::OnBnClickedButtonCalibSetCustomCenter()
+{
+	CString str;
+	GetDlgItem(IDC_EDIT_CUSTOM_CENTER_VAL)->GetWindowText(str);
+	int customnum = _ttoi(str);
+	ERVS_Calibration_Custom_Center_Point(customnum);
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 }

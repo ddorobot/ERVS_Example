@@ -154,6 +154,7 @@ public:
 		float ret_Matrix[12]);
 
 	int Calibration_StandAlone_Y_Direction(int Direction);
+	int Calibration_Custom_Center_Point(int customnum);
 
 	int Calibration_GetPoint(const float in_px, const float in_py, float* out_rx, float* out_ry);
 	int Calibration_GetChessPoint(const int index, float* out_rx, float* out_ry);

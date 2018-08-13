@@ -198,7 +198,7 @@ float CEyedeaInterface::GetVisionConfigOption(int option)
 	return ret;
 }
 
-int CEyedeaInterface::DBAddObject(void)
+int CEyedeaInterface::DBAddObject(int id)
 {
 	boost::unique_lock<boost::mutex> scoped_lock(mutex);
 
@@ -208,11 +208,17 @@ int CEyedeaInterface::DBAddObject(void)
 		return EYEDEA_ERROR_INVALID_MEMORY;
 	}
 
-	//printf("SetSearchArea - %d %d %d %d\n", x, y, w, h);
+	//printf("id - %d\n", id);
 
 	char command = COMMAND_DB_ADD_OBJECT;
-	int len = 0;
-	unsigned char* data = NULL;
+	int len = 4;
+	unsigned char* data = new unsigned char[len];
+
+	//id
+	data[0] = (id & 0xFF000000) >> 24;
+	data[1] = (id & 0x00FF0000) >> 16;
+	data[2] = (id & 0x0000FF00) >> 8;
+	data[3] = (id & 0x000000FF);
 
 	unsigned int scale_factor = 1;
 	int new_id = 0;

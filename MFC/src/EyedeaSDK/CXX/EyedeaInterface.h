@@ -82,7 +82,7 @@ public:
 	int CreateSocket(char* ip, int port);
 	void DeleteSocket();
 
-	int DBAddObject(void);
+	int DBAddObject(int id = 1000);
 	int GetDBCount(void);
 	int GetDB_Info_Id(int index);
 	int GetDB_Select_ID(void);

@@ -9,12 +9,12 @@
 #include "opencv2/opencv.hpp"													//eyedea - opencv lib.
 #include "../../../src/EyedeaSDK/CXX/EyedeaAPI.h"								//eyedea - draw lib.
 #include "afxcmn.h"
-#include "D:\vb_shared\EyedeaDemoForDRA\lib\boost_1_62_0\boost\thread\detail\thread.hpp"
-#include "D:\vb_shared\EyedeaDemoForDRA\lib\boost_1_62_0\boost\property_tree\ptree.hpp"
-#include "D:\vb_shared\EyedeaDemoForDRA\lib\boost_1_62_0\boost\property_tree\ini_parser.hpp"
-#include "D:\vb_shared\EyedeaDemoForDRA\lib\boost_1_62_0\boost\filesystem\operations.hpp"
-#include "D:\vb_shared\EyedeaDemoForDRA\lib\boost_1_62_0\boost\range\iterator_range.hpp"
-#include "D:\vb_shared\EyedeaDemoForDRA\lib\boost_1_62_0\boost\system\error_code.hpp"
+#include "boost\thread\detail\thread.hpp"
+#include "boost\property_tree\ptree.hpp"
+#include "boost\property_tree\ini_parser.hpp"
+#include "boost\filesystem\operations.hpp"
+#include "boost\range\iterator_range.hpp"
+#include "boost\system\error_code.hpp"
 
 #include "afxwin.h"
 #include "EyedeaVisionConfigTabDlg.h"

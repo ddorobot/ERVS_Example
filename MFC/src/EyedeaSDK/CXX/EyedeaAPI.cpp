@@ -284,9 +284,9 @@ float ERVS_GetVisionConfigOption(int option)
 	return g_cls_interface.GetVisionConfigOption(option);
 }
 
-int ERVS_DBAddObject(void)
+int ERVS_DBAddObject(int id)
 {
-	return g_cls_interface.DBAddObject();
+	return g_cls_interface.DBAddObject(id);
 }
 
 int ERVS_DB_Get_Count(void)

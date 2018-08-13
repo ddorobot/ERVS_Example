@@ -216,6 +216,9 @@ BOOL CEyedeaExampleDlg::OnInitDialog()
 	str.Format(_T("0"));
 	GetDlgItem(IDC_EDIT_DB_ID)->SetWindowText(str);
 
+	str.Format(_T("1000"));
+	GetDlgItem(IDC_EDIT_NEW_ID)->SetWindowText(str);
+
 	//Initialize list
 	m_list_information.DeleteAllItems();
 	// 리스트 스타일 설정
@@ -890,8 +893,11 @@ void CEyedeaExampleDlg::OnBnClickedButtonNewModel()
 {
 	// TODO: Add your control notification handler code here
 	//Add New Item
+	CString strNEWID;
+	GetDlgItem(IDC_EDIT_NEW_ID)->GetWindowText(strNEWID);
+	int new_id = _ttoi(strNEWID);
 
-	int newid = ERVS_DBAddObject();
+	int newid = ERVS_DBAddObject(new_id);
 
 	if (newid > 0)
 	{

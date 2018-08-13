@@ -25,7 +25,7 @@ int ERVS_GetImage(int option, int option2, char** data, int* len);
 int ERVS_GetFindObjectResultImage(int option, int option2, char** data, int* len);
 
 //[3] Job Management
-int ERVS_DBAddObject(void);
+int ERVS_DBAddObject(int id = 1000);
 int ERVS_DB_Del_ID(int id);
 int ERVS_SetObject(int id = -1);
 int ERVS_DB_Get_Count(void);
